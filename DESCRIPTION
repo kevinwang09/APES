@@ -1,11 +1,19 @@
 Package: APES
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Title: APproximated Exhaustive Search
+Version: 0.0.1
+Author: Kevin Wang
+Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Imports:
+  dplyr,
+  magrittr,
+  purrr,
+  reshape2,
+  tibble
+RoxygenNote: 6.0.1
+
