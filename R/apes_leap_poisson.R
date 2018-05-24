@@ -19,7 +19,7 @@
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
 #' y = rpois(n, 5)
-#' mu = glm(y ~ x[,1:2],family = "poisson")$fitted.value
+#' mu = glm(y ~ x,family = "poisson")$fitted.value
 #' apesResult = apes_leaps_poisson(x = x, y = y, mu = mu, maxK = maxK)
 #' names(apesResult)
 
