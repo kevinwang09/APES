@@ -65,7 +65,7 @@ apes_leaps_logit = function(x,
 
 
   apesMleModels = apply(apesIndicator, 2, function(indicator){
-    refittingMle(indicator = indicator, X = x, yBinom = yBinom)
+    refittingMle_logit(indicator = indicator, X = x, yBinom = yBinom)
   }) ## Each model will be different
 
 
