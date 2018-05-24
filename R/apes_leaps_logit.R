@@ -20,10 +20,10 @@
 #' colnames(x) = paste0("X", 1:p)
 #' y = round(runif(n, 0,1))
 #' Pi = runif(n, 0, 1)
-#' apesResult = apes_leaps(x = x, y = y, Pi = Pi, maxK = maxK)
+#' apesResult = apes_leaps_logit(x = x, y = y, Pi = Pi, maxK = maxK)
 #' names(apesResult)
 
-apes_leaps = function(x,
+apes_leaps_logit = function(x,
                       y,
                       Pi,
                       maxK){
@@ -138,34 +138,6 @@ apes_leaps = function(x,
   )
   return(result)
 }
-####################################################################################
-expit = function(x){
-  1/(1+exp(-x))
-}
-
-logit = function(x){
-  log(x) - log(1-x)
-}
-##############################
-## If a vector of IC has a minimum, then returns a vector with that minimum labelled as symbol.
-icOptimal = function(ic, symbol){
-  if(length(which.min(ic)) == 0){
-    res = NA
-  } else {
-    res = rep("", length(ic))
-    res[which.min(ic)] = symbol
-  }
-  return(res)
-}
-##############################
-minIcMatrix = function(ic, mat){
-  if(length(which.min(ic)) == 0){
-    res = NA
-  } else {
-    res = mat[,which.min(ic)]
-  }
-  return(res)
-}
 ####################################
 ## Calculate the log-likelihood of logisitic regression using yBinom and estimated pis
 loglikePi = function(yBinom, pis){
@@ -179,9 +151,8 @@ beta2Pi = function(X, beta){
   expit(xint[, names(beta)] %*% as.matrix(beta))
 }
 #####################################
-#####################################
 ## Given an indicators of variables, design matrix and the yBinom, we refit the MLE-logisitic. X should not have an Intercept term
-refittingMle = function(indicator, X, yBinom){
+refittingMle_logit = function(indicator, X, yBinom){
   xTemp = cbind(Int = 1, X[,indicator])
   colnames(xTemp) = c("Int", colnames(X)[indicator])
 
@@ -191,24 +162,3 @@ refittingMle = function(indicator, X, yBinom){
           family = binomial(link = "logit"))
 }
 #####################################
-## We take the MLE model fitted above and rearrange the columns and remove the NA's in our vector
-mleModelToBeta = function(mleModels, variables){
-  mleBeta = purrr::map(mleModels, "coefficients") %>%
-    purrr::map(t) %>%
-    purrr::map(data.frame) %>%
-    dplyr::bind_rows() %>% t
-
-  mleBeta[is.na(mleBeta)] = 0L
-  variablesOrdered = intersect(rownames(mleBeta), variables) %>% gtools::mixedsort()
-  # variablesOrdered = variables %>% mixedsort
-  mleBeta = mleBeta[variablesOrdered,]
-
-  tmp = matrix(0L,
-               nrow = length(variables),
-               ncol = ncol(mleBeta),
-               dimnames = list(variables, colnames(mleBeta))) ## To avoid a variable is never selected, we create an empty matrix
-
-  tmp[rownames(mleBeta), ] = mleBeta
-
-  return(tmp)
-}
