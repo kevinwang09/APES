@@ -3,7 +3,6 @@
 #' @param y response vector for logistics regression of length n
 #' @param Pi esimated probability of each observation using a baseline model. Of length n.
 #' @param krange range of k to explore
-#' @import bestsubset
 #' @import tibble
 #' @import broom
 #' @import magrittr
