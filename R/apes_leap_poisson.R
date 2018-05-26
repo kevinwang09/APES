@@ -1,7 +1,7 @@
 #' Perform APES using the leaps package
 #' @param x n times p design matrix for logistics regression
 #' @param y response vector for logistics regression of length n
-#' @param mu esimated probability of each observation using a baseline model. Of length n.
+#' @param mu esimated mean of each observation using a baseline model. Of length n.
 #' @param maxK maximum model size, less than p.
 #' @import leaps
 #' @import tibble
@@ -95,24 +95,24 @@ apes_leaps_poisson = function(x,
     # l2MleDist = betaL2(apesMleBeta, beta) ## L2 error of the apesMleBeta vector with the true beta.
   )
 
-  ############# Constructing Estimated Probability information ##################
+
 
   obsNum = paste0("obs", 1:n)
   colnames(apesMleMu) = apesModelName
   rownames(apesMleMu) = obsNum
 
   ############
-  apesMinAicProb = minIcMatrix(ic = apesMleAIC,
+  apesMinAicMean = minIcMatrix(ic = apesMleAIC,
                                mat = apesMleMu)
-  apesMinBicProb = minIcMatrix(ic = apesMleBIC,
+  apesMinBicMean = minIcMatrix(ic = apesMleBIC,
                                mat = apesMleMu)
   ############
   responseTibble = tibble::tibble(obsNum = obsNum,
                                   y = y,
                                   mu = mu,
                                   linearY = linearY,
-                                  apesMinAicProb = apesMinAicProb,
-                                  apesMinBicProb = apesMinBicProb) %>%
+                                  apesMinAicMean = apesMinAicMean,
+                                  apesMinBicMean = apesMinBicMean) %>%
     as.tbl
 
   apesMleBetaBinary = reshape2::melt(apesMleBeta != 0,

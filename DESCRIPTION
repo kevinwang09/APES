@@ -10,12 +10,13 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
-  bestsubset,
   dplyr,
   leaps,
   magrittr,
   purrr,
   reshape2,
   tibble
+Suggests:
+  bestsubset
 RoxygenNote: 6.0.1
 

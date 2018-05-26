@@ -11,7 +11,7 @@ apes_leaps_poisson(x, y, mu, maxK)
 
 \item{y}{response vector for logistics regression of length n}
 
-\item{mu}{esimated probability of each observation using a baseline model. Of length n.}
+\item{mu}{esimated mean of each observation using a baseline model. Of length n.}
 
 \item{maxK}{maximum model size, less than p.}
 }
