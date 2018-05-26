@@ -1,7 +1,7 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
-Version: 0.0.5
+Version: 0.0.6
 Author: Kevin Wang
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
 Description: More about what it does (maybe more than one line)
