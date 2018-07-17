@@ -2,7 +2,7 @@
 
 export(apes_leaps_logit)
 export(apes_leaps_poisson)
-export(apes_mio)
+export(apes_mio_logit)
 export(expit)
 export(icOptimal)
 export(logit)
