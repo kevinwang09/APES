@@ -1,7 +1,6 @@
 #' Not to be used by end-users
 #' @param ic numeric vector, information criterion
 #' @param symbol Labelling minimum model with a symbol
-#' @export
 
 icOptimal = function(ic, symbol){
   if(length(which.min(ic)) == 0){

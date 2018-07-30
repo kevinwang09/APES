@@ -1,8 +1,8 @@
-#' Perform APES using the bestsubset package
-#' @param x n times p design matrix for logistics regression
-#' @param y response vector for logistics regression of length n
-#' @param Pi esimated probability of each observation using a baseline model. Of length n.
-#' @param krange range of k to explore
+#' Perform APES-logistics regression using the bestsubset package
+#' @param x The n by p design matrix for logistics regression
+#' @param y The response vector for logistics regression of length n
+#' @param Pi Esimated probability of each observation using a baseline model. It should be a vector of length n.
+#' @param krange The range of model size to explore.
 #' @import tibble
 #' @import broom
 #' @import magrittr
@@ -18,7 +18,7 @@
 #' colnames(x) = paste0("X", 1:p)
 #' y = round(runif(n, 0,1))
 #' Pi = runif(n, 0, 1)
-#' apesResult = apes_mio(x = x, y = y, Pi = Pi, krange = krange)
+#' apesResult = apes_mio_logit(x = x, y = y, Pi = Pi, krange = krange)
 #' names(apesResult)
 
 
@@ -135,19 +135,4 @@ apes_mio_logit = function(x,
     responseTibble = responseTibble
   )
   return(result)
-}
-
-
-## Default apes solver
-apesSolver_mio = function(x, y, k = 1:min(nrow(x), ncol(x)), time.limit){
-  apes.obj = bestsubset::bs(x = x,
-                            y = y,
-                            intercept = T,
-                            k = k,
-                            verbose = TRUE,
-                            tol = 1e-6,
-                            form = 1,
-                            nruns = 50,
-                            time.limit = time.limit)
-  return(apes.obj)
 }

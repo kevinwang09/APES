@@ -2,7 +2,7 @@
 % Please edit documentation in R/mleModelToBeta.R
 \name{mleModelToBeta}
 \alias{mleModelToBeta}
-\title{We take the MLE model fitted above and rearrange the columns and remove the NA's in our vector}
+\title{Convert MLE models to beta coefficients}
 \usage{
 mleModelToBeta(mleModels, variables)
 }
@@ -12,5 +12,5 @@ mleModelToBeta(mleModels, variables)
 \item{variables}{variable names}
 }
 \description{
-We take the MLE model fitted above and rearrange the columns and remove the NA's in our vector
+Convert MLE models to beta coefficients
 }

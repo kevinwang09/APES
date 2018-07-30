@@ -2,21 +2,21 @@
 % Please edit documentation in R/apes_mio_logit.R
 \name{apes_mio_logit}
 \alias{apes_mio_logit}
-\title{Perform APES using the bestsubset package}
+\title{Perform APES-logistics regression using the bestsubset package}
 \usage{
 apes_mio_logit(x, y, Pi, krange, time.limit = 100)
 }
 \arguments{
-\item{x}{n times p design matrix for logistics regression}
+\item{x}{The n by p design matrix for logistics regression}
 
-\item{y}{response vector for logistics regression of length n}
+\item{y}{The response vector for logistics regression of length n}
 
-\item{Pi}{esimated probability of each observation using a baseline model. Of length n.}
+\item{Pi}{Esimated probability of each observation using a baseline model. It should be a vector of length n.}
 
-\item{krange}{range of k to explore}
+\item{krange}{The range of model size to explore.}
 }
 \description{
-Perform APES using the bestsubset package
+Perform APES-logistics regression using the bestsubset package
 }
 \examples{
 set.seed(10)
@@ -27,6 +27,6 @@ x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
 y = round(runif(n, 0,1))
 Pi = runif(n, 0, 1)
-apesResult = apes_mio(x = x, y = y, Pi = Pi, krange = krange)
+apesResult = apes_mio_logit(x = x, y = y, Pi = Pi, krange = krange)
 names(apesResult)
 }

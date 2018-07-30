@@ -2,21 +2,21 @@
 % Please edit documentation in R/apes_leaps_logit.R
 \name{apes_leaps_logit}
 \alias{apes_leaps_logit}
-\title{Perform APES using the leaps package}
+\title{Perform APES-logistics regression using the leaps package}
 \usage{
 apes_leaps_logit(x, y, Pi, maxK)
 }
 \arguments{
-\item{x}{n times p design matrix for logistics regression}
+\item{x}{The n by p design matrix for logistics regression}
 
-\item{y}{response vector for logistics regression of length n}
+\item{y}{The response vector for logistics regression of length n}
 
-\item{Pi}{esimated probability of each observation using a baseline model. Of length n.}
+\item{Pi}{Esimated probability of each observation using a baseline model. It should be a vector of length n.}
 
-\item{maxK}{maximum model size, less than p.}
+\item{maxK}{The maximum model size to explore, this value must be less than p.}
 }
 \description{
-Perform APES using the leaps package
+Perform APES-logistics regression using the leaps package
 }
 \examples{
 

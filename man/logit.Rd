@@ -2,7 +2,7 @@
 % Please edit documentation in R/logit.R
 \name{logit}
 \alias{logit}
-\title{The expit function}
+\title{The logit function}
 \usage{
 logit(x)
 }
@@ -10,5 +10,5 @@ logit(x)
 \item{x}{numeric}
 }
 \description{
-The expit function
+The logit function
 }

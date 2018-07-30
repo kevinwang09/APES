@@ -1,4 +1,4 @@
-#' The expit function
+#' The logit function
 #' @param x numeric
 #' @export
 

@@ -1,12 +1,12 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
-Version: 0.0.7
+Version: 0.1.0
 Author: Kevin Wang
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
-Description: More about what it does (maybe more than one line)
+Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: 	GPL-2
 Encoding: UTF-8
 LazyData: true
 Imports:

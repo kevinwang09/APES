@@ -1,7 +1,7 @@
-#' Perform APES-logistics regression using the leaps package
-#' @param x The n by p design matrix for logistics regression
-#' @param y The response vector for logistics regression of length n
-#' @param Pi Esimated probability of each observation using a baseline model. It should be a vector of length n.
+#' Perform APES-Poisson regression using the leaps package
+#' @param x The n by p design matrix for Poisson regression
+#' @param y The response vector for Poisson regression of length n
+#' @param mu Esimated means of each observation using a baseline model. It should be a vector of length n.
 #' @param maxK The maximum model size to explore, this value must be less than p.
 #' @import leaps
 #' @import tibble
@@ -18,23 +18,23 @@
 #
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
-#' y = round(runif(n, 0,1))
-#' Pi = runif(n, 0, 1)
-#' apesResult = apes_leaps_logit(x = x, y = y, Pi = Pi, maxK = maxK)
+#' y = rpois(n, 5)
+#' mu = glm(y ~ x,family = "poisson")$fitted.value
+#' apesResult = apes_leaps_poisson(x = x, y = y, mu = mu, maxK = maxK)
 #' names(apesResult)
 
-apes_leaps_logit = function(x,
+apes_leaps_poisson = function(x,
                       y,
-                      Pi,
+                      mu,
                       maxK){
 
   variables = c("Int", colnames(x))
   x = x
-  yBinom = y
+  yPois = y
   ###### Begin setting up linear regression #######
   n = nrow(x)
   p = ncol(x)
-  linearY = log(Pi/(1-Pi)) + (yBinom-Pi)/(Pi*(1-Pi))
+  linearY = log(mu) + (1/mu)*(yPois - mu)
   ###### End setting up linear regression #######
 
   ############# Begin apes solver ##############
@@ -65,19 +65,19 @@ apes_leaps_logit = function(x,
 
 
   apesMleModels = apply(apesIndicator, 2, function(indicator){
-    refittingMle_logit(indicator = indicator, X = x, yBinom = yBinom)
+    refittingMle_poisson(indicator = indicator, X = x, yPois = yPois)
   }) ## Each model will be different
 
 
   apesMleBeta = mleModelToBeta(mleModels = apesMleModels, variables = variables)
   colnames(apesMleBeta) = apesModelName
 
-  apesMlePi = apply(apesMleBeta, 2, function(beta){beta2Pi(X = x, beta = beta)})
-  apesMleLoglike = apply(apesMlePi, 2, function(mlePi){loglikePi(yBinom = yBinom, pis = mlePi)})
+  apesMleMu = apply(apesMleBeta, 2, function(beta){beta2Mu(X = x, beta = beta)})
+  apesMleLoglike = apply(apesMleMu, 2, function(mleMu){loglikeMu(yPois = yPois, mus = mleMu)})
   apesMleBIC = -2*apesMleLoglike + log(n)*apesModelSize
   apesMleAIC = -2*apesMleLoglike + 2*apesModelSize
 
-  ############# End Exact Logistic solver ##############
+  ############# End Exact Poisson solver ##############
 
   ############# Constructing model information ##################
   apesModelDf = tibble::tibble(
@@ -95,24 +95,24 @@ apes_leaps_logit = function(x,
     # l2MleDist = betaL2(apesMleBeta, beta) ## L2 error of the apesMleBeta vector with the true beta.
   )
 
-  ############# Constructing Estimated Probability information ##################
+
 
   obsNum = paste0("obs", 1:n)
-  colnames(apesMlePi) = apesModelName
-  rownames(apesMlePi) = obsNum
+  colnames(apesMleMu) = apesModelName
+  rownames(apesMleMu) = obsNum
 
   ############
-  apesMinAicProb = minIcMatrix(ic = apesMleAIC,
-                               mat = apesMlePi)
-  apesMinBicProb = minIcMatrix(ic = apesMleBIC,
-                               mat = apesMlePi)
+  apesMinAicMean = minIcMatrix(ic = apesMleAIC,
+                               mat = apesMleMu)
+  apesMinBicMean = minIcMatrix(ic = apesMleBIC,
+                               mat = apesMleMu)
   ############
   responseTibble = tibble::tibble(obsNum = obsNum,
-                              y = y,
-                              Pi = Pi,
-                              linearY = linearY,
-                              apesMinAicProb = apesMinAicProb,
-                              apesMinBicProb = apesMinBicProb) %>%
+                                  y = y,
+                                  mu = mu,
+                                  linearY = linearY,
+                                  apesMinAicMean = apesMinAicMean,
+                                  apesMinBicMean = apesMinBicMean) %>%
     as.tbl
 
   apesMleBetaBinary = reshape2::melt(apesMleBeta != 0,
@@ -138,27 +138,39 @@ apes_leaps_logit = function(x,
   )
   return(result)
 }
+####################################################################################
+#######################
+## If a vector of IC has a minimum, then returns a vector with that minimum labelled as symbol.
+icOptimal = function(ic, symbol){
+  if(length(which.min(ic)) == 0){
+    res = NA
+  } else {
+    res = rep("", length(ic))
+    res[which.min(ic)] = symbol
+  }
+  return(res)
+}
 ####################################
-## Calculate the log-likelihood of logisitic regression using yBinom and estimated pis
-loglikePi = function(yBinom, pis){
-  loglike = yBinom*log(pis) + (1-yBinom)*log(1-pis)
+## Calculate the log-likelihood of logisitic regression using yPois and estimated pis
+loglikeMu = function(yPois, mus){
+  # loglike = yPois*log(pis) + (1-yPois)*log(1-pis)
+  loglike = -mus + yPois * log(mus) - log(factorial(yPois))
   return(sum(loglike))
 }
 #####################################
 ## Calculate estimated pis using beta
-beta2Pi = function(X, beta){
+beta2Mu = function(X, beta){
   xint = cbind(Int = 1,X)
-  expit(xint[, names(beta)] %*% as.matrix(beta))
+  exp(xint[, names(beta)] %*% as.matrix(beta))
 }
 #####################################
-## Given an indicators of variables, design matrix and the yBinom, we refit the MLE-logisitic. X should not have an Intercept term
-refittingMle_logit = function(indicator, X, yBinom){
+## Given an indicators of variables, design matrix and the yPois, we refit the MLE-logisitic. X should not have an Intercept term
+refittingMle_poisson = function(indicator, X, yPois){
   xTemp = cbind(Int = 1, X[,indicator])
   colnames(xTemp) = c("Int", colnames(X)[indicator])
 
   glm.fit(x = xTemp,
-          y = yBinom,
+          y = yPois,
           # etastart = fullModel$linear.predictors,
-          family = binomial(link = "logit"))
+          family = poisson(link = "log"))
 }
-#####################################

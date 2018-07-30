@@ -1,7 +1,6 @@
-#' We take the MLE model fitted above and rearrange the columns and remove the NA's in our vector
+#' Convert MLE models to beta coefficients
 #' @param mleModels mleModels
 #' @param variables variable names
-#' @export
 #'
 #'
 mleModelToBeta = function(mleModels, variables){
