@@ -6,7 +6,7 @@ Author: Kevin Wang
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
 Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models
     Use four spaces when indenting paragraphs within the Description.
-License: 	GPL-2
+License: 	Unpublished, do not distribute.
 Encoding: UTF-8
 LazyData: true
 Imports:
