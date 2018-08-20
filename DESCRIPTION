@@ -2,11 +2,13 @@ Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
 Version: 0.1.0
-Author: Kevin Wang
+Authors@R: c(
+    person("Kevin", "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
+    )
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
 Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models
     Use four spaces when indenting paragraphs within the Description.
-License: 	Unpublished, do not distribute.
+License: Unpublished, do not distribute.
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -18,5 +20,4 @@ Imports:
   tibble
 Suggests:
   bestsubset
-RoxygenNote: 6.0.1
-
+RoxygenNote: 6.1.0
