@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1</span>
       </span>
     </div>
 
@@ -136,17 +136,17 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'>set.seed</span>(<span class='fl'>10</span>)
+    <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>10</span>)
 <span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>
 <span class='no'>p</span> <span class='kw'>=</span> <span class='fl'>10</span>
-<span class='no'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>5</span>
+<span class='no'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>
+<span class='no'>beta</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, -<span class='fl'>1</span>, <span class='fu'>rep</span>(<span class='fl'>0</span>, <span class='no'>p</span>-<span class='fl'>2</span>))
 <span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>matrix</span>(<span class='fu'>rnorm</span>(<span class='no'>n</span>*<span class='no'>p</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='no'>p</span>)
 <span class='fu'>colnames</span>(<span class='no'>x</span>) <span class='kw'>=</span> <span class='fu'>paste0</span>(<span class='st'>"X"</span>, <span class='fl'>1</span>:<span class='no'>p</span>)
-<span class='no'>y</span> <span class='kw'>=</span> <span class='fu'>rpois</span>(<span class='no'>n</span>, <span class='fl'>5</span>)
-<span class='no'>mu</span> <span class='kw'>=</span> <span class='fu'>glm</span>(<span class='no'>y</span> ~ <span class='no'>x</span>,<span class='kw'>family</span> <span class='kw'>=</span> <span class='st'>"poisson"</span>)$<span class='no'>fitted.value</span>
+<span class='no'>y</span> <span class='kw'>=</span> <span class='fu'>rpois</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fu'>exp</span>(<span class='no'>x</span> <span class='kw'>%*%</span> <span class='no'>beta</span>))
+<span class='no'>mu</span> <span class='kw'>=</span> <span class='fu'>glm.fit</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='st'>"log"</span>))$<span class='no'>fitted.values</span>
 <span class='no'>apesLeapsResult</span> <span class='kw'>=</span> <span class='fu'>apes_poisson</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished"</div><div class='input'>
+                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'>
 <span class='no'>apesMioResult</span> <span class='kw'>=</span> <span class='fu'>apes_poisson</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
                                <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div><div class='output co'>#&gt; 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.
 #&gt; 1. Solving best subset selection with k=1.
@@ -164,8 +164,24 @@
 #&gt; 5. Solving best subset selection with k=5.
 #&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
 #&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; [1] "Finished"</div><div class='input'>
+#&gt; 6. Solving best subset selection with k=6.
+#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
+#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
+#&gt; 7. Solving best subset selection with k=7.
+#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
+#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
+#&gt; 8. Solving best subset selection with k=8.
+#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
+#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
+#&gt; 9. Solving best subset selection with k=9.
+#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
+#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
+#&gt; 10. Solving best subset selection with k=10.
+#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
+#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
+#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'>
 <span class='fu'>all.equal</span>(<span class='no'>apesLeapsResult</span>$<span class='no'>apesMleBeta</span>, <span class='no'>apesMioResult</span>$<span class='no'>apesMleBeta</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -181,7 +197,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by .</p>
+  <p>Developed by Kevin Wang, Garth Tarr, Jean Yang, Samuel Mueller.</p>
 </div>
 
 <div class="pkgdown">

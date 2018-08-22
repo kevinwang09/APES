@@ -1,0 +1,74 @@
+---
+title: "APES Vignette"
+author: "Kevin Wang"
+date: "22/08/2018"
+output: html_document
+---
+
+
+# Introduction 
+
+```{r}
+library(APES)
+library(glmnet)
+library(lars)
+```
+
+## Loading data
+```{r}
+data("diabetes", package = "lars")
+x = diabetes$x
+y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L)
+dim(x)
+length(y)
+```
+
+
+# Running APES on diabetes data
+
+
+## Using the leaps estimator 
+```{r}
+fullModel = glm(y ~ x, family = "binomial")
+apes_logit_leaps = apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = ncol(x), 
+  estimator = "leaps")
+```
+
+## Using the MIO estimator 
+```{r, message = FALSE}
+apes_logit_mio = apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = 1:ncol(x), 
+  estimator = "mio")
+
+apes_logit_mio$selectedModelBeta
+```
+
+
+# Running Lasso on diabetes data
+```{r}
+lasso_logit = glmnet::cv.glmnet(x = x,
+                                y = y)
+lasso_logit_coef = coef(lasso_logit, s = "lambda.min")
+rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)]
+```
+
+
+# Running time 
+
+```{r}
+apes_logit_leaps$apesTimeDiff
+apes_logit_mio$apesTimeDiff
+```
+
+# Session Info
+```{r}
+sessionInfo()
+```
+
