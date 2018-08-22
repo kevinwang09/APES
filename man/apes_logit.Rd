@@ -23,19 +23,19 @@ apes_logit(x, y, Pi, k, estimator = "leaps", time.limit = 60)
 Perform APES-logistic regression using either the leaps or bestsubset package
 }
 \examples{
-
 set.seed(10)
 n = 100
 p = 10
-k = 1:5
+k = 1:10
+beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
-y = round(runif(n, 0,1))
-Pi = glm(y ~ x, family = "binomial")$fitted.values
-apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k, 
+y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
+Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
+apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
                                estimator = "leaps")
 
-apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k, 
+apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
                                estimator = "mio", time.limit = 5)
 
 all.equal(apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta)

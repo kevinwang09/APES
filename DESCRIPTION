@@ -1,9 +1,12 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
-    person("Kevin", "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
+    person(given = "Kevin", family = "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
+    person(given = "Garth", family = "Tarr", email = "garth.tarr@sydney.edu.au", role = c("aut")),
+    person(given = "Jean", family = "Yang", email = "jean.yang@sydney.edu.au", role = c("aut")),
+    person(given = "Samuel", family = "Mueller", email = "samuel.mueller@sydney.edu.au", role = c("aut"))
     )
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
 Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models
@@ -19,5 +22,6 @@ Imports:
   reshape2,
   tibble
 Suggests:
-  bestsubset
+  bestsubset,
+  lars
 RoxygenNote: 6.1.0

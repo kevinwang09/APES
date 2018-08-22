@@ -23,21 +23,22 @@ apes_poisson(x, y, mu, k, estimator = "leaps", time.limit = 60)
 Perform APES-Poisson regression using either the leaps or bestsubset package
 }
 \examples{
-
 set.seed(10)
 n = 100
 p = 10
-k = 1:5
+k = 1:10
+beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
-y = rpois(n, 5)
-mu = glm(y ~ x,family = "poisson")$fitted.value
-apesLeapsResult = apes_poisson(x = x, y = y, mu = mu, k = k, 
+y = rpois(n = n, lambda = exp(x \%*\% beta))
+mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+apesLeapsResult = apes_poisson(x = x, y = y, mu = mu, k = k,
                                estimator = "leaps")
 
-apesMioResult = apes_poisson(x = x, y = y, mu = mu, k = k, 
+apesMioResult = apes_poisson(x = x, y = y, mu = mu, k = k,
                                estimator = "mio", time.limit = 5)
 
 all.equal(apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta)
+
 
 }

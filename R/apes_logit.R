@@ -2,51 +2,237 @@
 #' @param x The n by p design matrix for logistic regression
 #' @param y The response vector for logistic regression of length n
 #' @param Pi Esimated probabilities of each observation using a baseline model. It should be a vector of length n.
-#' @param k Model size to explore. If leaps was selected as the estimator, then model up to size max(k) will be explored. If mio was selected as the estimator, then model sizes specified in k will be explored. 
-#' @param estimator Either "leaps" or "mio", which correspond to optimisation algorithms available in the leaps and bestsubset package, respectively. 
+#' @param k Model size to explore. If leaps was selected as the estimator, then model up to size max(k) will be explored. If mio was selected as the estimator, then model sizes specified in k will be explored.
+#' @param estimator Either "leaps" or "mio", which correspond to optimisation algorithms available in the leaps and bestsubset package, respectively.
 #' @param time.limit The time limit for the maximum time allocated to each model size model when the "mio" estimator was selected. It will not affect the speed if leaps
 #' @import leaps
 #' @import tibble
-#' @import broom
 #' @import magrittr
 #' @import dplyr
 #' @export
 #' @examples
-#'
 #' set.seed(10)
 #' n = 100
 #' p = 10
-#' k = 1:5
-#
+#' k = 1:10
+#' beta = c(1, -1, rep(0, p-2))
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
-#' y = round(runif(n, 0,1))
-#' Pi = glm(y ~ x, family = "binomial")$fitted.values
-#' apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k, 
+#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+#' Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
+#' apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
 #'                                estimator = "leaps")
-#' 
-#' apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k, 
+#'
+#' apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
 #'                                estimator = "mio", time.limit = 5)
 #'
 #' all.equal(apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta)
-#' 
-#' 
+#'
+#'
 apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
-  
+
+  ###### Begin setting up linear regression #######
+  variables = c("Int", colnames(x))
+  yBinom = y
+
+  n = nrow(x)
+  p = ncol(x)
+  linearY = log(Pi/(1-Pi)) + (yBinom-Pi)/(Pi*(1-Pi))
+  ###### End setting up linear regression #######
+
+
+
   if(estimator == "leaps"){
-    result = apes_leaps_logit(x = x, y = y, Pi = Pi,
-                                maxK = max(k)
-    )
-  }
-  
-  
+    apesT1 = Sys.time()
+    apesRes = leaps::regsubsets(x = x, y = linearY,
+                                really.big = T,
+                                nbest = 1,
+                                nvmax = max(k),
+                                method = "exhaustive")
+    apesT2 = Sys.time()
+    print("Finished solving linear regression approximation")
+    ## The computational time
+    apesTimeDiff = difftime(apesT2, apesT1, units = "mins")
+    ############# Begin tidying ##############
+    ## Summary of the leaps object
+    summaryApesRes = summary(apesRes)
+    summaryApesResWhich = summaryApesRes$which
+    ## Remove the intercept term
+    apesIndicator = t(summaryApesResWhich[, -which(colnames(summaryApesResWhich) == "(Intercept)")])
+    rownames(apesIndicator) = variables[-1]
+    ## We always include intercept term!!
+    apesModelSize = colSums(apesIndicator) + 1L
+    ############# End tidying ##############
+    status = "leaps_optimal"
+  } ## End estimator == "leaps"
+
+
   if(estimator == "mio"){
-    result = apes_mio_logit(x = x, y = y, Pi = Pi, 
-                              krange = k,
-                              time.limit = time.limit
-    )
+    apesT1 = Sys.time()
+    apesRes = apesSolver_mio(x = x,
+                             y = linearY,
+                             k = k,
+                             time.limit = time.limit)
+    apesT2 = Sys.time()
+    print("Finished solving linear regression approximation")
+    ## The computational time
+    apesTimeDiff = difftime(apesT2, apesT1, units = "mins")
+    ############# Begin tidying ##############
+    apesHosmerBeta = apesRes$beta
+    apesIndicator = (apesHosmerBeta != 0)
+    ## We always include intercept term!!
+    apesModelSize = colSums(apesIndicator) + 1L
+    ############# End tidying ##############
+    status = apesRes$status
   }
-  
-  
+
+
+  ############ Generating evaluation outputs ############
+  apesModelName = paste0("apesModel_", apesModelSize)
+
+  ## We compute a model for each model size, based on apesIndicator
+  apesMleModels = apply(apesIndicator, 2, function(indicator){
+    refittingMle_logit(indicator = indicator, X = x, yBinom = yBinom)
+  })
+
+  ## Compute and collect the beta coefficients
+  apesMleBeta = mleModelToBeta(mleModels = apesMleModels, variables = variables)
+  colnames(apesMleBeta) = apesModelName
+
+  ## Compute model fit statistics
+  apesMlePi = apply(apesMleBeta, 2, function(beta){beta2Pi(X = x, beta = beta)})
+  apesMleLoglike = apply(apesMlePi, 2, function(mlePi){loglikePi(yBinom = yBinom, pis = mlePi)})
+  apesMleBIC = -2*apesMleLoglike + log(n)*apesModelSize
+  apesMleAIC = -2*apesMleLoglike + 2*apesModelSize
+
+  ############# Constructing model data frame ##################
+  apesModelDf = tibble::tibble(
+    method = "apes",
+    modelName = apesModelName,
+    modelSize = apesModelSize,
+    apesMleLoglike = apesMleLoglike,
+    mleAIC = apesMleAIC,
+    mleBIC = apesMleBIC,
+    status = status,
+    icOptimalModels = paste0(
+      icOptimal(ic = apesMleAIC, "apesMinAic"),
+      icOptimal(ic = apesMleBIC, "apesMinBic")
+    ) ## This variable records where the min AIC and min BIC models are.
+  )
+  ############# Constructing estimated Probability information ##################
+
+  obsNum = paste0("obs", 1:n)
+  colnames(apesMlePi) = apesModelName
+  rownames(apesMlePi) = obsNum
+
+  ############
+  apesMinAicProb = minIcMatrix(ic = apesMleAIC,
+                               mat = apesMlePi)
+  apesMinBicProb = minIcMatrix(ic = apesMleBIC,
+                               mat = apesMlePi)
+  ############
+  responseTibble = tibble::tibble(obsNum = obsNum,
+                                  y = yBinom,
+                                  Pi = Pi,
+                                  linearY = linearY,
+                                  apesMinAicProb = apesMinAicProb,
+                                  apesMinBicProb = apesMinBicProb) %>%
+    as.tbl
+
+  apesMleBetaBinary = reshape2::melt(apesMleBeta != 0,
+                                     varnames = c("variables", "modelName"),
+                                     value.name = "fittedBeta") %>% as.tbl
+
+  selectedModelBeta = cbind(
+    apesMinAic = minIcMatrix(ic = apesMleAIC, mat = apesMleBeta),
+    apesMinBic = minIcMatrix(ic = apesMleBIC, mat = apesMleBeta)
+  )
+
+  result = list(
+    apesModelDf = apesModelDf,
+    apesMleBeta = apesMleBeta,
+    apesMleBetaBinary = apesMleBetaBinary,
+    apesTimeDiff = apesTimeDiff,
+
+    selectedModelBeta = selectedModelBeta,
+    responseTibble = responseTibble
+  )
   return(result)
+}
+####################################
+####################################
+####################################
+####################################
+####################################
+#####################################
+icOptimal = function(ic, symbol){
+  if(length(which.min(ic)) == 0){
+    res = NA
+  } else {
+    res = rep("", length(ic))
+    res[which.min(ic)] = symbol
+  }
+  return(res)
+}
+######################################
+## Calculate the log-likelihood of logisitic regression using yBinom and estimated pis
+loglikePi = function(yBinom, pis){
+  loglike = yBinom*log(pis) + (1-yBinom)*log(1-pis)
+  return(sum(loglike))
+}
+#####################################
+## Calculate estimated pis using beta
+beta2Pi = function(X, beta){
+  xint = cbind(Int = 1,X)
+  expit(xint[, names(beta)] %*% as.matrix(beta))
+}
+#####################################
+## Given an indicators of variables, design matrix and the yBinom, we refit the MLE-logisitic. X should not have an Intercept term
+refittingMle_logit = function(indicator, X, yBinom){
+  xTemp = cbind(Int = 1, X[,indicator])
+  colnames(xTemp) = c("Int", colnames(X)[indicator])
+
+  glm.fit(x = xTemp,
+          y = yBinom,
+          # etastart = fullModel$linear.predictors,
+          family = binomial(link = "logit"))
+}
+#####################################
+icOptimal = function(ic, symbol){
+  if(length(which.min(ic)) == 0){
+    res = NA
+  } else {
+    res = rep("", length(ic))
+    res[which.min(ic)] = symbol
+  }
+  return(res)
+}
+#####################################
+minIcMatrix = function(ic, mat){
+  if(length(which.min(ic)) == 0){
+    res = NA
+  } else {
+    res = mat[,which.min(ic)]
+  }
+  return(res)
+}
+#####################################
+mleModelToBeta = function(mleModels, variables){
+  mleBeta = purrr::map(mleModels, "coefficients") %>%
+    purrr::map(t) %>%
+    purrr::map(data.frame) %>%
+    dplyr::bind_rows() %>% t
+
+  mleBeta[is.na(mleBeta)] = 0L
+  variablesOrdered = base::intersect(rownames(mleBeta), variables) %>% gtools::mixedsort()
+  mleBeta = mleBeta[variablesOrdered,]
+
+  tmp = matrix(0L,
+               nrow = length(variables),
+               ncol = ncol(mleBeta),
+               dimnames = list(variables, colnames(mleBeta))) ## To avoid a variable is never selected, we create an empty matrix
+
+  tmp[rownames(mleBeta), ] = mleBeta
+
+  return(tmp)
 }
