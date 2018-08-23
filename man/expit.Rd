@@ -12,3 +12,6 @@ expit(x)
 \description{
 The expit function
 }
+\examples{
+curve(expit, from = -5, to = 5)
+}

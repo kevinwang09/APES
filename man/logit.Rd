@@ -12,3 +12,6 @@ logit(x)
 \description{
 The logit function
 }
+\examples{
+curve(logit, from = 0.1, to = 0.9)
+}
