@@ -69,9 +69,14 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
 
   if(estimator == "mio"){
     apesT1 = Sys.time()
-    apesRes = apesSolver_mio(x = x,
+    apesRes = bestsubset::bs(x = x,
                              y = linearY,
+                             intercept = T,
                              k = k,
+                             verbose = TRUE,
+                             tol = 1e-6,
+                             form = 1,
+                             nruns = 50,
                              time.limit = time.limit)
     apesT2 = Sys.time()
     print("Finished solving linear regression approximation")
