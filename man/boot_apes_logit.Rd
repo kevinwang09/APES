@@ -5,7 +5,7 @@
 \title{Bootstrap version of apes_logit}
 \usage{
 boot_apes_logit(x, y, Pi, k, estimator = "leaps", time.limit = 60,
-  nBoot = 100)
+  nBoot = 100, nCores = 1)
 }
 \description{
 Bootstrap version of apes_logit

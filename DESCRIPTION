@@ -1,7 +1,7 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
     person(given = "Kevin", family = "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
     person(given = "Garth", family = "Tarr", email = "garth.tarr@sydney.edu.au", role = c("aut")),
@@ -18,7 +18,8 @@ Imports:
   directlabels,
   leaps,
   reshape2,
-  tidyverse
+  tidyverse,
+  parallel
 Suggests:
   bestsubset,
   mplot

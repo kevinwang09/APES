@@ -2,7 +2,7 @@
 #' @title Bootstrap version of apes_logit
 #' @author Kevin Wang
 #' @import parallel
-#' @export 
+#' @export
 #' @examples
 #' set.seed(10)
 #' n = 100
@@ -17,24 +17,37 @@
 #' length(listResult)
 
 
-boot_apes_poisson = function(x, y, mu, k, 
-                           estimator = "leaps", 
+boot_apes_poisson = function(x, y, mu, k,
+                           estimator = "leaps",
                            time.limit = 60,
-                           nBoot = 100){
-  
-  result = lapply(1:nBoot, function(thisLoop){
-    bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
-    res = APES::apes_poisson(
-      x = x[bootSample,],
-      y = y[bootSample],
-      mu = mu,
-      k = k,
-      time.limit = time.limit,
-      estimator = estimator)
-    return(res)
-  })
-  
+                           nBoot = 100, nCores = 1){
+  if(nCores > 1){
+    result = parallel::mclapply(1:nBoot, function(thisLoop){
+      bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
+      res = APES::apes_poisson(
+        x = x[bootSample,],
+        y = y[bootSample],
+        mu = mu,
+        k = k,
+        time.limit = time.limit,
+        estimator = estimator)
+      return(res)
+    }, mc.cores = nCores)
+  } else{
+    result = lapply(1:nBoot, function(thisLoop){
+      bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
+      res = APES::apes_poisson(
+        x = x[bootSample,],
+        y = y[bootSample],
+        mu = mu,
+        k = k,
+        time.limit = time.limit,
+        estimator = estimator)
+      return(res)
+    })
+  }
+
   names(result) = paste0("bootNum", 1:nBoot)
-  
+
   return(result)
 }
