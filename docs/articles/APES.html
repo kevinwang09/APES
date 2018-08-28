@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
       </span>
     </div>
 
@@ -47,8 +47,20 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
 <li>
-  <a href="../articles/APES.html">Tutorial</a>
+      <a href="../articles/birthweight_example.html">birth weight example</a>
+    </li>
+    <li>
+      <a href="../articles/diabetes_example.html">Diabetes example</a>
+    </li>
+  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -85,113 +97,9 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(APES)
-<span class="kw">library</span>(glmnet)</code></pre></div>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## Loading required package: foreach</code></pre>
-<pre><code>## Loaded glmnet 2.0-16</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lars)</code></pre></div>
-<pre><code>## Loaded lars 1.2</code></pre>
-<div id="loading-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#loading-data" class="anchor"></a>Loading data</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"diabetes"</span>, <span class="dt">package =</span> <span class="st">"lars"</span>)
-x =<span class="st"> </span>diabetes<span class="op">$</span>x
-y =<span class="st"> </span><span class="kw">ifelse</span>(diabetes<span class="op">$</span>y <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(diabetes<span class="op">$</span>y), 1L, 0L)
-<span class="kw">dim</span>(x)</code></pre></div>
-<pre><code>## [1] 442  10</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(y)</code></pre></div>
-<pre><code>## [1] 442</code></pre>
-</div>
-</div>
-<div id="running-apes-on-diabetes-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#running-apes-on-diabetes-data" class="anchor"></a>Running APES on diabetes data</h1>
-<div id="using-the-leaps-estimator" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-the-leaps-estimator" class="anchor"></a>Using the leaps estimator</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fullModel =<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">family =</span> <span class="st">"binomial"</span>)
-apes_logit_leaps =<span class="st"> </span><span class="kw"><a href="../reference/apes_logit.html">apes_logit</a></span>(
-  <span class="dt">x =</span> x,
-  <span class="dt">y =</span> y,
-  <span class="dt">Pi =</span> fullModel<span class="op">$</span>fitted.values,
-  <span class="dt">k =</span> <span class="kw">ncol</span>(x), 
-  <span class="dt">estimator =</span> <span class="st">"leaps"</span>)</code></pre></div>
-<pre><code>## [1] "Finished solving linear regression approximation"</code></pre>
-</div>
-<div id="using-the-mio-estimator" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-the-mio-estimator" class="anchor"></a>Using the MIO estimator</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">apes_logit_mio =<span class="st"> </span><span class="kw"><a href="../reference/apes_logit.html">apes_logit</a></span>(
-  <span class="dt">x =</span> x,
-  <span class="dt">y =</span> y,
-  <span class="dt">Pi =</span> fullModel<span class="op">$</span>fitted.values,
-  <span class="dt">k =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(x), 
-  <span class="dt">estimator =</span> <span class="st">"mio"</span>)</code></pre></div>
-<pre><code>## 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.
-## 1. Solving best subset selection with k=1.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 2. Solving best subset selection with k=2.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 3. Solving best subset selection with k=3.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 4. Solving best subset selection with k=4.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 5. Solving best subset selection with k=5.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 6. Solving best subset selection with k=6.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 7. Solving best subset selection with k=7.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 8. Solving best subset selection with k=8.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 9. Solving best subset selection with k=9.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## 10. Solving best subset selection with k=10.
-##   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-##   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-## [1] "Finished solving linear regression approximation"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">apes_logit_mio<span class="op">$</span>selectedModelBeta</code></pre></div>
-<pre><code>##        apesMinAic   apesMinBic
-## Int  4.734679e-04   0.02160353
-## age  0.000000e+00   0.00000000
-## sex -1.151745e+01 -11.70917874
-## bmi  1.384089e+01  12.92102916
-## map  1.175915e+01  11.68049083
-## tc  -3.482705e+01   0.00000000
-## ldl  2.503822e+01   0.00000000
-## hdl  0.000000e+00 -13.09943384
-## tch  0.000000e+00   0.00000000
-## ltg  3.069939e+01  15.67079135
-## glu  0.000000e+00   0.00000000</code></pre>
-</div>
-</div>
-<div id="running-lasso-on-diabetes-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#running-lasso-on-diabetes-data" class="anchor"></a>Running Lasso on diabetes data</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lasso_logit =<span class="st"> </span>glmnet<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/glmnet/topics/cv.glmnet">cv.glmnet</a></span>(<span class="dt">x =</span> x,
-                                <span class="dt">y =</span> y)
-lasso_logit_coef =<span class="st"> </span><span class="kw">coef</span>(lasso_logit, <span class="dt">s =</span> <span class="st">"lambda.min"</span>)
-<span class="kw">rownames</span>(lasso_logit_coef)[<span class="kw">as.matrix</span>(lasso_logit_coef <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)]</code></pre></div>
-<pre><code>## [1] "(Intercept)" "sex"         "bmi"         "map"         "tc"         
-## [6] "hdl"         "ltg"</code></pre>
-</div>
-<div id="running-time" class="section level1">
-<h1 class="hasAnchor">
-<a href="#running-time" class="anchor"></a>Running time</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">apes_logit_leaps<span class="op">$</span>apesTimeDiff</code></pre></div>
-<pre><code>## Time difference of 1.980066e-05 mins</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">apes_logit_mio<span class="op">$</span>apesTimeDiff</code></pre></div>
-<pre><code>## Time difference of 0.01011132 mins</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(APES)</code></pre></div>
+<pre><code>## Warning: replacing previous import 'magrittr::set_names' by
+## 'purrr::set_names' when loading 'APES'</code></pre>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
@@ -206,28 +114,39 @@ lasso_logit_coef =<span class="st"> </span><span class="kw">coef</span>(lasso_lo
 ## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] C
+## [1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] gurobi_8.0-1  slam_0.1-43   lars_1.2      glmnet_2.0-16 foreach_1.4.4
-## [6] Matrix_1.2-14 APES_0.2.0   
+## [1] APES_0.2.3
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.18     plyr_1.8.4       compiler_3.5.1   pillar_1.3.0    
-##  [5] bindr_0.1.1      iterators_1.0.10 tools_3.5.1      digest_0.6.15   
-##  [9] evaluate_0.11    memoise_1.1.0    tibble_1.4.2     lattice_0.20-35 
-## [13] pkgconfig_2.0.1  rlang_0.2.1      rstudioapi_0.7   commonmark_1.5  
-## [17] yaml_2.2.0       pkgdown_1.1.0    bindrcpp_0.2.2   stringr_1.3.1   
-## [21] dplyr_0.7.6      roxygen2_6.1.0   xml2_1.2.0       knitr_1.20      
-## [25] gtools_3.8.1     desc_1.2.0       fs_1.2.5         bestsubset_1.0.6
-## [29] rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.4 glue_1.3.0      
-## [33] R6_2.2.2         rmarkdown_1.10   reshape2_1.4.3   purrr_0.2.5     
-## [37] magrittr_1.5     backports_1.1.2  codetools_0.2-15 htmltools_0.3.6 
-## [41] MASS_7.3-50      leaps_3.0        assertthat_0.2.0 stringi_1.2.4   
-## [45] crayon_1.3.4</code></pre>
+##  [1] Rcpp_0.12.18            plyr_1.8.4             
+##  [3] compiler_3.5.1          pillar_1.3.0           
+##  [5] bindr_0.1.1             directlabels_2018.05.22
+##  [7] tools_3.5.1             digest_0.6.16          
+##  [9] evaluate_0.11           memoise_1.1.0          
+## [11] tibble_1.4.2            gtable_0.2.0           
+## [13] pkgconfig_2.0.2         rlang_0.2.2            
+## [15] rstudioapi_0.7          commonmark_1.5         
+## [17] parallel_3.5.1          yaml_2.2.0             
+## [19] pkgdown_1.1.0           bindrcpp_0.2.2         
+## [21] stringr_1.3.1           dplyr_0.7.6            
+## [23] roxygen2_6.1.0          xml2_1.2.0             
+## [25] knitr_1.20              desc_1.2.0             
+## [27] fs_1.2.6                rprojroot_1.3-2        
+## [29] grid_3.5.1              tidyselect_0.2.4       
+## [31] glue_1.3.0              R6_2.2.2               
+## [33] rmarkdown_1.10          purrr_0.2.5            
+## [35] ggplot2_3.0.0           magrittr_1.5           
+## [37] leaps_3.0               backports_1.1.2        
+## [39] scales_1.0.0            htmltools_0.3.6        
+## [41] MASS_7.3-50             assertthat_0.2.0       
+## [43] colorspace_1.3-2        quadprog_1.5-5         
+## [45] stringi_1.2.4           lazyeval_0.2.1         
+## [47] munsell_0.5.0           crayon_1.3.4</code></pre>
 </div>
   </div>
 
@@ -236,19 +155,7 @@ lasso_logit_coef =<span class="st"> </span><span class="kw">coef</span>(lasso_lo
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#introduction">Introduction</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#loading-data">Loading data</a></li>
-      </ul>
-</li>
-      <li>
-<a href="#running-apes-on-diabetes-data">Running APES on diabetes data</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#using-the-leaps-estimator">Using the leaps estimator</a></li>
-      <li><a href="#using-the-mio-estimator">Using the MIO estimator</a></li>
-      </ul>
-</li>
-      <li><a href="#running-lasso-on-diabetes-data">Running Lasso on diabetes data</a></li>
-      <li><a href="#running-time">Running time</a></li>
+<li><a href="#introduction">Introduction</a></li>
       <li><a href="#session-info">Session Info</a></li>
       </ul>
 </div>

@@ -1,7 +1,7 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
-Version: 0.2.2
+Version: 0.3.0
 Authors@R: c(
     person(given = "Kevin", family = "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
     person(given = "Garth", family = "Tarr", email = "garth.tarr@sydney.edu.au", role = c("aut")),
@@ -15,15 +15,13 @@ License: Unpublished, do not distribute.
 Encoding: UTF-8
 LazyData: true
 Imports:
-  dplyr,
+  directlabels,
   leaps,
-  magrittr,
-  purrr,
   reshape2,
-  tibble
+  tidyverse
 Suggests:
   bestsubset,
-  lars
+  mplot
 RoxygenNote: 6.1.0
 URL: https://github.com/kevinwang09/APES
 BugReports: https://github.com/kevinwang09/APES/issues

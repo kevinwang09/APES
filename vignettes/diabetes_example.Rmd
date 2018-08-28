@@ -1,0 +1,90 @@
+---
+title: "Diabetes example"
+author: "Kevin Wang"
+date: "22/08/2018"
+output: html_document
+---
+
+
+# Introduction 
+
+```{r}
+library(APES)
+library(glmnet)
+library(mplot)
+library(tidyverse)
+library(directlabels)
+```
+
+## Loading data
+
+We will illustrate the utility of the APES method on the diabetes data from the `mplot` package. We will dichromise the response variable y by spliting it at the median. 
+
+
+
+```{r}
+diabetes = mplot::diabetes
+x = diabetes %>% dplyr::select(age:glu) %>% as.matrix() %>% scale
+y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L)
+dim(x)
+length(y)
+```
+
+
+# Running APES on diabetes data
+
+
+## Using the leaps estimator 
+```{r}
+fullModel = glm.fit(x = x, y = y, family = binomial(link = "logit"))
+
+apes_logit_leaps = apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = 1:ncol(x), 
+  estimator = "leaps")
+
+apes_logit_leaps$selectedModelBeta
+```
+
+
+# Running Lasso on diabetes data
+```{r}
+lasso_logit = glmnet::cv.glmnet(x = x,
+                                y = y)
+lasso_logit_coef = coef(lasso_logit, s = "lambda.min")
+rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)]
+```
+
+
+# Running time 
+
+```{r}
+apes_logit_leaps$apesTimeDiff
+```
+
+
+# Bootstrapping using leaps version 
+```{r, results = 'hide'}
+listResult = APES::boot_apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = 1:ncol(x), 
+  estimator = "leaps",
+  nBoot = 100)
+```
+
+
+## Plotting
+```{r}
+APES::viPlot_apes(listResult)
+APES::viTilePlot_apes(listResult)
+```
+
+# Session Info
+```{r}
+sessionInfo()
+```
+

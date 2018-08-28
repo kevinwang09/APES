@@ -1,0 +1,113 @@
+---
+title: "birth weight example"
+author: "Kevin Wang"
+date: "26/08/2018"
+output: html_document
+---
+
+# Introduction 
+
+```{r}
+library(APES)
+library(MASS)
+library(tidyverse)
+library(mplot)
+library(directlabels)
+```
+
+## Loading data
+```{r}
+data("birthwt", package = "MASS")
+
+bwt <- with(birthwt, {
+  race <- factor(race, labels = c("white", "black", "other"))
+  ptd <- factor(ptl > 0)
+  ftv <- factor(ftv)
+  levels(ftv)[-(1:2)] <- "2+"
+  data.frame(low = factor(low), age, lwt, race, smoke = (smoke > 0), ptd, ht = (ht > 0), ui = (ui > 0), ftv)
+})
+# options(contrasts = c("contr.treatment", "contr.poly"))
+
+
+```
+
+
+# Running APES on diabetes data
+
+
+## Using the leaps estimator 
+```{r}
+fullModel <- glm(low ~ ., family = binomial, data = bwt)
+round(summary(fullModel)$coef, 2)
+```
+
+```{r}
+bwt = mutate_if(bwt, is.factor, as.character)
+x = model.matrix(~0 + . - low, data = bwt)[,-3]
+dim(x)
+y = as.integer(as.character(bwt$low))
+length(y)
+
+apes_logit_leaps = apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = ncol(x), 
+  estimator = "leaps")
+```
+
+## Using the MIO estimator 
+```{r, message = FALSE}
+apes_logit_mio = apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = 1:ncol(x), 
+  estimator = "mio")
+
+apes_logit_mio$selectedModelBeta
+```
+
+
+# Running Lasso on diabetes data
+```{r}
+lasso_logit = glmnet::cv.glmnet(x = x,
+                                y = y)
+lasso_logit_coef = coef(lasso_logit, s = "lambda.min")
+rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)]
+```
+
+
+# Running time 
+
+```{r}
+apes_logit_leaps$apesTimeDiff
+apes_logit_mio$apesTimeDiff
+```
+
+
+
+# Bootstrapping using leaps version 
+
+```{r, results = 'hide'}
+listResult = APES::boot_apes_logit(
+  x = x,
+  y = y,
+  Pi = fullModel$fitted.values,
+  k = 1:ncol(x), 
+  estimator = "leaps",
+  nBoot = 100)
+```
+
+
+## Plotting
+```{r}
+APES::viPlot_apes(listResult)
+APES::viTilePlot_apes(listResult)
+```
+
+# Session Info
+```{r}
+sessionInfo()
+```
+

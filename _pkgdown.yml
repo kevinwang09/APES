@@ -18,9 +18,6 @@ navbar:
     intro:
       text: Get started
       href: articles/APES.html
-    tutorials:
-      text: Tutorial
-      href: articles/APES.html
     github:
       icon: fa-github fa-lg
       href: https://github.com/kevinwang09/APES

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Perform APES-Poisson regression using either the leaps or bestsubset package — apes_poisson • APES</title>
+<title>Variable Inclusion Plot — viPlot_apes • APES</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Perform APES-Poisson regression using either the leaps or bestsubset package — apes_poisson" />
+<meta property="og:title" content="Variable Inclusion Plot — viPlot_apes" />
 
-<meta property="og:description" content="Perform APES-Poisson regression using either the leaps or bestsubset package" />
+<meta property="og:description" content="Variable inclusion plot" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,45 +115,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Perform APES-Poisson regression using either the leaps or bestsubset package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/apes_poisson.R'><code>R/apes_poisson.R</code></a></small>
-    <div class="hidden name"><code>apes_poisson.Rd</code></div>
+    <h1>Variable Inclusion Plot</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/viPlot_apes.R'><code>R/viPlot_apes.R</code></a></small>
+    <div class="hidden name"><code>viPlot_apes.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Perform APES-Poisson regression using either the leaps or bestsubset package</p>
+    <p>Variable inclusion plot</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>apes_poisson</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>mu</span>, <span class='no'>k</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>60</span>)</pre>
+    <pre class="usage"><span class='fu'>viPlot_apes</span>(<span class='no'>listResult</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>The n by p design matrix for Poisson regression</p></td>
-    </tr>
-    <tr>
-      <th>y</th>
-      <td><p>The response vector for Poisson regression of length n</p></td>
-    </tr>
-    <tr>
-      <th>mu</th>
-      <td><p>Esimated means of each observation using a baseline model. It should be a vector of length n.</p></td>
-    </tr>
-    <tr>
-      <th>k</th>
-      <td><p>Model size to explore. If leaps was selected as the estimator, then model up to size max(k) will be explored. If mio was selected as the estimator, then model sizes specified in k will be explored.</p></td>
-    </tr>
-    <tr>
-      <th>estimator</th>
-      <td><p>Either "leaps" or "mio", which correspond to optimisation algorithms available in the leaps and bestsubset package, respectively.</p></td>
-    </tr>
-    <tr>
-      <th>time.limit</th>
-      <td><p>The time limit for the maximum time allocated to each model size model when the "mio" estimator was selected. It will not affect the speed if leaps</p></td>
+      <th>listResult</th>
+      <td><p>a list of APES outputs</p></td>
     </tr>
     </table>
     
@@ -168,44 +148,58 @@
 <span class='fu'>colnames</span>(<span class='no'>x</span>) <span class='kw'>=</span> <span class='fu'>paste0</span>(<span class='st'>"X"</span>, <span class='fl'>1</span>:<span class='no'>p</span>)
 <span class='no'>y</span> <span class='kw'>=</span> <span class='fu'>rpois</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fu'>exp</span>(<span class='no'>x</span> <span class='kw'>%*%</span> <span class='no'>beta</span>))
 <span class='no'>mu</span> <span class='kw'>=</span> <span class='fu'>glm.fit</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'>poisson</span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='st'>"log"</span>))$<span class='no'>fitted.values</span>
-<span class='no'>apesLeapsResult</span> <span class='kw'>=</span> <span class='fu'>apes_poisson</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'>
-<span class='no'>apesMioResult</span> <span class='kw'>=</span> <span class='fu'>apes_poisson</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div><div class='output co'>#&gt; 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.
-#&gt; 1. Solving best subset selection with k=1.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 2. Solving best subset selection with k=2.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 3. Solving best subset selection with k=3.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 4. Solving best subset selection with k=4.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 5. Solving best subset selection with k=5.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 6. Solving best subset selection with k=6.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 7. Solving best subset selection with k=7.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 8. Solving best subset selection with k=8.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 9. Solving best subset selection with k=9.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 10. Solving best subset selection with k=10.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'>
-<span class='fu'>all.equal</span>(<span class='no'>apesLeapsResult</span>$<span class='no'>apesMleBeta</span>, <span class='no'>apesMioResult</span>$<span class='no'>apesMleBeta</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 
-</div></pre>
+<span class='no'>listResult</span> <span class='kw'>=</span> <span class='fu'><a href='boot_apes_poisson.html'>boot_apes_poisson</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>, <span class='kw'>nBoot</span> <span class='kw'>=</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"
+#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='no'>viPlotResult</span> <span class='kw'>=</span> <span class='fu'>viPlot_apes</span>(<span class='no'>listResult</span>)
+<span class='no'>viPlotResult</span>$<span class='no'>viPlot</span></div><div class='img'><img src='viPlot_apes-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -214,6 +208,10 @@
             
       <li><a href="#examples">Examples</a></li>
     </ul>
+
+    <h2>Author</h2>
+    
+Kevin Wang
 
   </div>
 </div>
