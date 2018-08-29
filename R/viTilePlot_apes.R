@@ -39,7 +39,7 @@ viTilePlot_apes = function(listResult){
       freqSelected_category = base::cut(
         freqSelected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE
       )
-    )
+    ) %>% as.tibble
 
   variableTilePlot = apesMleBetaBinaryPlotdf %>%
     ggplot2::ggplot(aes(x = modelSize,
@@ -65,6 +65,7 @@ viTilePlot_apes = function(listResult){
   # variableTilePlot_category
 
   result = list(
+    apesMleBetaBinaryPlotdf = apesMleBetaBinaryPlotdf,
     variableTilePlot = variableTilePlot,
     variableTilePlot_category = variableTilePlot_category
   )

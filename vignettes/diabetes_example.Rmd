@@ -36,7 +36,8 @@ length(y)
 
 ## Using the leaps estimator 
 ```{r}
-fullModel = glm.fit(x = x, y = y, family = binomial(link = "logit"))
+# fullModel = glm.fit(x = x, y = y, family = binomial(link = "logit"))
+fullModel = glm(y ~ x, family = "binomial")
 
 apes_logit_leaps = apes_logit(
   x = x,
@@ -58,15 +59,9 @@ rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)]
 ```
 
 
-# Running time 
-
-```{r}
-apes_logit_leaps$apesTimeDiff
-```
-
-
 # Bootstrapping using leaps version 
 ```{r, results = 'hide'}
+t1 = Sys.time()
 listResult = APES::boot_apes_logit(
   x = x,
   y = y,
@@ -74,13 +69,30 @@ listResult = APES::boot_apes_logit(
   k = 1:ncol(x), 
   estimator = "leaps",
   nBoot = 100)
+t2 = Sys.time()
+t2 - t1
 ```
 
 
 ## Plotting
 ```{r}
-APES::viPlot_apes(listResult)
-APES::viTilePlot_apes(listResult)
+viPlotResult = APES::viPlot_apes(listResult)
+viPlotResult$viPlot + theme_classic(18)
+viTilePlotResult = APES::viTilePlot_apes(listResult)
+viPlotResult
+```
+
+
+# Compare against mplot
+
+```{r}
+t3 = Sys.time()
+mplotResult = mplot::vis(
+  mf = fullModel, 
+  B = 100)
+t4 = Sys.time()
+t4 - t3
+plot(mplotResult, which = "vip")
 ```
 
 # Session Info
