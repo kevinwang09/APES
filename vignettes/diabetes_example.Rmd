@@ -2,7 +2,9 @@
 title: "Diabetes example"
 author: "Kevin Wang"
 date: "22/08/2018"
-output: html_document
+output:
+  html_document:
+    self_contained: no
 ---
 
 
@@ -94,7 +96,7 @@ plotly::ggplotly(
 ```
 
 
-```{r}
+```{r, results = "asis", message=FALSE}
 t3 = Sys.time()
 mplotResult = mplot::vis(
   mf = fullModel, 
@@ -102,6 +104,7 @@ mplotResult = mplot::vis(
   redundant = FALSE)
 t4 = Sys.time()
 t4 - t3
+# plot(mplotResult, which = "vip", interactive = TRUE)
 plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart")
 ```
 
