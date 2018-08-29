@@ -14,6 +14,7 @@ library(glmnet)
 library(mplot)
 library(tidyverse)
 library(directlabels)
+library(plotly)
 ```
 
 ## Loading data
@@ -24,7 +25,7 @@ We will illustrate the utility of the APES method on the diabetes data from the 
 
 ```{r}
 diabetes = mplot::diabetes
-x = diabetes %>% dplyr::select(age:glu) %>% as.matrix() %>% scale
+x = diabetes %>% dplyr::select(age:glu) %>% as.matrix() %>% cbind(RV = rnorm(nrow(diabetes))) %>% scale
 y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L)
 dim(x)
 length(y)
@@ -68,7 +69,7 @@ listResult = APES::boot_apes_logit(
   Pi = fullModel$fitted.values,
   k = 1:ncol(x), 
   estimator = "leaps",
-  nBoot = 100)
+  nBoot = 200)
 t2 = Sys.time()
 t2 - t1
 ```
@@ -77,22 +78,30 @@ t2 - t1
 ## Plotting
 ```{r}
 viPlotResult = APES::viPlot_apes(listResult)
-viPlotResult$viPlot + theme_classic(18)
+viPlotResult$viPlot
 viTilePlotResult = APES::viTilePlot_apes(listResult)
-viPlotResult
+viTilePlotResult
 ```
 
 
 # Compare against mplot
 
 ```{r}
+plotly::ggplotly(
+  viPlotResult$viPlot + 
+  theme_classic(18) 
+)
+```
+
+
+```{r}
 t3 = Sys.time()
 mplotResult = mplot::vis(
   mf = fullModel, 
-  B = 100)
+  B = 200)
 t4 = Sys.time()
 t4 - t3
-plot(mplotResult, which = "vip")
+plot(mplotResult, which = "vip", tag = "chart")
 ```
 
 # Session Info
