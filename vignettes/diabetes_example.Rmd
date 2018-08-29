@@ -98,10 +98,11 @@ plotly::ggplotly(
 t3 = Sys.time()
 mplotResult = mplot::vis(
   mf = fullModel, 
-  B = 200)
+  B = 200,
+  redundant = FALSE)
 t4 = Sys.time()
 t4 - t3
-plot(mplotResult, which = "vip", tag = "chart")
+plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart")
 ```
 
 # Session Info
