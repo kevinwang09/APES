@@ -71,7 +71,7 @@ listResult = APES::boot_apes_logit(
   Pi = fullModel$fitted.values,
   k = 1:ncol(x), 
   estimator = "leaps",
-  nBoot = 200)
+  nBoot = 1000)
 t2 = Sys.time()
 t2 - t1
 ```
@@ -100,7 +100,7 @@ plotly::ggplotly(
 t3 = Sys.time()
 mplotResult = mplot::vis(
   mf = fullModel, 
-  B = 200,
+  B = 1000,
   redundant = FALSE)
 t4 = Sys.time()
 t4 - t3
