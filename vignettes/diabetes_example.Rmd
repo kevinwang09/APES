@@ -73,8 +73,12 @@ listResult = APES::boot_apes_logit(
   estimator = "leaps",
   nBoot = 1000)
 t2 = Sys.time()
+```
+
+```{r}
 t2 - t1
 ```
+
 
 
 ## Plotting
