@@ -25,6 +25,12 @@
 
 viTilePlot_apes = function(listResult){
   apesMleBetaBinaryList = purrr::map_dfr(listResult, "apesMleBetaBinary", .id = "bootNum")
+  apesModelDfList = purrr::map_dfr(listResult, "apesModelDf", .id = "bootNum")
+
+  aicOptimalMedianSize = apesModelDfList %>% dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinAic")) %>%
+    dplyr::pull(modelSize) %>% median(na.rm = TRUE)
+  bicOptimalMedianSize = apesModelDfList %>% dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinBic")) %>%
+    dplyr::pull(modelSize) %>% median(na.rm = TRUE)
 
   apesMleBetaBinaryPlotdf = apesMleBetaBinaryList %>%
     dplyr::group_by(variables, modelName) %>%
@@ -45,9 +51,15 @@ viTilePlot_apes = function(listResult){
     ggplot2::ggplot(aes(x = modelSize,
                y = variables,
                fill = freqSelected)) +
-    ggplot2::geom_tile() +
+    ggplot2::geom_tile(colour = "gray") +
+    ggplot2::scale_x_continuous(breaks = seq(min(apesMleBetaBinaryPlotdf$modelSize),
+                                             max(apesMleBetaBinaryPlotdf$modelSize), by = 1L)) +
+    ggplot2::annotate("text", x = aicOptimalMedianSize + 0.2, y = "Int", label = "AIC", angle = 90) +
+    ggplot2::annotate("text", x = bicOptimalMedianSize + 0.2, y = "Int", label = "BIC", angle = 90) +
+    ggplot2::geom_vline(xintercept = aicOptimalMedianSize, colour = "black") +
+    ggplot2::geom_vline(xintercept = bicOptimalMedianSize, colour = "black") +
     ggplot2::scale_fill_distiller(palette = "Spectral", direction = -1) +
-    ggplot2::theme(legend.text = element_text(angle = 90),
+    ggplot2::theme(legend.text = element_text(angle = 45, hjust = 0.7),
                    legend.position = "bottom")
 
   # variableTilePlot
@@ -56,7 +68,11 @@ viTilePlot_apes = function(listResult){
     ggplot2::ggplot(aes(x = modelSize,
                y = variables,
                fill = freqSelected_category)) +
-    ggplot2::geom_tile() +
+    ggplot2::geom_tile(colour = "gray") +
+    ggplot2::annotate("text", x = aicOptimalMedianSize + 0.2, y = "Int", label = "AIC", angle = 90) +
+    ggplot2::annotate("text", x = bicOptimalMedianSize + 0.2, y = "Int", label = "BIC", angle = 90) +
+    ggplot2::geom_vline(xintercept = aicOptimalMedianSize, colour = "black") +
+    ggplot2::geom_vline(xintercept = bicOptimalMedianSize, colour = "black") +
     ggplot2::scale_fill_manual(
       values = colorRampPalette(RColorBrewer::brewer.pal(3, "YlGnBu"))(5)
     ) +
