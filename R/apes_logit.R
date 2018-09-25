@@ -58,7 +58,7 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
     summaryApesRes = summary(apesRes)
     summaryApesResWhich = summaryApesRes$which
     ## Remove the intercept term
-    apesIndicator = t(summaryApesResWhich[, -which(colnames(summaryApesResWhich) == "(Intercept)")])
+    apesIndicator = t(summaryApesResWhich[, -which(colnames(summaryApesResWhich) == "(Intercept)"), drop = FALSE])
     rownames(apesIndicator) = variables[-1]
     ## We always include intercept term!!
     apesModelSize = colSums(apesIndicator) + 1L
@@ -142,11 +142,11 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
                                   linearY = linearY,
                                   apesMinAicProb = apesMinAicProb,
                                   apesMinBicProb = apesMinBicProb) %>%
-    as.tbl
+    tibble::as.tibble()
 
   apesMleBetaBinary = reshape2::melt(apesMleBeta != 0,
                                      varnames = c("variables", "modelName"),
-                                     value.name = "fittedBeta") %>% as.tbl
+                                     value.name = "fittedBeta") %>% tibble::as.tibble()
 
   selectedModelBeta = cbind(
     apesMinAic = minIcMatrix(ic = apesMleAIC, mat = apesMleBeta),
@@ -230,7 +230,7 @@ mleModelToBeta = function(mleModels, variables){
 
   mleBeta[is.na(mleBeta)] = 0L
   variablesOrdered = base::intersect(rownames(mleBeta), variables) %>% gtools::mixedsort()
-  mleBeta = mleBeta[variablesOrdered,]
+  mleBeta = mleBeta[variablesOrdered,,drop = FALSE]
 
   tmp = matrix(0L,
                nrow = length(variables),

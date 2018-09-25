@@ -13,7 +13,7 @@
 #' colnames(x) = paste0("X", 1:p)
 #' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
 #' Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
-#' listResult = boot_apes_logit(x = x, y = y, Pi = Pi, k = k, estimator = "leaps", nBoot = 10)
+#' listResult = boot_apes_logit(x = x, y = y, Pi = Pi, k = k, estimator = "leaps", nBoot = 10, nCores = 1)
 #' length(listResult)
 
 

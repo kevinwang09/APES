@@ -1,7 +1,7 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search
-Version: 0.3.4
+Version: 0.3.5
 Authors@R: c(
     person(given = "Kevin", family = "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
     person(given = "Garth", family = "Tarr", email = "garth.tarr@sydney.edu.au", role = c("aut")),
