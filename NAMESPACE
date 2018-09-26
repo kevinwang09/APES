@@ -3,6 +3,7 @@
 export(apes_logit)
 export(apes_logit_mio_combine)
 export(apes_poisson)
+export(bicPlot)
 export(boot_apes_logit)
 export(boot_apes_poisson)
 export(expit)
