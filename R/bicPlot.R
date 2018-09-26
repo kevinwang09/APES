@@ -31,7 +31,8 @@ bicPlot = function(listResult){
       mleAIC_min = (mleAIC == min(mleAIC))
     )
   
-  apesModelDf %>% 
+  
+  g = apesModelDf %>% 
     ggplot2::ggplot() +
     ggplot2::geom_line(aes(x = modelSize, y = mleBIC, group = bootNum)) +
     ggplot2::geom_point(aes(x = modelSize, y = mleBIC, colour = mleBIC_min, size = mleBIC_min)) +
@@ -39,5 +40,7 @@ bicPlot = function(listResult){
     scale_size_manual(values = c("TRUE" = 2, "FALSE" = 0)) +
     theme_classic(18) + 
     theme(legend.position = "bottom")
+  
+  return(g)
   
 }
