@@ -168,6 +168,8 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
   modelAvgBeta = cbind(aicWeightCoef,
                        bicWeightCoef)
 
+  colnames(modelAvgBeta) = c("aicWeightCoef", "bicWeightCoef")
+
   # maxBicValue = max(apesMleBIC)
   # bicValueMaxRemoved = apesMleBIC[-which.max(apesMleBIC)]
   #
@@ -184,6 +186,8 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
     apesTimeDiff = apesTimeDiff,
 
     selectedModelBeta = selectedModelBeta,
+    aicWeights = aicWeights,
+    bicWeights = bicWeights,
     modelAvgBeta = modelAvgBeta,
     responseTibble = responseTibble
   )

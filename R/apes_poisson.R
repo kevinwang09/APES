@@ -155,6 +155,23 @@ apes_poisson = function(x, y, mu, k, estimator = "leaps", time.limit = 60){
 
   apesTimeDiff = difftime(apesT2, apesT1, units = "mins")
 
+  ####################### Model averaging ######################
+  scaleApesMleAIC = apesMleAIC - min(apesMleAIC)
+  aicWeights = matrix(exp(-0.5*scaleApesMleAIC)/sum(exp(-0.5*scaleApesMleAIC)),
+                      ncol = 1, byrow = TRUE)
+
+  aicWeightCoef = apesMleBeta %*% aicWeights
+
+  scaleApesMleBIC = apesMleBIC - min(apesMleBIC)
+  bicWeights = matrix(exp(-0.5*scaleApesMleBIC)/sum(exp(-0.5*scaleApesMleBIC)),
+                      ncol = 1, byrow = TRUE)
+  bicWeightCoef = apesMleBeta %*% bicWeights
+
+  modelAvgBeta = cbind(aicWeightCoef,
+                       bicWeightCoef)
+
+  colnames(modelAvgBeta) = c("aicWeightCoef", "bicWeightCoef")
+
 
   result = list(
     apesModelDf = apesModelDf,
@@ -163,6 +180,9 @@ apes_poisson = function(x, y, mu, k, estimator = "leaps", time.limit = 60){
     apesTimeDiff = apesTimeDiff,
 
     selectedModelBeta = selectedModelBeta,
+    aicWeights = aicWeights,
+    bicWeights = bicWeights,
+    modelAvgBeta = modelAvgBeta,
     responseTibble = responseTibble
   )
   return(result)
