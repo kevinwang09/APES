@@ -79,7 +79,7 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
                              nruns = 50,
                              time.limit = time.limit)
     apesT2 = Sys.time()
-    print("Finished solving linear regression approximation")
+    # print("Finished solving linear regression approximation")
     ## The computational time
     apesTimeDiff = difftime(apesT2, apesT1, units = "mins")
     ############# Begin tidying ##############
@@ -153,6 +153,30 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
     apesMinBic = minIcMatrix(ic = apesMleBIC, mat = apesMleBeta)
   )
 
+  ####################### Model averaging ######################
+  scaleApesMleAIC = apesMleAIC - min(apesMleAIC)
+  aicWeights = matrix(exp(-0.5*scaleApesMleAIC)/sum(exp(-0.5*scaleApesMleAIC)),
+                      ncol = 1, byrow = TRUE)
+
+  aicWeightCoef = apesMleBeta %*% aicWeights
+
+  scaleApesMleBIC = apesMleBIC - min(apesMleBIC)
+  bicWeights = matrix(exp(-0.5*scaleApesMleBIC)/sum(exp(-0.5*scaleApesMleBIC)),
+                      ncol = 1, byrow = TRUE)
+  bicWeightCoef = apesMleBeta %*% bicWeights
+
+  modelAvgBeta = cbind(aicWeightCoef,
+                       bicWeightCoef)
+
+  # maxBicValue = max(apesMleBIC)
+  # bicValueMaxRemoved = apesMleBIC[-which.max(apesMleBIC)]
+  #
+  # logA0 = -0.5*maxBicValue
+  # logAi = -0.5*bicValueMaxRemoved
+  #
+  # logA0 + log(1 + sum(exp(logAi - logA0)))
+  ######################## End Model averaging ################
+
   result = list(
     apesModelDf = apesModelDf,
     apesMleBeta = apesMleBeta,
@@ -160,6 +184,7 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
     apesTimeDiff = apesTimeDiff,
 
     selectedModelBeta = selectedModelBeta,
+    modelAvgBeta = modelAvgBeta,
     responseTibble = responseTibble
   )
   return(result)
