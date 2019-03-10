@@ -6,6 +6,9 @@
 #' @import ggplot2
 #' @import purrr
 #' @import directlabels
+#' @import RColorBrewer
+#' @import forcats
+#' @importFrom magrittr %>%
 #' @export
 #' @examples
 #' set.seed(10)
@@ -18,7 +21,9 @@
 #' y = rpois(n = n, lambda = exp(x %*% beta))
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
+#' listResult = boot_apes_poisson(
+#' x = x, y = y, mu = mu, k = k,
+#' estimator = "leaps", nBoot = 50)
 #' viTileResult = viTilePlot_apes(listResult)
 #' viTileResult$variableTilePlot
 #' viTileResult$variableTilePlot_category
@@ -39,7 +44,7 @@ viTilePlot_apes = function(listResult){
     dplyr::mutate(
       modelSize = stringr::str_replace_all(modelName, "apesModel_", "") %>% as.integer,
       variables = forcats::fct_reorder(
-        variables, freqSelected, quantile, 0.5) %>%
+        variables, freqSelected, stats::quantile, 0.5) %>%
         forcats::fct_relevel("Int") %>%
         forcats::fct_shift(),
       freqSelected_category = base::cut(

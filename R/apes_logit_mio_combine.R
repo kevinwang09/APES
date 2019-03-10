@@ -1,5 +1,6 @@
 #' Combine apes_logit results
 #' @title Bootstrap version of apes_logit
+#' @param listApes a list of APES output with the MIO optimisation algorithm
 #' @author Kevin Wang
 #' @import tibble
 #' @import dplyr
@@ -32,19 +33,19 @@ apes_logit_mio_combine = function(listApes){
   apesTimeDiff = purrr::map(listApes, "apesTimeDiff")
   selectedModelBeta = purrr::map(listApes, "selectedModelBeta")
   responseTibble = purrr::map(listApes, "responseTibble")
-  
-  
-  
-  
-  apesModelDf_new = dplyr::bind_rows(apesModelDf, .id = "listName") %>% 
+
+
+
+
+  apesModelDf_new = dplyr::bind_rows(apesModelDf, .id = "listName") %>%
     dplyr::mutate(icOptimalModels = paste0(
       icOptimal(ic = mleAIC, "apesMinAic"),
       icOptimal(ic = mleBIC, "apesMinBic")
     ))
-  
+
   apesMleBeta_new = do.call(cbind, apesMleBeta)
   apesMleBetaBinary_new = dplyr::bind_rows(apesMleBetaBinary, .id = "listName")
-  
+
   apesTimeDiff_new = do.call(c, apesTimeDiff)
   whichAicModel = which.min(apesModelDf_new$mleAIC)
   whichBicModel = which.min(apesModelDf_new$mleBIC)
@@ -52,20 +53,41 @@ apes_logit_mio_combine = function(listApes){
                                 selectedModelBeta[[whichBicModel]][,"apesMinBic"])
   apesMinAicProb = purrr::map(responseTibble, "apesMinAicProb")
   apesMinBicProb = purrr::map(responseTibble, "apesMinBicProb")
-  
-  responseTibble_new = 
+
+  responseTibble_new =
     cbind(responseTibble[[1]][, c("obsNum", "y", "Pi", "linearY")],
           apesMinAicProb = apesMinAicProb[[whichAicModel]],
           apesMinBicProb = apesMinBicProb[[whichBicModel]]) %>% tibble::as.tibble()
-  
+
+
+
+  scaleApesMleAIC = apesModelDf_new$mleAIC - min(apesModelDf_new$mleAIC)
+  aicWeights = matrix(exp(-0.5*scaleApesMleAIC)/sum(exp(-0.5*scaleApesMleAIC)),
+                      ncol = 1, byrow = TRUE)
+
+  aicWeightCoef = apesMleBeta_new %*% aicWeights
+
+  scaleApesMleBIC = apesModelDf_new$mleBIC - min(apesModelDf_new$mleBIC)
+  bicWeights = matrix(exp(-0.5*scaleApesMleBIC)/sum(exp(-0.5*scaleApesMleBIC)),
+                      ncol = 1, byrow = TRUE)
+  bicWeightCoef = apesMleBeta_new %*% bicWeights
+
+  modelAvgBeta = cbind(aicWeightCoef,
+                       bicWeightCoef)
+
+  colnames(modelAvgBeta) = c("aicWeightCoef", "bicWeightCoef")
+
   result = list(
     apesModelDf = apesModelDf_new,
     apesMleBeta = apesMleBeta_new,
     apesMleBetaBinary = apesMleBetaBinary_new,
     apesTimeDiff = apesTimeDiff_new,
     selectedModelBeta = selectedModelBeta_new,
-    responseTibble = responseTibble_new
+    responseTibble = responseTibble_new,
+    modelAvgBeta = modelAvgBeta,
+    aicWeights = aicWeights,
+    bicWeights =  bicWeights
   )
-  
+
   return(result)
 }

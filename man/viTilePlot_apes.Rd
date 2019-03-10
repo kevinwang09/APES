@@ -23,7 +23,9 @@ colnames(x) = paste0("X", 1:p)
 y = rpois(n = n, lambda = exp(x \%*\% beta))
 mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 
-listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
+listResult = boot_apes_poisson(
+x = x, y = y, mu = mu, k = k,
+estimator = "leaps", nBoot = 50)
 viTileResult = viTilePlot_apes(listResult)
 viTileResult$variableTilePlot
 viTileResult$variableTilePlot_category

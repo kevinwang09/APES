@@ -6,6 +6,7 @@
 #' @import dplyr
 #' @import stringr
 #' @import purrr
+#' @importFrom magrittr %>%
 #' @export
 #' @examples
 #' set.seed(10)
@@ -24,39 +25,34 @@
 
 icModelFreq = function(listResult, ic = "BIC"){
   apesModelDf = purrr::map_dfr(listResult, "apesModelDf",  .id = "bootNum")
-  apesMleBetaBinaryDf = purrr::map_dfr(listResult, "apesMleBetaBinary",  .id = "bootNum") %>% 
+  apesMleBetaBinaryDf = purrr::map_dfr(listResult, "apesMleBetaBinary",  .id = "bootNum") %>%
     dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
-  
+
   if(ic == "AIC"){
-    icOptimalModels = apesModelDf %>% 
-      dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinAic")) %>% 
+    icOptimalModels = apesModelDf %>%
+      dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinAic")) %>%
       dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
-    
+
     cat("Summary of model sizes selected by AIC \n")
   }
-  
+
   if(ic == "BIC"){
-    icOptimalModels = apesModelDf %>% 
-      dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinBic")) %>% 
+    icOptimalModels = apesModelDf %>%
+      dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinBic")) %>%
       dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
-    
+
     cat("Summary of model sizes selected by BIC \n")
-    
+
   }
-  
-  
-  c(summary(icOptimalModels$modelSize), 
-    SD = sd(icOptimalModels$modelSize),
-    IQR = IQR(icOptimalModels$modelSize))
-  boxplot(icOptimalModels$modelSize, horizontal = TRUE, xlab = "model size")
-  
-  icOptimalVariables = apesMleBetaBinaryDf %>% 
+
+  icOptimalVariables = apesMleBetaBinaryDf %>%
     dplyr::filter(bootNum_modelName %in% icOptimalModels$bootNum_modelName)
-  
-  icOptimalVariables_freq = icOptimalVariables %>% 
-    group_by(variables) %>% 
-    summarise(freq = mean(fittedBeta)) %>% 
-    arrange(desc(freq)) %>% ungroup()
-  
+
+  icOptimalVariables_freq = icOptimalVariables %>%
+    dplyr::group_by(variables) %>%
+    dplyr::summarise(freq = mean(fittedBeta)) %>%
+    dplyr::arrange(desc(freq)) %>%
+    dplyr::ungroup()
+
   return(icOptimalVariables_freq)
 }

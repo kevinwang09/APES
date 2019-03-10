@@ -1,13 +1,21 @@
-#' Perform APES-Poisson regression using either the leaps or bestsubset package
+#' @title Perform APES-Poisson regression using either the leaps or bestsubset package
 #' @param x The n by p design matrix for Poisson regression
 #' @param y The response vector for Poisson regression of length n
-#' @param mu Esimated means of each observation using a baseline model. It should be a vector of length n.
-#' @param k Model size to explore. If leaps was selected as the estimator, then model up to size max(k) will be explored. If mio was selected as the estimator, then model sizes specified in k will be explored.
-#' @param estimator Either "leaps" or "mio", which correspond to optimisation algorithms available in the leaps and bestsubset package, respectively.
-#' @param time.limit The time limit for the maximum time allocated to each model size model when the "mio" estimator was selected. It will not affect the speed if leaps
+#' @param mu Esimated means of each observation using a baseline model.
+#' It should be a vector of length n.
+#' @param k Model size to explore. If leaps was selected as the estimator,
+#' then model up to size max(k) will be explored.
+#' If mio was selected as the estimator, then
+#' model sizes specified in k will be explored.
+#' @param estimator Either "leaps" or "mio", which correspond to
+#' optimisation algorithms available in
+#' the leaps and bestsubset package, respectively.
+#' @param time.limit The time limit for the maximum time allocated to each
+#' model size model when the "mio" estimator was selected.
+#' It will not affect the speed if leaps
 #' @import leaps
 #' @import tibble
-#' @import magrittr
+#' @importFrom magrittr %>%
 #' @import dplyr
 #' @export
 #' @examples
@@ -206,8 +214,8 @@ refittingMle_poisson = function(indicator, X, yPois){
   xTemp = cbind(Int = 1, X[,indicator])
   colnames(xTemp) = c("Int", colnames(X)[indicator])
 
-  glm.fit(x = xTemp,
+  stats::glm.fit(x = xTemp,
           y = yPois,
           # etastart = fullModel$linear.predictors,
-          family = poisson(link = "log"))
+          family = stats::poisson(link = "log"))
 }

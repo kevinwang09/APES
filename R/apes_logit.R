@@ -7,9 +7,23 @@
 #' @param time.limit The time limit for the maximum time allocated to each model size model when the "mio" estimator was selected. It will not affect the speed if leaps
 #' @import leaps
 #' @import tibble
-#' @import magrittr
+#' @importFrom magrittr %>%
 #' @import dplyr
 #' @export
+#' @return A list of results:
+#' \itemize{
+#' \item{apesModelDf:} A data.frame (tibble) containing the optimal model of each size and associated statistics
+#' \item{apesMleBeta:} A matrix of MLE for the most optimal model of each model size.
+#' \item{apesMleBetaBinary:} A data.frame (tibble), which has a column indicating if
+#' a variable has been selected into the most optimal model of each size.
+#' It is a binarised, linear version of the previous \code{apesMleBeta} output.
+#' \item{apesTimeDiff:} A difftime object of the computational time.
+#' \item{selectedModelBeta:} A matrix containing the MLE correspond to the AIC and BIC selected model. A subset of the \code{apesMleBeta} output.
+#' \item{aicWeights:} A matrix of weights corresponding to the AIC_j/sum(AIC_j), where AIC_j denotes the most optimal model of the size j in the \code{apesModelDf} output.
+#' \item{bicWeights:} A matrix of weights corresponding to the BIC_j/sum(BIC_j), where BIC_j denotes the most optimal model of the size j in the \code{apesModelDf} output.
+#' \item{modelAvgBeta}: A matrix of AIC and BIC weighted coefficients. It is identical to the matrix product of apesMleBeta and aicWeights (or bicWeights).
+#' \item{responseTibble}: A data.frame (tibble) of estimates for each observations, e.g. initial fitted response, final fitted response.
+#' }
 #' @examples
 #' set.seed(10)
 #' n = 100
@@ -226,10 +240,10 @@ refittingMle_logit = function(indicator, X, yBinom){
   xTemp = cbind(Int = 1, X[,indicator])
   colnames(xTemp) = c("Int", colnames(X)[indicator])
 
-  glm.fit(x = xTemp,
-          y = yBinom,
-          # etastart = fullModel$linear.predictors,
-          family = binomial(link = "logit"))
+  stats::glm.fit(x = xTemp,
+                 y = yBinom,
+                 # etastart = fullModel$linear.predictors,
+                 family = stats::binomial(link = "logit"))
 }
 #####################################
 icOptimal = function(ic, symbol){

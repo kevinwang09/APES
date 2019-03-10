@@ -11,13 +11,21 @@ apes_poisson(x, y, mu, k, estimator = "leaps", time.limit = 60)
 
 \item{y}{The response vector for Poisson regression of length n}
 
-\item{mu}{Esimated means of each observation using a baseline model. It should be a vector of length n.}
+\item{mu}{Esimated means of each observation using a baseline model.
+It should be a vector of length n.}
 
-\item{k}{Model size to explore. If leaps was selected as the estimator, then model up to size max(k) will be explored. If mio was selected as the estimator, then model sizes specified in k will be explored.}
+\item{k}{Model size to explore. If leaps was selected as the estimator,
+then model up to size max(k) will be explored.
+If mio was selected as the estimator, then
+model sizes specified in k will be explored.}
 
-\item{estimator}{Either "leaps" or "mio", which correspond to optimisation algorithms available in the leaps and bestsubset package, respectively.}
+\item{estimator}{Either "leaps" or "mio", which correspond to
+optimisation algorithms available in
+the leaps and bestsubset package, respectively.}
 
-\item{time.limit}{The time limit for the maximum time allocated to each model size model when the "mio" estimator was selected. It will not affect the speed if leaps}
+\item{time.limit}{The time limit for the maximum time allocated to each
+model size model when the "mio" estimator was selected.
+It will not affect the speed if leaps}
 }
 \description{
 Perform APES-Poisson regression using either the leaps or bestsubset package

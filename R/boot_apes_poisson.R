@@ -1,5 +1,20 @@
-#' Bootstrap version of apes_logit
 #' @title Bootstrap version of apes_logit
+#' @param x The n by p design matrix for Poisson regression
+#' @param y The response vector for Poisson regression of length n
+#' @param mu Esimated means of each observation using a baseline model.
+#' It should be a vector of length n.
+#' @param k Model size to explore. If leaps was selected as the estimator,
+#' then model up to size max(k) will be explored.
+#' If mio was selected as the estimator, then
+#' model sizes specified in k will be explored.
+#' @param estimator Either "leaps" or "mio", which correspond to
+#' optimisation algorithms available in
+#' the leaps and bestsubset package, respectively.
+#' @param time.limit The time limit for the maximum time allocated to each
+#' model size model when the "mio" estimator was selected.
+#' It will not affect the speed if leaps
+#' @param nBoot Number of bootstrap runs
+#' @param nCores Number of cores, only supporting parallel::mclapply now
 #' @author Kevin Wang
 #' @import parallel
 #' @export
@@ -13,7 +28,9 @@
 #' colnames(x) = paste0("X", 1:p)
 #' y = rpois(n = n, lambda = exp(x %*% beta))
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 10)
+#' listResult = boot_apes_poisson(
+#' x = x, y = y, mu = mu, k = k,
+#' estimator = "leaps", nBoot = 10)
 #' length(listResult)
 
 

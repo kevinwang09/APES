@@ -7,6 +7,7 @@
 #' @import ggplot2
 #' @import purrr
 #' @import directlabels
+#' @importFrom magrittr %>%
 #' @export
 #' @examples
 #' set.seed(10)

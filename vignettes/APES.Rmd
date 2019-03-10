@@ -1,8 +1,15 @@
 ---
-title: "APES Vignette"
-author: "Kevin Wang"
-date: "22/08/2018"
-output: html_document
+title: "An introduction to the APES package"
+author:
+- name: Kevin Y.X. Wang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+output:
+  html_document:
+    toc_float: true
+vignette: |
+  %\VignetteIndexEntry{An introduction to the scMerge package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
@@ -11,6 +18,8 @@ output: html_document
 ```{r}
 library(APES)
 ```
+
+
 
 # Session Info
 ```{r}

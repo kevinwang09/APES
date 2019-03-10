@@ -7,6 +7,13 @@ output: html_document
 
 # Introduction 
 
+In this document, we will perform APES on the `birthweight` data from the `MASS` package. 
+
+There are 189 observations and 8 variables. The response variable is a binary variable indicating if an infant is in the low-weight group. 
+
+
+# Setting up the data
+
 ```{r}
 library(APES)
 library(MASS)
@@ -24,7 +31,11 @@ bwt <- with(birthwt, {
   ptd <- factor(ptl > 0)
   ftv <- factor(ftv)
   levels(ftv)[-(1:2)] <- "2+"
-  data.frame(low = factor(low), age, lwt, race, smoke = (smoke > 0), ptd, ht = (ht > 0), ui = (ui > 0), ftv)
+  data.frame(low = factor(low), 
+             age, lwt, race, 
+             smoke = (smoke > 0), 
+             ptd, ht = (ht > 0), 
+             ui = (ui > 0), ftv)
 })
 # options(contrasts = c("contr.treatment", "contr.poly"))
 
@@ -32,62 +43,61 @@ bwt <- with(birthwt, {
 ```
 
 
-# Running APES on diabetes data
+# Single run of APES on diabetes data
 
+Due to the small size of this data, we will use the `leaps` estimator. 
+
+Since there are some factor variables, we will need to manually create the model matrix/design matrix. 
 
 ## Using the leaps estimator 
+
 ```{r}
 fullModel <- glm(low ~ ., family = binomial, data = bwt)
 round(summary(fullModel)$coef, 2)
-```
 
-```{r}
-bwt = mutate_if(bwt, is.factor, as.character)
+bwt = dplyr::mutate_if(bwt, is.factor, as.character)
 x = model.matrix(~0 + . - low, data = bwt)[,-3]
 dim(x)
 y = as.integer(as.character(bwt$low))
 length(y)
+```
 
+
+
+```{r}
 apes_logit_leaps = apes_logit(
   x = x,
   y = y,
   Pi = fullModel$fitted.values,
-  k = ncol(x), 
-  estimator = "leaps")
-```
-
-## Using the MIO estimator 
-```{r, message = FALSE}
-apes_logit_mio = apes_logit(
-  x = x,
-  y = y,
-  Pi = fullModel$fitted.values,
   k = 1:ncol(x), 
-  estimator = "mio")
+  estimator = "leaps")
 
-apes_logit_mio$selectedModelBeta
+APES::viTilePlot_apes(list(apes_logit_leaps))
 ```
 
 
-# Running Lasso on diabetes data
-```{r}
-lasso_logit = glmnet::cv.glmnet(x = x,
-                                y = y)
-lasso_logit_coef = coef(lasso_logit, s = "lambda.min")
-rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)]
-```
+
+<!-- # Running Lasso on diabetes data -->
+<!-- ```{r} -->
+<!-- lasso_logit = glmnet::cv.glmnet(x = x, -->
+<!--                                 y = y) -->
+<!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") -->
+<!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] -->
+<!-- ``` -->
 
 
-# Running time 
+<!-- # Running time  -->
 
-```{r}
-apes_logit_leaps$apesTimeDiff
-apes_logit_mio$apesTimeDiff
-```
+<!-- ```{r} -->
+<!-- apes_logit_leaps$apesTimeDiff -->
+<!-- apes_logit_mio$apesTimeDiff -->
+<!-- ``` -->
 
 
 
 # Bootstrapping using leaps version 
+
+In most practical cases, a single run of any variable selection procedure is not stable. In order to explore stability of variable selection in this case, we can bootstrap on the 189 observations. The implementation of APES is fast enough that this can be done relatively fast.
 
 ```{r, results = 'hide'}
 listResult = APES::boot_apes_logit(
@@ -100,11 +110,44 @@ listResult = APES::boot_apes_logit(
 ```
 
 
-## Plotting
+### Variable selection plot 
+
 ```{r}
-APES::viPlot_apes(listResult)
-APES::viTilePlot_apes(listResult)
+viPlotResult = APES::viPlot_apes(listResult)
+viPlotResult$viPlot
+viTilePlotResult = APES::viTilePlot_apes(listResult)
+viTilePlotResult
 ```
+
+
+```{r, warning = FALSE}
+plotly::ggplotly(
+  viPlotResult$viPlot + 
+    theme_classic(18) 
+)
+```
+
+
+### Model averaging coefficient plot
+```{r}
+APES::maCoefPlot(listResult, type = "aic") + 
+  labs(title = "AIC weighted coefficients")
+
+APES::maCoefPlot(listResult, type = "bic") +
+  labs(title = "AIC weighted coefficients")
+```
+
+
+### Model averaging weights plot
+```{r}
+APES::maWeightsPlot(listResult, type = "aic") + 
+  labs(title = "AIC Weights")
+
+APES::maWeightsPlot(listResult, type = "bic") + 
+  labs(title = "BIC Weights")
+```
+
+
 
 # Session Info
 ```{r}

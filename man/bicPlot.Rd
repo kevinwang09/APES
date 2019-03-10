@@ -2,15 +2,17 @@
 % Please edit documentation in R/bicPlot.R
 \name{bicPlot}
 \alias{bicPlot}
-\title{Variable Inclusion Plot}
+\title{AIC or BIC path plot}
 \usage{
-bicPlot(listResult)
+bicPlot(listResult, type = "BIC")
 }
 \arguments{
 \item{listResult}{a list of APES outputs}
+
+\item{type}{Either "AIC" or "BIC"}
 }
 \description{
-Variable inclusion plot
+AIC or BIC path plot
 }
 \examples{
 set.seed(10)
@@ -25,7 +27,6 @@ mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 
 listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
 bicPlot(listResult)
-aicPlot(listResult)
 }
 \author{
 Kevin Wang

@@ -6,6 +6,9 @@
 \usage{
 apes_logit_mio_combine(listApes)
 }
+\arguments{
+\item{listApes}{a list of APES output with the MIO optimisation algorithm}
+}
 \description{
 Combine apes_logit results
 }
