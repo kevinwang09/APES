@@ -90,6 +90,12 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
 
 
   if(estimator == "mio"){
+
+    if (!requireNamespace("bestsubset", quietly = TRUE)) {
+      stop("Package \"bestsubset\" needed for this function to work. Please install it.",
+           call. = FALSE)
+    }
+
     apesT1 = Sys.time()
     apesRes = bestsubset::bs(x = x,
                              y = linearY,

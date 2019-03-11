@@ -75,6 +75,12 @@ apes_poisson = function(x, y, mu, k, estimator = "leaps", time.limit = 60){
 
 
   if(estimator == "mio"){
+
+    if (!requireNamespace("bestsubset", quietly = TRUE)) {
+      stop("Package \"bestsubset\" needed for this function to work. Please install it.",
+           call. = FALSE)
+    }
+
     ############# Begin MIO solver ##############
     apesT1 = Sys.time()
     apesRes = bestsubset::bs(x = x,
