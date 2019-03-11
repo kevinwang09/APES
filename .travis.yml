@@ -8,4 +8,5 @@ dist: trusty
 os:
   - linux
   - osx
-r_check_force_suggests: false
+env:
+  - _R_CHECK_FORCE_SUGGESTS_=false
