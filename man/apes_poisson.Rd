@@ -42,11 +42,14 @@ y = rpois(n = n, lambda = exp(x \%*\% beta))
 mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 apesLeapsResult = apes_poisson(x = x, y = y, mu = mu, k = k,
                                estimator = "leaps")
+apesLeapsResult$apesModelDf
 
+\dontrun{
+## You need to install Gurobi before uing the mio option
 apesMioResult = apes_poisson(x = x, y = y, mu = mu, k = k,
                                estimator = "mio", time.limit = 5)
+}
 
-all.equal(apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta)
 
 
 }
