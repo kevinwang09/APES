@@ -54,7 +54,7 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
 
   epsilon = 1e-10
 
-  if(sum(PiDegen < epsilon | PiDegen > 1-epsilon) >= floor(n/2)){
+  if(sum(Pi < epsilon | Pi > 1-epsilon) >= floor(n/2)){
     warning("Proceed with caution: \n
             Over half of Pi's has values less than 1e-10 or greater than
             1 - 1e-10, which may imply degeneracy.")

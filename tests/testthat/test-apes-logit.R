@@ -21,7 +21,7 @@ if("bestsubset" %in% rownames(installed.packages())){
   testthat::expect_equal(
     apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta
   )
-} 
+}
 
 ######################## Test for warnings on degenerate Pi #############
 set.seed(10)
@@ -31,9 +31,8 @@ PiDegen = suppressWarnings(
   glm.fit(x = x, y = yDegen, family = binomial(link = "logit"))$fitted.values
 ) ## Suppose the users did not see the wanring
 
-hist(PiDegen)
-
 testthat::expect_warning(
   apes_logit(x = x, y = yDegen, Pi = PiDegen, k = k,
              estimator = "leaps")
 )
+
