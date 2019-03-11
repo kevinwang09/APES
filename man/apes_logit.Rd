@@ -50,11 +50,11 @@ y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
 Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
 apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
                                estimator = "leaps")
+apesLeapsResult$apesModelDf
 
+\dontrun{
+## You need to install Gurobi before uing the mio option
 apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
                                estimator = "mio", time.limit = 5)
-
-all.equal(apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta)
-
-
+}
 }

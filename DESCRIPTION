@@ -1,7 +1,7 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search for GLM
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: c(
     person(given = "Kevin", family = "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
     person(given = "Garth", family = "Tarr", email = "garth.tarr@sydney.edu.au", role = c("aut")),
@@ -26,9 +26,10 @@ Imports:
   RColorBrewer,
   forcats
 Suggests:
-  bestsubset,
-  mplot,
-  knitr
+    bestsubset,
+    mplot,
+    knitr,
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 URL: https://github.com/kevinwang09/APES

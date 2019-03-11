@@ -36,13 +36,13 @@
 #' Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
 #' apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
 #'                                estimator = "leaps")
+#' apesLeapsResult$apesModelDf
 #'
+#' \dontrun{
+#' ## You need to install Gurobi before uing the mio option
 #' apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
 #'                                estimator = "mio", time.limit = 5)
-#'
-#' all.equal(apesLeapsResult$apesMleBeta, apesMioResult$apesMleBeta)
-#'
-#'
+#' }
 apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
 
   ###### Begin setting up linear regression #######
@@ -51,6 +51,14 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
 
   n = nrow(x)
   p = ncol(x)
+
+  epsilon = 1e-10
+
+  if(sum(PiDegen < epsilon | PiDegen > 1-epsilon) >= floor(n/2)){
+    warning("Proceed with caution: \n
+            Over half of Pi's has values less than 1e-10 or greater than
+            1 - 1e-10, which may imply degeneracy.")
+  }
   linearY = log(Pi/(1-Pi)) + (yBinom-Pi)/(Pi*(1-Pi))
   ###### End setting up linear regression #######
 

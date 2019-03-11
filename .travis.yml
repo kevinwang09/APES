@@ -4,10 +4,8 @@ language: R
 sudo: false
 cache: packages
 R: release
-install:
-  - Rscript -e 'install.packages("devtools")'
-  - Rscript -e 'devtools::install_github(repo="ryantibs/best-subset", subdir="bestsubset")'
 dist: trusty
 os:
   - linux
   - osx
+r_check_force_suggests: false

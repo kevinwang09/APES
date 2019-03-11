@@ -6,6 +6,9 @@
 #' @import dplyr
 #' @export
 #' @examples
+#'
+#' ## You need to install Gurobi before uing the mio option
+#' \dontrun{
 #' set.seed(10)
 #' n = 100
 #' p = 10
@@ -20,6 +23,7 @@
 #' listApes = list(firstApes, secondApes)
 #' finalResult = apes_logit_mio_combine(listApes)
 #' print(finalResult)
+#' }
 
 
 

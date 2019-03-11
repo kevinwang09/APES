@@ -13,6 +13,9 @@ apes_logit_mio_combine(listApes)
 Combine apes_logit results
 }
 \examples{
+
+## You need to install Gurobi before uing the mio option
+\dontrun{
 set.seed(10)
 n = 100
 p = 10
@@ -27,6 +30,7 @@ secondApes = apes_logit(x = x, y = y, Pi = Pi, k = 2, estimator = "mio")
 listApes = list(firstApes, secondApes)
 finalResult = apes_logit_mio_combine(listApes)
 print(finalResult)
+}
 }
 \author{
 Kevin Wang
