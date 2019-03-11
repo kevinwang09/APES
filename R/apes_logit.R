@@ -7,6 +7,7 @@
 #' @param time.limit The time limit for the maximum time allocated to each model size model when the "mio" estimator was selected. It will not affect the speed if leaps
 #' @import leaps
 #' @import tibble
+#' @importFrom gtools mixedsort
 #' @importFrom magrittr %>%
 #' @import dplyr
 #' @export

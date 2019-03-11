@@ -25,7 +25,8 @@ Imports:
   parallel,
   RColorBrewer,
   forcats,
-  magrittr
+  magrittr,
+  gtools
 Suggests:
     mplot,
     knitr,
