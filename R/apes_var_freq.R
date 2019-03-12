@@ -1,5 +1,4 @@
-#' Best IC variables
-#' @title IC variable frequency
+#' @title Calculates the frequency that a variable is selected
 #' @param listResult a list of APES outputs
 #' @param ic Either "AIC" or "BIC"
 #' @author Kevin Wang
@@ -20,10 +19,10 @@
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
 #' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-#' icModelFreq(listResult = listResult, ic = "AIC")
-#' icModelFreq(listResult = listResult, ic = "BIC")
+#' apes_var_freq(listResult = listResult, ic = "AIC")
+#' apes_var_freq(listResult = listResult, ic = "BIC")
 
-icModelFreq = function(listResult, ic = "BIC"){
+apes_var_freq = function(listResult, ic = "BIC"){
   apesModelDf = purrr::map_dfr(listResult, "apesModelDf",  .id = "bootNum")
   apesMleBetaBinaryDf = purrr::map_dfr(listResult, "apesMleBetaBinary",  .id = "bootNum") %>%
     dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
@@ -51,7 +50,7 @@ icModelFreq = function(listResult, ic = "BIC"){
   icOptimalVariables_freq = icOptimalVariables %>%
     dplyr::group_by(variables) %>%
     dplyr::summarise(freq = mean(fittedBeta)) %>%
-    dplyr::arrange(desc(freq)) %>%
+    dplyr::arrange(dplyr::desc(freq)) %>%
     dplyr::ungroup()
 
   return(icOptimalVariables_freq)

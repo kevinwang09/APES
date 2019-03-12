@@ -5,7 +5,7 @@
 \title{Bootstrap version of apes_logit}
 \usage{
 boot_apes_poisson(x, y, mu, k, estimator = "leaps", time.limit = 60,
-  nBoot = 100, nCores = 1)
+  nBoot = 100, workers = 1)
 }
 \arguments{
 \item{x}{The n by p design matrix for Poisson regression}
@@ -30,7 +30,7 @@ It will not affect the speed if leaps}
 
 \item{nBoot}{Number of bootstrap runs}
 
-\item{nCores}{Number of cores, only supporting parallel::mclapply now}
+\item{workers}{Number of cores, using multicores from the furr package}
 }
 \description{
 Bootstrap version of apes_logit
@@ -47,7 +47,7 @@ y = rpois(n = n, lambda = exp(x \%*\% beta))
 mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 listResult = boot_apes_poisson(
 x = x, y = y, mu = mu, k = k,
-estimator = "leaps", nBoot = 10)
+estimator = "leaps", nBoot = 10, workers = 1)
 length(listResult)
 }
 \author{

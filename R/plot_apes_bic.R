@@ -18,12 +18,12 @@
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
 #' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
-#' bicPlot(listResult)
+#' plot_apes_ic(listResult)
 
 
 
 
-bicPlot = function(listResult, type = "BIC"){
+plot_apes_ic = function(listResult, type = "BIC"){
   apesModelDf = purrr::map_dfr(listResult, "apesModelDf", .id = "bootNum") %>%
     group_by(bootNum) %>%
     dplyr::mutate(

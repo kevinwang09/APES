@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/birthweight_example.html">birth weight example</a>
+      <a href="../articles/birthweight_example.html">Birth weight example</a>
     </li>
     <li>
       <a href="../articles/diabetes_example.html">Diabetes example</a>
@@ -188,42 +188,25 @@ It is a binarised, linear version of the previous <code>apesMleBeta</code> outpu
 <span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>rbinom</a></span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='expit.html'>expit</a></span>(<span class='no'>x</span> <span class='kw'>%*%</span> <span class='no'>beta</span>))
 <span class='no'>Pi</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/glm'>glm.fit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/family'>binomial</a></span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='st'>"logit"</span>))$<span class='no'>fitted.values</span>
 <span class='no'>apesLeapsResult</span> <span class='kw'>=</span> <span class='fu'>apes_logit</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'>
+                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='no'>apesLeapsResult</span>$<span class='no'>apesModelDf</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 8</span><span>
+#&gt;    method modelName modelSize apesMleLoglike mleAIC mleBIC status
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> 
+#&gt; </span><span style='color: #555555;'> 1</span><span> apes   apesMode…         2          -</span><span style='color: #BB0000;'>59.4</span><span>   123.   128. leaps…
+#&gt; </span><span style='color: #555555;'> 2</span><span> apes   apesMode…         3          -</span><span style='color: #BB0000;'>53.3</span><span>   113.   120. leaps…
+#&gt; </span><span style='color: #555555;'> 3</span><span> apes   apesMode…         4          -</span><span style='color: #BB0000;'>51.8</span><span>   112.   122. leaps…
+#&gt; </span><span style='color: #555555;'> 4</span><span> apes   apesMode…         5          -</span><span style='color: #BB0000;'>51.2</span><span>   112.   125. leaps…
+#&gt; </span><span style='color: #555555;'> 5</span><span> apes   apesMode…         6          -</span><span style='color: #BB0000;'>50.6</span><span>   113.   129. leaps…
+#&gt; </span><span style='color: #555555;'> 6</span><span> apes   apesMode…         7          -</span><span style='color: #BB0000;'>50.1</span><span>   114.   132. leaps…
+#&gt; </span><span style='color: #555555;'> 7</span><span> apes   apesMode…         8          -</span><span style='color: #BB0000;'>50.1</span><span>   116.   137. leaps…
+#&gt; </span><span style='color: #555555;'> 8</span><span> apes   apesMode…         9          -</span><span style='color: #BB0000;'>50.1</span><span>   118.   142. leaps…
+#&gt; </span><span style='color: #555555;'> 9</span><span> apes   apesMode…        10          -</span><span style='color: #BB0000;'>50.0</span><span>   120.   146. leaps…
+#&gt; </span><span style='color: #555555;'>10</span><span> apes   apesMode…        11          -</span><span style='color: #BB0000;'>49.9</span><span>   122.   151. leaps…
+#&gt; </span><span style='color: #555555;'># … with 1 more variable: icOptimalModels </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'>
+</div></span><span class='co'># NOT RUN {</span>
+<span class='co'>## You need to install Gurobi before uing the mio option</span>
 <span class='no'>apesMioResult</span> <span class='kw'>=</span> <span class='fu'>apes_logit</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div><div class='output co'>#&gt; 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.
-#&gt; 1. Solving best subset selection with k=1.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 2. Solving best subset selection with k=2.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 3. Solving best subset selection with k=3.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 4. Solving best subset selection with k=4.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 5. Solving best subset selection with k=5.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 6. Solving best subset selection with k=6.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 7. Solving best subset selection with k=7.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 8. Solving best subset selection with k=8.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 9. Solving best subset selection with k=9.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.
-#&gt; 10. Solving best subset selection with k=10.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</div><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all.equal'>all.equal</a></span>(<span class='no'>apesLeapsResult</span>$<span class='no'>apesMleBeta</span>, <span class='no'>apesMioResult</span>$<span class='no'>apesMleBeta</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-
-</div></pre>
+                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

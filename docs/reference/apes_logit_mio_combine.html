@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/birthweight_example.html">birth weight example</a>
+      <a href="../articles/birthweight_example.html">Birth weight example</a>
     </li>
     <li>
       <a href="../articles/diabetes_example.html">Diabetes example</a>
@@ -141,7 +141,10 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>10</span>)
+    <pre class="examples"><div class='input'>
+## You need to install Gurobi before uing the mio option
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>10</span>)
 <span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>
 <span class='no'>p</span> <span class='kw'>=</span> <span class='fl'>10</span>
 <span class='no'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>
@@ -150,110 +153,12 @@
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>x</span>) <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='st'>"X"</span>, <span class='fl'>1</span>:<span class='no'>p</span>)
 <span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>rbinom</a></span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='expit.html'>expit</a></span>(<span class='no'>x</span> <span class='kw'>%*%</span> <span class='no'>beta</span>))
 <span class='no'>Pi</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/glm'>glm.fit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/family'>binomial</a></span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='st'>"logit"</span>))$<span class='no'>fitted.values</span>
-<span class='no'>firstApes</span> <span class='kw'>=</span> <span class='fu'><a href='apes_logit.html'>apes_logit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>)</div><div class='output co'>#&gt; 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.
-#&gt; 1. Solving best subset selection with k=1.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</div><div class='input'><span class='no'>secondApes</span> <span class='kw'>=</span> <span class='fu'><a href='apes_logit.html'>apes_logit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>)</div><div class='output co'>#&gt; 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.
-#&gt; 1. Solving best subset selection with k=2.
-#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... 
-#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</div><div class='input'><span class='no'>listApes</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>firstApes</span>, <span class='no'>secondApes</span>)
-<span class='no'>finalResult</span> <span class='kw'>=</span> <span class='fu'>apes_logit_mio_combine</span>(<span class='no'>listApes</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Unequal factor levels: coercing to character</span></div><div class='output co'>#&gt; <span class='warning'>Warning: binding character and factor vector, coercing into character vector</span></div><div class='output co'>#&gt; <span class='warning'>Warning: binding character and factor vector, coercing into character vector</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>finalResult</span>)</div><div class='output co'>#&gt; $apesModelDf
-#&gt; <span style='color: #555555;'># A tibble: 2 x 9</span><span>
-#&gt;   listName method modelName modelSize apesMleLoglike mleAIC mleBIC status
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> 
-#&gt; </span><span style='color: #555555;'>1</span><span> 1        apes   apesMode~         2          -</span><span style='color: #BB0000;'>59.4</span><span>   123.   128. OPTIM~
-#&gt; </span><span style='color: #555555;'>2</span><span> 2        apes   apesMode~         3          -</span><span style='color: #BB0000;'>53.3</span><span>   113.   120. OPTIM~
-#&gt; </span><span style='color: #555555;'># ... with 1 more variable: icOptimalModels </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; 
-#&gt; $apesMleBeta
-#&gt;     apesModel_2 apesModel_3
-#&gt; Int  -0.1837717  -0.0541247
-#&gt; X1    0.0000000   0.9097537
-#&gt; X2   -1.0242090  -1.1231560
-#&gt; X3    0.0000000   0.0000000
-#&gt; X4    0.0000000   0.0000000
-#&gt; X5    0.0000000   0.0000000
-#&gt; X6    0.0000000   0.0000000
-#&gt; X7    0.0000000   0.0000000
-#&gt; X8    0.0000000   0.0000000
-#&gt; X9    0.0000000   0.0000000
-#&gt; X10   0.0000000   0.0000000
-#&gt; 
-#&gt; $apesMleBetaBinary
-#&gt; </span><span style='color: #555555;'># A tibble: 22 x 4</span><span>
-#&gt;    listName variables modelName   fittedBeta
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
-#&gt; </span><span style='color: #555555;'> 1</span><span> 1        Int       apesModel_2 TRUE      
-#&gt; </span><span style='color: #555555;'> 2</span><span> 1        X1        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'> 3</span><span> 1        X2        apesModel_2 TRUE      
-#&gt; </span><span style='color: #555555;'> 4</span><span> 1        X3        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'> 5</span><span> 1        X4        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'> 6</span><span> 1        X5        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'> 7</span><span> 1        X6        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'> 8</span><span> 1        X7        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'> 9</span><span> 1        X8        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'>10</span><span> 1        X9        apesModel_2 FALSE     
-#&gt; </span><span style='color: #555555;'># ... with 12 more rows</span><span>
-#&gt; 
-#&gt; $apesTimeDiff
-#&gt; Time differences in mins
-#&gt;           1           2 
-#&gt; 0.002363968 0.003840450 
-#&gt; 
-#&gt; $selectedModelBeta
-#&gt;           [,1]       [,2]
-#&gt; Int -0.0541247 -0.0541247
-#&gt; X1   0.9097537  0.9097537
-#&gt; X2  -1.1231560 -1.1231560
-#&gt; X3   0.0000000  0.0000000
-#&gt; X4   0.0000000  0.0000000
-#&gt; X5   0.0000000  0.0000000
-#&gt; X6   0.0000000  0.0000000
-#&gt; X7   0.0000000  0.0000000
-#&gt; X8   0.0000000  0.0000000
-#&gt; X9   0.0000000  0.0000000
-#&gt; X10  0.0000000  0.0000000
-#&gt; 
-#&gt; $responseTibble
-#&gt; </span><span style='color: #555555;'># A tibble: 100 x 6</span><span>
-#&gt;    obsNum     y     Pi linearY apesMinAicProb apesMinBicProb
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span> obs1       0 0.824    -</span><span style='color: #BB0000;'>4.13</span><span>         0.694          0.694 
-#&gt; </span><span style='color: #555555;'> 2</span><span> obs2       0 0.290    -</span><span style='color: #BB0000;'>2.30</span><span>         0.333          0.333 
-#&gt; </span><span style='color: #555555;'> 3</span><span> obs3       1 0.396     2.10         0.467          0.467 
-#&gt; </span><span style='color: #555555;'> 4</span><span> obs4       1 0.237     3.05         0.198          0.198 
-#&gt; </span><span style='color: #555555;'> 5</span><span> obs5       1 0.523     2.00         0.716          0.716 
-#&gt; </span><span style='color: #555555;'> 6</span><span> obs6       0 0.339    -</span><span style='color: #BB0000;'>2.18</span><span>         0.418          0.418 
-#&gt; </span><span style='color: #555555;'> 7</span><span> obs7       0 0.114    -</span><span style='color: #BB0000;'>3.18</span><span>         0.131          0.131 
-#&gt; </span><span style='color: #555555;'> 8</span><span> obs8       1 0.878     3.11         0.814          0.814 
-#&gt; </span><span style='color: #555555;'> 9</span><span> obs9       0 0.011</span><span style='text-decoration: underline;'>1</span><span>   -</span><span style='color: #BB0000;'>5.50</span><span>         0.063</span><span style='text-decoration: underline;'>6</span><span>         0.063</span><span style='text-decoration: underline;'>6</span><span>
-#&gt; </span><span style='color: #555555;'>10</span><span> obs10      0 0.040</span><span style='text-decoration: underline;'>1</span><span>   -</span><span style='color: #BB0000;'>4.22</span><span>         0.174          0.174 
-#&gt; </span><span style='color: #555555;'># ... with 90 more rows</span><span>
-#&gt; 
-#&gt; $modelAvgBeta
-#&gt;     aicWeightCoef bicWeightCoef
-#&gt; Int   -0.05490941   -0.05696541
-#&gt; X1     0.90424733    0.88982001
-#&gt; X2    -1.12255716   -1.12098801
-#&gt; X3     0.00000000    0.00000000
-#&gt; X4     0.00000000    0.00000000
-#&gt; X5     0.00000000    0.00000000
-#&gt; X6     0.00000000    0.00000000
-#&gt; X7     0.00000000    0.00000000
-#&gt; X8     0.00000000    0.00000000
-#&gt; X9     0.00000000    0.00000000
-#&gt; X10    0.00000000    0.00000000
-#&gt; 
-#&gt; $aicWeights
-#&gt;             [,1]
-#&gt; [1,] 0.006052629
-#&gt; [2,] 0.993947371
-#&gt; 
-#&gt; $bicWeights
-#&gt;            [,1]
-#&gt; [1,] 0.02191112
-#&gt; [2,] 0.97808888
-#&gt; </div></span></pre>
+<span class='no'>firstApes</span> <span class='kw'>=</span> <span class='fu'><a href='apes_logit.html'>apes_logit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>)
+<span class='no'>secondApes</span> <span class='kw'>=</span> <span class='fu'><a href='apes_logit.html'>apes_logit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>)
+<span class='no'>listApes</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>firstApes</span>, <span class='no'>secondApes</span>)
+<span class='no'>finalResult</span> <span class='kw'>=</span> <span class='fu'>apes_logit_mio_combine</span>(<span class='no'>listApes</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>finalResult</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -5,7 +5,7 @@
 \title{Bootstrap version of apes_logit}
 \usage{
 boot_apes_logit(x, y, Pi, k, estimator = "leaps", time.limit = 60,
-  nBoot = 100, nCores = 1)
+  nBoot = 100, workers = 1)
 }
 \arguments{
 \item{x}{The n by p design matrix for logistic regression}
@@ -28,7 +28,7 @@ It will not affect the speed if leaps}
 
 \item{nBoot}{Number of bootstrap runs}
 
-\item{nCores}{Number of cores, only supporting parallel::mclapply now}
+\item{workers}{Number of cores, only supporting parallel::mclapply now}
 }
 \description{
 Bootstrap version of apes_logit
@@ -45,7 +45,7 @@ y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
 Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
 listResult = boot_apes_logit(
 x = x, y = y, Pi = Pi, k = k,
-estimator = "leaps", nBoot = 10, nCores = 1)
+estimator = "leaps", nBoot = 10, workers = 1)
 length(listResult)
 }
 \author{

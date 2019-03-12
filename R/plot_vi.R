@@ -20,12 +20,12 @@
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
 #' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-#' viPlotResult = viPlot_apes(listResult)
+#' viPlotResult = plot_vi(listResult)
 #' viPlotResult$viPlot
 
 
 
-viPlot_apes = function(listResult){
+plot_vi = function(listResult){
   n = nrow(listResult[[1]]$responseTibble) ## Number of observations
   penalty = seq(0, 2*log(n), by = 0.1)
   list_apesModelDf = purrr::map(listResult, "apesModelDf")

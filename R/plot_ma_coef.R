@@ -20,12 +20,12 @@
 #' y = rpois(n = n, lambda = exp(x %*% beta))
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
+#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
 #'
-#' maCoefPlot(listResult, type = "aic")
-#' maCoefPlot(listResult, type = "bic")
+#' plot_ma_coef(listResult, type = "aic")
+#' plot_ma_coef(listResult, type = "bic")
 
-maCoefPlot = function(listResult, type = "aic"){
+plot_ma_coef = function(listResult, type = "aic"){
   modelAvgBeta = purrr::map(listResult,"modelAvgBeta")
 
   stopifnot(type %in% c("aic", "bic"))
@@ -54,7 +54,7 @@ maCoefPlot = function(listResult, type = "aic"){
     varnames = c("cumBootNum", "variables"),
     value.name = "maValues")
 
-  cummeanModelAvgPlotdf %>%
+  result = cummeanModelAvgPlotdf %>%
     ggplot2::ggplot(aes(
       x = cumBootNum,
       y = maValues,
@@ -71,5 +71,7 @@ maCoefPlot = function(listResult, type = "aic"){
          y = "Cumulative averaged MA coefficients") +
     ggplot2::theme_classic(18) +
     ggplot2::theme(legend.position = "none")
+
+  return(result)
 
 }

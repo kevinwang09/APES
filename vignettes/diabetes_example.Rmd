@@ -5,6 +5,10 @@ date: "22/08/2018"
 output:
   html_document:
     self_contained: no
+vignette: |
+  %\VignetteIndexEntry{An introduction to the scMerge package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
@@ -97,9 +101,9 @@ t2 - t1
 ### Variable selection plot 
 
 ```{r}
-viPlotResult = APES::viPlot_apes(listResult)
+viPlotResult = APES::plot_vi(listResult)
 viPlotResult$viPlot
-viTilePlotResult = APES::viTilePlot_apes(listResult)
+viTilePlotResult = APES::plot_vi_tile(listResult)
 viTilePlotResult
 ```
 
@@ -114,20 +118,20 @@ plotly::ggplotly(
 
 ### Model averaging coefficient plot
 ```{r}
-APES::maCoefPlot(listResult, type = "aic") + 
+APES::plot_ma_coef(listResult, type = "aic") + 
   labs(title = "AIC weighted coefficients")
 
-APES::maCoefPlot(listResult, type = "bic") +
+APES::plot_ma_coef(listResult, type = "bic") +
   labs(title = "BIC weighted coefficients")
 ```
 
 
 ### Model averaging weights plot
 ```{r}
-APES::maWeightsPlot(listResult, type = "aic") + 
+APES::plot_ma_weight(listResult, type = "aic") + 
   labs(title = "AIC Weights")
 
-APES::maWeightsPlot(listResult, type = "bic") + 
+APES::plot_ma_weight(listResult, type = "bic") + 
   labs(title = "BIC Weights")
 ```
 

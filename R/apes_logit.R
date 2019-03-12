@@ -60,7 +60,7 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
             Over half of Pi's has values less than 1e-10 or greater than
             1 - 1e-10, which may imply degeneracy.")
   }
-  linearY = log(Pi/(1-Pi)) + (yBinom-Pi)/(Pi*(1-Pi))
+  linearY = logit(Pi) + (yBinom-Pi)/(Pi*(1-Pi))
   ###### End setting up linear regression #######
 
 

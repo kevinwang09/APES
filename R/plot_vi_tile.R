@@ -24,11 +24,11 @@
 #' listResult = boot_apes_poisson(
 #' x = x, y = y, mu = mu, k = k,
 #' estimator = "leaps", nBoot = 50)
-#' viTileResult = viTilePlot_apes(listResult)
+#' viTileResult = plot_vi_tile(listResult)
 #' viTileResult$variableTilePlot
 #' viTileResult$variableTilePlot_category
 
-viTilePlot_apes = function(listResult){
+plot_vi_tile = function(listResult){
   apesMleBetaBinaryList = purrr::map_dfr(listResult, "apesMleBetaBinary", .id = "bootNum")
   apesModelDfList = purrr::map_dfr(listResult, "apesModelDf", .id = "bootNum")
 

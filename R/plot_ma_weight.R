@@ -20,54 +20,54 @@
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
 #' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-#' maWeightsPlot(listResult, type = "aic")
-#' maWeightsPlot(listResult, type = "bic")
+#' plot_ma_weight(listResult, type = "aic")
+#' plot_ma_weight(listResult, type = "bic")
 
 
 
-maWeightsPlot = function(listResult, type = "aic"){
-  
+plot_ma_weight = function(listResult, type = "aic"){
+
   stopifnot(type %in% c("aic", "bic"))
-  
-  
+
+
   if(type == "aic") {
-    weightsMat = purrr::map(listResult,"aicWeights") %>% 
+    weightsMat = purrr::map(listResult,"aicWeights") %>%
       do.call(cbind, .)
   }
-  
+
   if(type == "bic"){
-    weightsMat = purrr::map(listResult,"bicWeights") %>% 
+    weightsMat = purrr::map(listResult,"bicWeights") %>%
       do.call(cbind, .)
   }
-  
+
   colnames(weightsMat) = names(listResult)
   rownames(weightsMat) = listResult[[1]]$apesModelDf$modelSize
-  
+
   weightsPlotdf = reshape2::melt(
     weightsMat,
     varnames = c("modelSize", "bootNum"),
     value.name = "maWeights")
-  
-  
+
+
   weightsPlotdf %>%
     ggplot2::ggplot(
       aes(x = factor(modelSize),
           y = maWeights)) +
     ggplot2::geom_boxplot() +
-    ggplot2::labs(x = "Model size", 
+    ggplot2::labs(x = "Model size",
                   y = "MA weights") +
     ggplot2::theme_classic(18)
-  
-  
-  
+
+
+
   # geom_point()
-  
-  # weightsPlotdf %>% 
-  #   ggplot(aes(x = modelSize, 
-  #              y = maWeights, 
+
+  # weightsPlotdf %>%
+  #   ggplot(aes(x = modelSize,
+  #              y = maWeights,
   #              group = bootNum)) +
   #   geom_point() +
   #   geom_smooth(aes(group = 1))
   # geom_line()
-  
+
 }

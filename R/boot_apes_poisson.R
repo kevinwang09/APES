@@ -14,9 +14,10 @@
 #' model size model when the "mio" estimator was selected.
 #' It will not affect the speed if leaps
 #' @param nBoot Number of bootstrap runs
-#' @param nCores Number of cores, only supporting parallel::mclapply now
+#' @param workers Number of cores, using multicores from the furr package
 #' @author Kevin Wang
-#' @import parallel
+#' @import furrr
+#' @import future
 #' @export
 #' @examples
 #' set.seed(10)
@@ -30,29 +31,35 @@
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #' listResult = boot_apes_poisson(
 #' x = x, y = y, mu = mu, k = k,
-#' estimator = "leaps", nBoot = 10)
+#' estimator = "leaps", nBoot = 10, workers = 1)
 #' length(listResult)
 
-
 boot_apes_poisson = function(x, y, mu, k,
-                           estimator = "leaps",
-                           time.limit = 60,
-                           nBoot = 100, nCores = 1){
-  if(nCores > 1){
-    result = parallel::mclapply(1:nBoot, function(thisLoop){
-      bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
-      res = APES::apes_poisson(
-        x = x[bootSample,],
-        y = y[bootSample],
-        mu = mu,
-        k = k,
-        time.limit = time.limit,
-        estimator = estimator)
-      return(res)
-    }, mc.cores = nCores)
+                             estimator = "leaps",
+                             time.limit = 60,
+                             nBoot = 100, workers = 1){
+
+  if(workers > 1){
+    future::plan(strategy = future::multiprocess, workers = workers)
+
+    result = furrr::future_map(
+      .x = seq_len(nBoot),
+      .f = function(thisLoop){
+        bootSample = sample(seq_len(nrow(x)), replace = TRUE)
+        res = APES::apes_poisson(
+          x = x[bootSample,],
+          y = y[bootSample],
+          mu = mu,
+          k = k,
+          time.limit = time.limit,
+          estimator = estimator)
+        return(res)
+      }, .progress = TRUE)
+
+    future::plan(strategy = future::sequential)
   } else{
-    result = lapply(1:nBoot, function(thisLoop){
-      bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
+    result = lapply(seq_len(nBoot), function(thisLoop){
+      bootSample = sample(seq_len(nrow(x)), replace = TRUE)
       res = APES::apes_poisson(
         x = x[bootSample,],
         y = y[bootSample],

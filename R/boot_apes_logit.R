@@ -12,9 +12,10 @@
 #' to each model size model when the "mio" estimator was selected.
 #' It will not affect the speed if leaps
 #' @param nBoot Number of bootstrap runs
-#' @param nCores Number of cores, only supporting parallel::mclapply now
+#' @param workers Number of cores, only supporting parallel::mclapply now
 #' @author Kevin Wang
-#' @import parallel
+#' @import furrr
+#' @import future
 #' @export
 #' @examples
 #' set.seed(10)
@@ -28,30 +29,36 @@
 #' Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
 #' listResult = boot_apes_logit(
 #' x = x, y = y, Pi = Pi, k = k,
-#' estimator = "leaps", nBoot = 10, nCores = 1)
+#' estimator = "leaps", nBoot = 10, workers = 1)
 #' length(listResult)
 
 
 boot_apes_logit = function(x, y, Pi, k,
                            estimator = "leaps",
                            time.limit = 60,
-                           nBoot = 100, nCores = 1){
+                           nBoot = 100, workers = 1){
 
-  if(nCores > 1){
-    result = parallel::mclapply(1:nBoot, function(thisLoop){
-      bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
-      res = APES::apes_logit(
-        x = x[bootSample,],
-        y = y[bootSample],
-        Pi = Pi,
-        k = k,
-        time.limit = time.limit,
-        estimator = estimator)
-      return(res)
-    }, mc.cores = nCores)
+  if(workers > 1){
+    future::plan(strategy = future::multiprocess, workers = workers)
+
+    result = furrr::future_map(
+      .x = seq_len(nBoot),
+      .f = function(thisLoop){
+        bootSample = sample(seq_len(nrow(x)), replace = TRUE)
+        res = APES::apes_logit(
+          x = x[bootSample,],
+          y = y[bootSample],
+          Pi = Pi,
+          k = k,
+          time.limit = time.limit,
+          estimator = estimator)
+        return(res)
+      }, .progress = TRUE)
+
+    future::plan(future::sequential())
   } else{
     result = lapply(1:nBoot, function(thisLoop){
-      bootSample = sample(1:nrow(x), nrow(x), replace = TRUE)
+      bootSample = sample(seq_len(nrow(x)), replace = TRUE)
       res = APES::apes_logit(
         x = x[bootSample,],
         y = y[bootSample],
