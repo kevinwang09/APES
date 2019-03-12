@@ -8,6 +8,18 @@ dist: trusty
 os:
   - linux
   - osx
+
 env:
- global:
-   - R_CHECK_FORCE_SUGGESTS_=FALSE
+  global:
+    - NOT_CRAN=true
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
+    - _R_CHECK_LATEX_VIGNETTES=FALSE
+    - _R_CHECK_WEAVE_VIGNETTES=FALSE
+
+r_github_packages:
+  - r-lib/covr
+
+warnings_are_errors: false
+
+after_success:
+  - Rscript -e 'covr::codecov()'
