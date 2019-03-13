@@ -9,7 +9,21 @@ plot_vi(listResult)
 \arguments{
 \item{listResult}{a list of APES outputs}
 }
+\value{
+bootVarPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
+
+viPlot a ggplot
+}
 \description{
+This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores log-likelihood for every model it considered.
+In this function, we then consider general information criterion (GIC) of the form
+-2*logLike + penalty * modeSize.
+For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
+look at which variables are selected in that model.
+The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
+}
+\details{
 Variable inclusion plot
 }
 \examples{
@@ -23,7 +37,7 @@ colnames(x) = paste0("X", 1:p)
 y = rpois(n = n, lambda = exp(x \%*\% beta))
 mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 
-listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
+listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
 viPlotResult = plot_vi(listResult)
 viPlotResult$viPlot
 }

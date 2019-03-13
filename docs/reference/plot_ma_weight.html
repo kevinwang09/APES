@@ -32,7 +32,13 @@
 
 <meta property="og:title" content="MA weights visualisation — plot_ma_weight" />
 
-<meta property="og:description" content="MA weights visualisation" />
+<meta property="og:description" content="This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores AIC and BIC for every model it considered.
+These AIC and BIC values can be converted into weights via AIC_j/sum(AIC_j), where AIC_j denotes the
+AIC of the best model with j number of variables.
+These weights can be used for calculate model averaging.
+If a model size typically receives more weights across all bootstrap runs, then we could use this information
+to determine the optimal number of variables to build into the final model." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
       </span>
     </div>
 
@@ -89,7 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/birthweight_example.html">Birth weight example</a>
+      <a href="../articles/birthweight_logit.html">Birth weight example</a>
+    </li>
+    <li>
+      <a href="../articles/birthweight_poisson.html">Count Data</a>
     </li>
     <li>
       <a href="../articles/diabetes_example.html">Diabetes example</a>
@@ -124,11 +133,17 @@
 
     <div class="ref-description">
     
-    <p>MA weights visualisation</p>
+    <p>This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores AIC and BIC for every model it considered.
+These AIC and BIC values can be converted into weights via AIC_j/sum(AIC_j), where AIC_j denotes the
+AIC of the best model with j number of variables.
+These weights can be used for calculate model averaging.
+If a model size typically receives more weights across all bootstrap runs, then we could use this information
+to determine the optimal number of variables to build into the final model.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>plot_ma_weight</span>(<span class='no'>listResult</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"aic"</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_ma_weight</span>(<span class='no'>listResult</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"AIC"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -204,7 +219,7 @@
 #&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='fu'>plot_ma_weight</span>(<span class='no'>listResult</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"aic"</span>)</div><div class='img'><img src='plot_ma_weight-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_ma_weight</span>(<span class='no'>listResult</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"bic"</span>)</div><div class='img'><img src='plot_ma_weight-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='fu'>plot_ma_weight</span>(<span class='no'>listResult</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"AIC"</span>)</div><div class='img'><img src='plot_ma_weight-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_ma_weight</span>(<span class='no'>listResult</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"BIC"</span>)</div><div class='img'><img src='plot_ma_weight-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

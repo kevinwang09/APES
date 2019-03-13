@@ -13,6 +13,7 @@
 #' It will not affect the speed if leaps
 #' @param nBoot Number of bootstrap runs
 #' @param workers Number of cores, only supporting parallel::mclapply now
+#' @param seed Used to set a random seed for reproducibility. Default to NULL
 #' @author Kevin Wang
 #' @import furrr
 #' @import future
@@ -36,40 +37,42 @@
 boot_apes_logit = function(x, y, Pi, k,
                            estimator = "leaps",
                            time.limit = 60,
-                           nBoot = 100, workers = 1){
+                           nBoot = 100, workers = 1, seed = NULL){
+  if(!is.null(seed)){
+    set.seed(seed)
+  }
+
+  listBootIndex = base::replicate(
+    n = nBoot,
+    expr = sample(seq_len(nrow(x)), replace = TRUE),
+    simplify = FALSE)
+
+  single_boot_apes_logit = function(bootIndex){
+
+    res = APES::apes_logit(
+      x = x[bootIndex,],
+      y = y[bootIndex],
+      Pi = Pi,
+      k = k,
+      time.limit = time.limit,
+      estimator = estimator)
+    return(res)
+  }
+
 
   if(workers > 1){
     future::plan(strategy = future::multiprocess, workers = workers)
 
     result = furrr::future_map(
-      .x = seq_len(nBoot),
-      .f = function(thisLoop){
-        bootSample = sample(seq_len(nrow(x)), replace = TRUE)
-        res = APES::apes_logit(
-          x = x[bootSample,],
-          y = y[bootSample],
-          Pi = Pi,
-          k = k,
-          time.limit = time.limit,
-          estimator = estimator)
-        return(res)
-      }, .progress = TRUE)
+      .x = listBootIndex,
+      .f = single_boot_apes_logit, .progress = TRUE)
 
     future::plan(future::sequential())
   } else{
-    result = lapply(1:nBoot, function(thisLoop){
-      bootSample = sample(seq_len(nrow(x)), replace = TRUE)
-      res = APES::apes_logit(
-        x = x[bootSample,],
-        y = y[bootSample],
-        Pi = Pi,
-        k = k,
-        time.limit = time.limit,
-        estimator = estimator)
-      return(res)
-    })
+    result = lapply(listBootIndex, single_boot_apes_logit)
   }
 
   names(result) = paste0("bootNum", 1:nBoot)
   return(result)
 }
+

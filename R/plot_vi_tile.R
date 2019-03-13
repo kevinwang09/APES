@@ -1,5 +1,6 @@
 #' Variable inclusion plot in tile format
 #' @title Variable Inclusion Plot in tile format
+#' @description This function displays the same information as plot_vi, but in a tile plot format.
 #' @param listResult a list of APES outputs
 #' @author Kevin Wang
 #' @import dplyr
@@ -9,6 +10,9 @@
 #' @import RColorBrewer
 #' @import forcats
 #' @importFrom magrittr %>%
+#' @return apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
+#' @return variableTilePlot a ggplot with continuous colouring
+#' @return variableTilePlot_category a ggplot with discrete colouring
 #' @export
 #' @examples
 #' set.seed(10)
@@ -23,7 +27,7 @@
 #'
 #' listResult = boot_apes_poisson(
 #' x = x, y = y, mu = mu, k = k,
-#' estimator = "leaps", nBoot = 50)
+#' estimator = "leaps", nBoot = 20)
 #' viTileResult = plot_vi_tile(listResult)
 #' viTileResult$variableTilePlot
 #' viTileResult$variableTilePlot_category
@@ -64,6 +68,9 @@ plot_vi_tile = function(listResult){
     ggplot2::geom_vline(xintercept = aicOptimalMedianSize, colour = "black") +
     ggplot2::geom_vline(xintercept = bicOptimalMedianSize, colour = "black") +
     ggplot2::scale_fill_distiller(palette = "Spectral", direction = -1) +
+    ggplot2::labs(
+      title = "Variable inclusion tile plot, continuous colouring") +
+    ggplot2::theme_classic(18) +
     ggplot2::theme(legend.text = element_text(angle = 45, hjust = 0.7),
                    legend.position = "bottom")
 
@@ -81,6 +88,9 @@ plot_vi_tile = function(listResult){
     ggplot2::scale_fill_manual(
       values = colorRampPalette(RColorBrewer::brewer.pal(3, "YlGnBu"))(5)
     ) +
+    ggplot2::labs(
+      title = "Variable inclusion tile plot, discrete colouring") +
+    ggplot2::theme_classic(18) +
     ggplot2::theme(legend.position = "bottom")
 
   # variableTilePlot_category

@@ -1,5 +1,12 @@
 #' Variable inclusion plot
 #' @title Variable Inclusion Plot
+#' @description This function is suitable for a list of bootstrap APES outputs.
+#' From each bootstrap run, APES stores log-likelihood for every model it considered.
+#' In this function, we then consider general information criterion (GIC) of the form
+#' -2*logLike + penalty * modeSize.
+#' For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
+#' look at which variables are selected in that model.
+#' The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
 #' @param listResult a list of APES outputs
 #' @author Kevin Wang
 #' @import dplyr
@@ -7,6 +14,8 @@
 #' @import purrr
 #' @import directlabels
 #' @importFrom magrittr %>%
+#' @return bootVarPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
+#' @return viPlot a ggplot
 #' @export
 #' @examples
 #' set.seed(10)
@@ -19,7 +28,7 @@
 #' y = rpois(n = n, lambda = exp(x %*% beta))
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
+#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
 #' viPlotResult = plot_vi(listResult)
 #' viPlotResult$viPlot
 
@@ -67,6 +76,11 @@ plot_vi = function(listResult){
     ggplot2::annotate("text", x = log(n)+0.2, y = 1, label = "BIC", angle = 90) +
     ggplot2::ylim(0,1) +
     ggplot2::xlim(min(penalty), max(penalty)+1) +
+    ggplot2::labs(
+      title = "Variable inclusion plot",
+      x = "penalty",
+      y = "empirical variable inclusion probability") +
+    ggplot2::theme_classic(18) +
     ggplot2::theme(legend.position = "none")
 
 

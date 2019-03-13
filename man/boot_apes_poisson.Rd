@@ -5,7 +5,7 @@
 \title{Bootstrap version of apes_logit}
 \usage{
 boot_apes_poisson(x, y, mu, k, estimator = "leaps", time.limit = 60,
-  nBoot = 100, workers = 1)
+  nBoot = 100, workers = 1, seed = NULL)
 }
 \arguments{
 \item{x}{The n by p design matrix for Poisson regression}
@@ -31,6 +31,8 @@ It will not affect the speed if leaps}
 \item{nBoot}{Number of bootstrap runs}
 
 \item{workers}{Number of cores, using multicores from the furr package}
+
+\item{seed}{Used to set a random seed for reproducibility. Default to NULL}
 }
 \description{
 Bootstrap version of apes_logit

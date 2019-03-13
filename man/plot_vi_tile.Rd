@@ -9,7 +9,17 @@ plot_vi_tile(listResult)
 \arguments{
 \item{listResult}{a list of APES outputs}
 }
+\value{
+apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
+
+variableTilePlot a ggplot with continuous colouring
+
+variableTilePlot_category a ggplot with discrete colouring
+}
 \description{
+This function displays the same information as plot_vi, but in a tile plot format.
+}
+\details{
 Variable inclusion plot in tile format
 }
 \examples{
@@ -25,7 +35,7 @@ mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 
 listResult = boot_apes_poisson(
 x = x, y = y, mu = mu, k = k,
-estimator = "leaps", nBoot = 50)
+estimator = "leaps", nBoot = 20)
 viTileResult = plot_vi_tile(listResult)
 viTileResult$variableTilePlot
 viTileResult$variableTilePlot_category

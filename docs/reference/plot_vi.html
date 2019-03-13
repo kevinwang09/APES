@@ -32,7 +32,13 @@
 
 <meta property="og:title" content="Variable Inclusion Plot — plot_vi" />
 
-<meta property="og:description" content="Variable inclusion plot" />
+<meta property="og:description" content="This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores log-likelihood for every model it considered.
+In this function, we then consider general information criterion (GIC) of the form
+-2*logLike + penalty * modeSize.
+For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
+look at which variables are selected in that model.
+The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
       </span>
     </div>
 
@@ -89,7 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/birthweight_example.html">Birth weight example</a>
+      <a href="../articles/birthweight_logit.html">Birth weight example</a>
+    </li>
+    <li>
+      <a href="../articles/birthweight_poisson.html">Count Data</a>
     </li>
     <li>
       <a href="../articles/diabetes_example.html">Diabetes example</a>
@@ -124,7 +133,13 @@
 
     <div class="ref-description">
     
-    <p>Variable inclusion plot</p>
+    <p>This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores log-likelihood for every model it considered.
+In this function, we then consider general information criterion (GIC) of the form
+-2*logLike + penalty * modeSize.
+For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
+look at which variables are selected in that model.
+The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.</p>
     
     </div>
 
@@ -139,6 +154,15 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>bootVarPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot</p>
+<p>viPlot a ggplot</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Variable inclusion plot</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>10</span>)
@@ -151,37 +175,7 @@
 <span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Poisson'>rpois</a></span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>exp</a></span>(<span class='no'>x</span> <span class='kw'>%*%</span> <span class='no'>beta</span>))
 <span class='no'>mu</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/glm'>glm.fit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/family'>poisson</a></span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='st'>"log"</span>))$<span class='no'>fitted.values</span>
 
-<span class='no'>listResult</span> <span class='kw'>=</span> <span class='fu'><a href='boot_apes_poisson.html'>boot_apes_poisson</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>, <span class='kw'>nBoot</span> <span class='kw'>=</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"
+<span class='no'>listResult</span> <span class='kw'>=</span> <span class='fu'><a href='boot_apes_poisson.html'>boot_apes_poisson</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='no'>mu</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>, <span class='kw'>nBoot</span> <span class='kw'>=</span> <span class='fl'>20</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
@@ -207,7 +201,11 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

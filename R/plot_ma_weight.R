@@ -1,5 +1,11 @@
-#' MA weights visualisation
 #' @title MA weights visualisation
+#' @description This function is suitable for a list of bootstrap APES outputs.
+#' From each bootstrap run, APES stores AIC and BIC for every model it considered.
+#' These AIC and BIC values can be converted into weights via AIC_j/sum(AIC_j), where AIC_j denotes the
+#' AIC of the best model with j number of variables.
+#' These weights can be used for calculate model averaging.
+#' If a model size typically receives more weights across all bootstrap runs, then we could use this information
+#' to determine the optimal number of variables to build into the final model.
 #' @param listResult a list of APES outputs
 #' @param type either "aic" (default) or "bic"
 #' @author Kevin Wang
@@ -20,22 +26,22 @@
 #' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 #'
 #' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-#' plot_ma_weight(listResult, type = "aic")
-#' plot_ma_weight(listResult, type = "bic")
+#' plot_ma_weight(listResult, type = "AIC")
+#' plot_ma_weight(listResult, type = "BIC")
 
 
 
-plot_ma_weight = function(listResult, type = "aic"){
+plot_ma_weight = function(listResult, type = "AIC"){
 
-  stopifnot(type %in% c("aic", "bic"))
+  stopifnot(type %in% c("AIC", "BIC"))
 
 
-  if(type == "aic") {
+  if(type == "AIC") {
     weightsMat = purrr::map(listResult,"aicWeights") %>%
       do.call(cbind, .)
   }
 
-  if(type == "bic"){
+  if(type == "BIC"){
     weightsMat = purrr::map(listResult,"bicWeights") %>%
       do.call(cbind, .)
   }
@@ -54,8 +60,10 @@ plot_ma_weight = function(listResult, type = "aic"){
       aes(x = factor(modelSize),
           y = maWeights)) +
     ggplot2::geom_boxplot() +
-    ggplot2::labs(x = "Model size",
-                  y = "MA weights") +
+    ggplot2::labs(
+      title = paste("Model average weights using", type),
+      x = "Model size",
+      y = "MA weights") +
     ggplot2::theme_classic(18)
 
 

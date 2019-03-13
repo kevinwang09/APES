@@ -4,7 +4,7 @@
 \alias{plot_ma_weight}
 \title{MA weights visualisation}
 \usage{
-plot_ma_weight(listResult, type = "aic")
+plot_ma_weight(listResult, type = "AIC")
 }
 \arguments{
 \item{listResult}{a list of APES outputs}
@@ -12,7 +12,13 @@ plot_ma_weight(listResult, type = "aic")
 \item{type}{either "aic" (default) or "bic"}
 }
 \description{
-MA weights visualisation
+This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores AIC and BIC for every model it considered.
+These AIC and BIC values can be converted into weights via AIC_j/sum(AIC_j), where AIC_j denotes the
+AIC of the best model with j number of variables.
+These weights can be used for calculate model averaging.
+If a model size typically receives more weights across all bootstrap runs, then we could use this information
+to determine the optimal number of variables to build into the final model.
 }
 \examples{
 set.seed(10)
@@ -26,8 +32,8 @@ y = rpois(n = n, lambda = exp(x \%*\% beta))
 mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 
 listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-plot_ma_weight(listResult, type = "aic")
-plot_ma_weight(listResult, type = "bic")
+plot_ma_weight(listResult, type = "AIC")
+plot_ma_weight(listResult, type = "BIC")
 }
 \author{
 Kevin Wang

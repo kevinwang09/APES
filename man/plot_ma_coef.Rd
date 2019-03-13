@@ -4,14 +4,21 @@
 \alias{plot_ma_coef}
 \title{Average of model average plot}
 \usage{
-plot_ma_coef(listResult, type = "aic")
+plot_ma_coef(listResult, type = "AIC")
 }
 \arguments{
 \item{listResult}{a list of APES outputs}
 
-\item{type}{either "aic" (default) or "bic"}
+\item{type}{either "AIC" (default) or "BIC"}
 }
 \description{
+This function is suitable for a list of bootstrap APES outputs.
+From each bootstrap run, APES stores coefficient values averaged across all models considered.
+As we have multiple bootstrapped APES output, we can cummulatively average
+these model averaged coefficient values across all bootstrap runs.
+On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
+}
+\details{
 Visualise model averaging results
 }
 \examples{
@@ -27,8 +34,8 @@ mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 
 listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
 
-plot_ma_coef(listResult, type = "aic")
-plot_ma_coef(listResult, type = "bic")
+plot_ma_coef(listResult, type = "AIC")
+plot_ma_coef(listResult, type = "BIC")
 }
 \author{
 Kevin Wang

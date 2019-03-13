@@ -11,7 +11,8 @@ output:
 
 In this document, we will perform APES on the `birthweight` data from the `MASS` package. 
 
-There are 189 observations and 8 variables. The response variable is a binary variable indicating if an infant is in the low-weight group. 
+There are 189 observations and 8 variables. 
+The response variable is a binary variable indicating if an infant is in the low-weight group. 
 
 
 # Setting up the data
@@ -75,8 +76,6 @@ apes_logit_leaps = apes_logit(
   Pi = fullModel$fitted.values,
   k = 1:ncol(x), 
   estimator = "leaps")
-
-APES::plot_vi_tile(list(apes_logit_leaps))
 ```
 
 
