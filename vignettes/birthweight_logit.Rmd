@@ -1,5 +1,5 @@
 ---
-title: "Birth weight example"
+title: "Birthweight Logistic Regression"
 author: "Kevin Wang"
 date: "26/08/2018"
 output:
@@ -103,6 +103,7 @@ apes_logit_leaps = apes_logit(
 In most practical cases, a single run of any variable selection procedure is not stable. In order to explore stability of variable selection in this case, we can bootstrap on the 189 observations. The implementation of APES is fast enough that this can be done relatively fast.
 
 ```{r, results = 'hide'}
+t1 = Sys.time()
 listResult = APES::boot_apes_logit(
   x = x,
   y = y,
@@ -110,10 +111,14 @@ listResult = APES::boot_apes_logit(
   k = 1:ncol(x), 
   estimator = "leaps",
   nBoot = 100)
+t2 = Sys.time()
 ```
 
 
-### Variable selection plot 
+
+
+
+## Variable selection plot 
 
 ```{r}
 viPlotResult = APES::plot_vi(listResult)
@@ -131,7 +136,7 @@ plotly::ggplotly(
 ```
 
 
-### Model averaging coefficient plot
+## Model averaging coefficient plot
 ```{r}
 APES::plot_ma_coef(listResult, type = "aic") + 
   labs(title = "AIC weighted coefficients")
@@ -141,7 +146,7 @@ APES::plot_ma_coef(listResult, type = "bic") +
 ```
 
 
-### Model averaging weights plot
+## Model averaging weights plot
 ```{r}
 APES::plot_ma_weight(listResult, type = "aic") + 
   labs(title = "AIC Weights")

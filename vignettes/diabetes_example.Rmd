@@ -132,21 +132,23 @@ APES::plot_ma_weight(listResult, type = "bic") +
 ```
 
 
-<!-- # Compare against mplot -->
+# Compare against mplot
 
-<!-- Some visualisations we implement in APES are originally from the `mplot` package. We will compare our APES method against the `mplot` results, which implements a genuine exhaustive search method.  -->
+Some visualisations we implement in APES are originally from the `mplot` package. We will compare our APES method against the `mplot` results, which implements a genuine exhaustive search method.
 
-<!-- ```{r, results = "asis", message=FALSE} -->
-<!-- t3 = Sys.time() -->
-<!-- mplotResult = mplot::vis( -->
-<!--   mf = fullModel,  -->
-<!--   B = 100, -->
-<!--   redundant = FALSE) -->
-<!-- t4 = Sys.time() -->
-<!-- t4 - t3 -->
+```{r, results = "asis", message=FALSE}
+t3 = Sys.time()
 
-<!-- plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart") -->
-<!-- ``` -->
+mplotResult = mplot::vis(
+  mf = fullModel,
+  B = 100,
+  redundant = FALSE)
+
+t4 = Sys.time()
+t4 - t3
+
+plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart")
+```
 
 
 # Session Info

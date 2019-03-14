@@ -1,5 +1,5 @@
 ---
-title: "Count Data"
+title: "Birthweight Poisson Regression"
 author: "Kevin Wang"
 date: "12/03/2019"
 output: html_document
