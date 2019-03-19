@@ -25,3 +25,9 @@ oneCore_withoutTime = purrr::map(oneCore, remove_apesTimeDiff)
 twoCore_withoutTime = purrr::map(twoCore, remove_apesTimeDiff)
 
 expect_identical(oneCore_withoutTime, twoCore_withoutTime)
+
+oneCore_secondRun = boot_apes_logit(x = x, y = y, Pi = Pi, k = k, estimator = "leaps", nBoot = 10, workers = 1, seed = 123)
+expect_identical(
+  purrr::map(oneCore, "responseTibble"),
+  purrr::map(oneCore_secondRun, "responseTibble")
+)
