@@ -6,7 +6,7 @@ author:
 output:
   html_document:
     toc_float: true
-vignette: |
+vignette: >
   %\VignetteIndexEntry{An introduction to the scMerge package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
