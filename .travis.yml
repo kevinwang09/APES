@@ -3,7 +3,9 @@
 language: R
 sudo: false
 cache: packages
-R: release
+R:
+  - devel
+  - bioc-devel
 dist: trusty
 os:
   - linux
