@@ -8,147 +8,147 @@ output:
 ---
 
 
-# Introduction 
+<!-- # Introduction  -->
 
-```{r}
-suppressPackageStartupMessages({
-  library(APES)
-  library(glmnet)
-  library(mplot)
-  library(tidyverse)
-  library(directlabels)
-  library(plotly)
-})
-```
-
-## Loading data
-
-We will illustrate the utility of the APES method on the diabetes data from the `mplot` package. 
-
-As the original data has a continuous response variable, named as `y`. We will dichromise this response variable by spliting it at the median to create two classes and fit a logistic regression. 
-
-```{r}
-diabetes = mplot::diabetes
-x = diabetes %>% dplyr::select(age:glu) %>% as.matrix() %>% cbind(RV = rnorm(nrow(diabetes))) %>% scale
-y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L)
-dim(x)
-length(y)
-```
-
-
-# Running APES on diabetes data
-
-We will illustrate the APES methodology using the `leaps` estimator here, since there are only 11 variables, the leaps estimator will be faster than the `mio` estimator. 
-
-
-## Using the leaps estimator on the full data
-```{r}
-# fullModel = glm.fit(x = x, y = y, family = binomial(link = "logit"))
-fullModel = glm(y ~ x, family = "binomial")
-
-apes_logit_leaps = apes_logit(
-  x = x,
-  y = y,
-  Pi = fullModel$fitted.values,
-  k = 1:ncol(x), 
-  estimator = "leaps")
-
-apes_logit_leaps$selectedModelBeta
-```
-
-
-<!-- # Running Lasso on diabetes data -->
 <!-- ```{r} -->
-<!-- lasso_logit = glmnet::cv.glmnet(x = x, -->
-<!--                                 y = y) -->
-<!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") -->
-<!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] -->
+<!-- suppressPackageStartupMessages({ -->
+<!--   library(APES) -->
+<!--   library(glmnet) -->
+<!--   library(mplot) -->
+<!--   library(tidyverse) -->
+<!--   library(directlabels) -->
+<!--   library(plotly) -->
+<!-- }) -->
+<!-- ``` -->
+
+<!-- ## Loading data -->
+
+<!-- We will illustrate the utility of the APES method on the diabetes data from the `mplot` package.  -->
+
+<!-- As the original data has a continuous response variable, named as `y`. We will dichromise this response variable by spliting it at the median to create two classes and fit a logistic regression.  -->
+
+<!-- ```{r} -->
+<!-- diabetes = mplot::diabetes -->
+<!-- x = diabetes %>% dplyr::select(age:glu) %>% as.matrix() %>% cbind(RV = rnorm(nrow(diabetes))) %>% scale -->
+<!-- y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L) -->
+<!-- dim(x) -->
+<!-- length(y) -->
 <!-- ``` -->
 
 
-## Bootstrapping using leaps version 
+<!-- # Running APES on diabetes data -->
 
-If we want to explore the variable selection stability, then we could perform bootstrapping to obtain averaged variable selection results. 
-
-```{r, results = 'hide'}
-t1 = Sys.time()
-listResult = APES::boot_apes_logit(
-  x = x,
-  y = y,
-  Pi = fullModel$fitted.values,
-  k = 1:ncol(x), 
-  estimator = "leaps",
-  nBoot = 100)
-t2 = Sys.time()
-```
+<!-- We will illustrate the APES methodology using the `leaps` estimator here, since there are only 11 variables, the leaps estimator will be faster than the `mio` estimator.  -->
 
 
-The time taken for bootstrapping in APES: 
+<!-- ## Using the leaps estimator on the full data -->
+<!-- ```{r} -->
+<!-- # fullModel = glm.fit(x = x, y = y, family = binomial(link = "logit")) -->
+<!-- fullModel = glm(y ~ x, family = "binomial") -->
 
-```{r}
-t2 - t1
-```
+<!-- apes_logit_leaps = apes_logit( -->
+<!--   x = x, -->
+<!--   y = y, -->
+<!--   Pi = fullModel$fitted.values, -->
+<!--   k = 1:ncol(x),  -->
+<!--   estimator = "leaps") -->
 
-
-
-## Basic plotting for APES 
-
-
-### Variable selection plot 
-
-```{r}
-viPlotResult = APES::plot_vi(listResult)
-viPlotResult$viPlot
-viTilePlotResult = APES::plot_vi_tile(listResult)
-viTilePlotResult
-```
+<!-- apes_logit_leaps$selectedModelBeta -->
+<!-- ``` -->
 
 
-```{r, warning = FALSE}
-plotly::ggplotly(
-  viPlotResult$viPlot + 
-    theme_classic(18) 
-)
-```
+<!-- <!-- # Running Lasso on diabetes data --> -->
+<!-- <!-- ```{r} --> -->
+<!-- <!-- lasso_logit = glmnet::cv.glmnet(x = x, --> -->
+<!-- <!--                                 y = y) --> -->
+<!-- <!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") --> -->
+<!-- <!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] --> -->
+<!-- <!-- ``` --> -->
 
 
-### Model averaging coefficient plot
-```{r}
-APES::plot_ma_coef(listResult, type = "AIC") + 
-  labs(title = "AIC weighted coefficients")
+<!-- ## Bootstrapping using leaps version  -->
 
-APES::plot_ma_coef(listResult, type = "BIC") +
-  labs(title = "BIC weighted coefficients")
-```
+<!-- If we want to explore the variable selection stability, then we could perform bootstrapping to obtain averaged variable selection results.  -->
 
-
-### Model averaging weights plot
-```{r}
-APES::plot_ma_weight(listResult, type = "AIC") + 
-  labs(title = "AIC Weights")
-
-APES::plot_ma_weight(listResult, type = "BIC") + 
-  labs(title = "BIC Weights")
-```
+<!-- ```{r, results = 'hide'} -->
+<!-- t1 = Sys.time() -->
+<!-- listResult = APES::boot_apes_logit( -->
+<!--   x = x, -->
+<!--   y = y, -->
+<!--   Pi = fullModel$fitted.values, -->
+<!--   k = 1:ncol(x),  -->
+<!--   estimator = "leaps", -->
+<!--   nBoot = 100) -->
+<!-- t2 = Sys.time() -->
+<!-- ``` -->
 
 
-# Compare against mplot
+<!-- The time taken for bootstrapping in APES:  -->
 
-Some visualisations we implement in APES are originally from the `mplot` package. We will compare our APES method against the `mplot` results, which implements a genuine exhaustive search method.
+<!-- ```{r} -->
+<!-- t2 - t1 -->
+<!-- ``` -->
 
-```{r, results = "asis", message=FALSE}
-t3 = Sys.time()
 
-mplotResult = mplot::vis(
-  mf = fullModel,
-  B = 100,
-  redundant = FALSE)
 
-t4 = Sys.time()
-t4 - t3
+<!-- ## Basic plotting for APES  -->
 
-plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart")
-```
+
+<!-- ### Variable selection plot  -->
+
+<!-- ```{r} -->
+<!-- viPlotResult = APES::plot_vi(listResult) -->
+<!-- viPlotResult$viPlot -->
+<!-- viTilePlotResult = APES::plot_vi_tile(listResult) -->
+<!-- viTilePlotResult -->
+<!-- ``` -->
+
+
+<!-- ```{r, warning = FALSE} -->
+<!-- plotly::ggplotly( -->
+<!--   viPlotResult$viPlot +  -->
+<!--     theme_classic(18)  -->
+<!-- ) -->
+<!-- ``` -->
+
+
+<!-- ### Model averaging coefficient plot -->
+<!-- ```{r} -->
+<!-- APES::plot_ma_coef(listResult, type = "AIC") +  -->
+<!--   labs(title = "AIC weighted coefficients") -->
+
+<!-- APES::plot_ma_coef(listResult, type = "BIC") + -->
+<!--   labs(title = "BIC weighted coefficients") -->
+<!-- ``` -->
+
+
+<!-- ### Model averaging weights plot -->
+<!-- ```{r} -->
+<!-- APES::plot_ma_weight(listResult, type = "AIC") +  -->
+<!--   labs(title = "AIC Weights") -->
+
+<!-- APES::plot_ma_weight(listResult, type = "BIC") +  -->
+<!--   labs(title = "BIC Weights") -->
+<!-- ``` -->
+
+
+<!-- # Compare against mplot -->
+
+<!-- Some visualisations we implement in APES are originally from the `mplot` package. We will compare our APES method against the `mplot` results, which implements a genuine exhaustive search method. -->
+
+<!-- ```{r, results = "asis", message=FALSE} -->
+<!-- t3 = Sys.time() -->
+
+<!-- mplotResult = mplot::vis( -->
+<!--   mf = fullModel, -->
+<!--   B = 100, -->
+<!--   redundant = FALSE) -->
+
+<!-- t4 = Sys.time() -->
+<!-- t4 - t3 -->
+
+<!-- plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart") -->
+<!-- ``` -->
 
 
 # Session Info

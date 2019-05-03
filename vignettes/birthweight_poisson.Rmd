@@ -13,137 +13,137 @@ In this document, we will perform APES on the `birthweight` data from the `MASS`
 There are 189 observations and 8 variables. The response variable is the `ftv` variable, which records the number of physician visits during the first trimester. 
 
 
-# Setting up the data
+<!-- # Setting up the data -->
 
-```{r}
-library(APES)
-library(MASS)
-library(tidyverse)
-library(mplot)
-library(directlabels)
-
-theme_set(
-  theme_classic(14) +
-    theme(legend.position = "bottom")
-)
-```
-
-## Loading data
-```{r}
-data("birthwt", package = "MASS")
-
-bwt <- with(birthwt, {
-  race <- factor(race, labels = c("white", "black", "other"))
-  ptd <- factor(ptl > 0)
-  data.frame(low = factor(low), 
-             age, lwt, race, 
-             smoke = (smoke > 0), 
-             ptd, ht = (ht > 0), 
-             ui = (ui > 0), ftv)
-})
-```
-
-
-# Single run of APES on diabetes data
-
-Due to the small size of this data, we will use the `leaps` estimator. 
-
-Since there are some factor variables, we will need to manually create the model matrix/design matrix. 
-
-## Using the leaps estimator 
-
-```{r}
-fullModel <- glm(ftv ~ ., family = poisson, data = bwt)
-round(summary(fullModel)$coef, 2)
-
-x = model.matrix(~0 + . -ftv, data = bwt)[,-1]
-dim(x)
-y = as.integer(as.character(bwt$ftv))
-length(y)
-```
-
-
-
-```{r}
-apes_poisson_leaps = apes_poisson(
-  x = x,
-  y = y,
-  mu = fullModel$fitted.values,
-  k = 1:ncol(x), 
-  estimator = "leaps")
-```
-
-
-
-<!-- # Running Lasso on diabetes data -->
 <!-- ```{r} -->
-<!-- lasso_logit = glmnet::cv.glmnet(x = x, -->
-<!--                                 y = y) -->
-<!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") -->
-<!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] -->
+<!-- library(APES) -->
+<!-- library(MASS) -->
+<!-- library(tidyverse) -->
+<!-- library(mplot) -->
+<!-- library(directlabels) -->
+
+<!-- theme_set( -->
+<!--   theme_classic(14) + -->
+<!--     theme(legend.position = "bottom") -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ## Loading data -->
+<!-- ```{r} -->
+<!-- data("birthwt", package = "MASS") -->
+
+<!-- bwt <- with(birthwt, { -->
+<!--   race <- factor(race, labels = c("white", "black", "other")) -->
+<!--   ptd <- factor(ptl > 0) -->
+<!--   data.frame(low = factor(low),  -->
+<!--              age, lwt, race,  -->
+<!--              smoke = (smoke > 0),  -->
+<!--              ptd, ht = (ht > 0),  -->
+<!--              ui = (ui > 0), ftv) -->
+<!-- }) -->
 <!-- ``` -->
 
 
-<!-- # Running time  -->
+<!-- # Single run of APES on diabetes data -->
+
+<!-- Due to the small size of this data, we will use the `leaps` estimator.  -->
+
+<!-- Since there are some factor variables, we will need to manually create the model matrix/design matrix.  -->
+
+<!-- ## Using the leaps estimator  -->
 
 <!-- ```{r} -->
-<!-- apes_logit_leaps$apesTimeDiff -->
-<!-- apes_logit_mio$apesTimeDiff -->
+<!-- fullModel <- glm(ftv ~ ., family = poisson, data = bwt) -->
+<!-- round(summary(fullModel)$coef, 2) -->
+
+<!-- x = model.matrix(~0 + . -ftv, data = bwt)[,-1] -->
+<!-- dim(x) -->
+<!-- y = as.integer(as.character(bwt$ftv)) -->
+<!-- length(y) -->
 <!-- ``` -->
 
 
 
-# Bootstrapping using leaps version 
-
-In most practical cases, a single run of any variable selection procedure is not stable. In order to explore stability of variable selection in this case, we can bootstrap on the 189 observations. The implementation of APES is fast enough that this can be done relatively fast.
-
-```{r, results = 'hide'}
-listResult = APES::boot_apes_poisson(
-  x = x,
-  y = y,
-  mu = fullModel$fitted.values,
-  k = 1:ncol(x), 
-  estimator = "leaps",
-  nBoot = 100)
-```
+<!-- ```{r} -->
+<!-- apes_poisson_leaps = apes_poisson( -->
+<!--   x = x, -->
+<!--   y = y, -->
+<!--   mu = fullModel$fitted.values, -->
+<!--   k = 1:ncol(x),  -->
+<!--   estimator = "leaps") -->
+<!-- ``` -->
 
 
-### Variable selection plot 
 
-```{r}
-viPlotResult = APES::plot_vi(listResult)
-viPlotResult$viPlot
-viTilePlotResult = APES::plot_vi_tile(listResult)
-viTilePlotResult
-```
-
-
-```{r, warning = FALSE}
-plotly::ggplotly(
-  viPlotResult$viPlot + 
-    theme_classic(18) 
-)
-```
+<!-- <!-- # Running Lasso on diabetes data --> -->
+<!-- <!-- ```{r} --> -->
+<!-- <!-- lasso_logit = glmnet::cv.glmnet(x = x, --> -->
+<!-- <!--                                 y = y) --> -->
+<!-- <!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") --> -->
+<!-- <!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] --> -->
+<!-- <!-- ``` --> -->
 
 
-### Model averaging coefficient plot
-```{r}
-APES::plot_ma_coef(listResult, type = "AIC") + 
-  labs(title = "AIC weighted coefficients")
+<!-- <!-- # Running time  --> -->
 
-APES::plot_ma_coef(listResult, type = "BIC") +
-  labs(title = "BIC weighted coefficients")
-```
+<!-- <!-- ```{r} --> -->
+<!-- <!-- apes_logit_leaps$apesTimeDiff --> -->
+<!-- <!-- apes_logit_mio$apesTimeDiff --> -->
+<!-- <!-- ``` --> -->
 
 
-### Model averaging weights plot
-```{r}
-APES::plot_ma_weight(listResult, type = "AIC") + 
-  labs(title = "AIC Weights")
 
-APES::plot_ma_weight(listResult, type = "BIC") + 
-  labs(title = "BIC Weights")
-```
+<!-- # Bootstrapping using leaps version  -->
+
+<!-- In most practical cases, a single run of any variable selection procedure is not stable. In order to explore stability of variable selection in this case, we can bootstrap on the 189 observations. The implementation of APES is fast enough that this can be done relatively fast. -->
+
+<!-- ```{r, results = 'hide'} -->
+<!-- listResult = APES::boot_apes_poisson( -->
+<!--   x = x, -->
+<!--   y = y, -->
+<!--   mu = fullModel$fitted.values, -->
+<!--   k = 1:ncol(x),  -->
+<!--   estimator = "leaps", -->
+<!--   nBoot = 100) -->
+<!-- ``` -->
+
+
+<!-- ### Variable selection plot  -->
+
+<!-- ```{r} -->
+<!-- viPlotResult = APES::plot_vi(listResult) -->
+<!-- viPlotResult$viPlot -->
+<!-- viTilePlotResult = APES::plot_vi_tile(listResult) -->
+<!-- viTilePlotResult -->
+<!-- ``` -->
+
+
+<!-- ```{r, warning = FALSE} -->
+<!-- plotly::ggplotly( -->
+<!--   viPlotResult$viPlot +  -->
+<!--     theme_classic(18)  -->
+<!-- ) -->
+<!-- ``` -->
+
+
+<!-- ### Model averaging coefficient plot -->
+<!-- ```{r} -->
+<!-- APES::plot_ma_coef(listResult, type = "AIC") +  -->
+<!--   labs(title = "AIC weighted coefficients") -->
+
+<!-- APES::plot_ma_coef(listResult, type = "BIC") + -->
+<!--   labs(title = "BIC weighted coefficients") -->
+<!-- ``` -->
+
+
+<!-- ### Model averaging weights plot -->
+<!-- ```{r} -->
+<!-- APES::plot_ma_weight(listResult, type = "AIC") +  -->
+<!--   labs(title = "AIC Weights") -->
+
+<!-- APES::plot_ma_weight(listResult, type = "BIC") +  -->
+<!--   labs(title = "BIC Weights") -->
+<!-- ``` -->
 
 
 
