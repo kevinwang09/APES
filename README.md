@@ -5,6 +5,8 @@
 
 [![Travis build
 status](https://travis-ci.org/kevinwang09/APES.svg?branch=master)](https://travis-ci.org/kevinwang09/APES)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/kevinwang09/APES?branch=master&svg=true)](https://ci.appveyor.com/project/kevinwang09/APES)
 [![Coverage
 status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](https://codecov.io/github/kevinwang09/APES?branch=master)
 
@@ -42,11 +44,16 @@ GLMs.
 
 ``` r
 library(APES)
+#> Registered S3 methods overwritten by 'ggplot2':
+#>   method         from 
+#>   [.quosures     rlang
+#>   c.quosures     rlang
+#>   print.quosures rlang
 
 set.seed(10)
 n = 100
 p = 10
-k = 1:10
+k = 1:p
 beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)

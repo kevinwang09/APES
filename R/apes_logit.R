@@ -171,11 +171,11 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
                                   linearY = linearY,
                                   apesMinAicProb = apesMinAicProb,
                                   apesMinBicProb = apesMinBicProb) %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   apesMleBetaBinary = reshape2::melt(apesMleBeta != 0,
                                      varnames = c("variables", "modelName"),
-                                     value.name = "fittedBeta") %>% tibble::as.tibble()
+                                     value.name = "fittedBeta") %>% tibble::as_tibble()
 
   selectedModelBeta = cbind(
     apesMinAic = minIcMatrix(ic = apesMleAIC, mat = apesMleBeta),
