@@ -138,20 +138,20 @@ plotly::ggplotly(
 
 ## Model averaging coefficient plot
 ```{r}
-APES::plot_ma_coef(listResult, type = "aic") + 
+APES::plot_ma_coef(listResult, type = "AIC") + 
   labs(title = "AIC weighted coefficients")
 
-APES::plot_ma_coef(listResult, type = "bic") +
+APES::plot_ma_coef(listResult, type = "BIC") +
   labs(title = "BIC weighted coefficients")
 ```
 
 
 ## Model averaging weights plot
 ```{r}
-APES::plot_ma_weight(listResult, type = "aic") + 
+APES::plot_ma_weight(listResult, type = "AIC") + 
   labs(title = "AIC Weights")
 
-APES::plot_ma_weight(listResult, type = "bic") + 
+APES::plot_ma_weight(listResult, type = "BIC") + 
   labs(title = "BIC Weights")
 ```
 
