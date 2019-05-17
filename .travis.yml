@@ -8,14 +8,14 @@ R:
 dist: trusty
 os:
   - linux
-  - osx
 
 env:
   global:
-    - NOT_CRAN=true
+    - NOT_CRAN = TRUE
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
     - _R_CHECK_LATEX_VIGNETTES=FALSE
     - _R_CHECK_WEAVE_VIGNETTES=FALSE
+    - VDIFFR_RUN_TESTS = TRUE
 
 r_github_packages:
   - r-lib/covr
@@ -25,13 +25,10 @@ warnings_are_errors: false
 after_success:
   - Rscript -e 'covr::codecov()'
 
-matrix:
-  include:
-  - r: release
-    env: VDIFFR_RUN_TESTS=true
-    before_cache:
-    - Rscript -e 'remotes::install_cran("pkgdown")'
-    deploy:
-      provider: script
-      script: Rscript -e 'pkgdown::deploy_site_github(verbose = TRUE)'
-      skip_cleanup: true
+script:
+  - R -e 'install.packages("pkgdown")'
+
+deploy:
+  provider: script
+  script: Rscript -e 'pkgdown::deploy_site_github(tarball = ".")'
+  skip_cleanup: true
