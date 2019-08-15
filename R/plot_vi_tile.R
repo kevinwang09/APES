@@ -2,6 +2,7 @@
 #' @title Variable Inclusion Plot in tile format
 #' @description This function displays the same information as plot_vi, but in a tile plot format.
 #' @param listResult a list of APES outputs
+#' @param order The ordering of variables. Either "median", "AIC" or "BIC"
 #' @author Kevin Wang
 #' @import dplyr
 #' @import ggplot2
@@ -28,11 +29,13 @@
 #' listResult = boot_apes_poisson(
 #' x = x, y = y, mu = mu, k = k,
 #' estimator = "leaps", nBoot = 20)
-#' viTileResult = plot_vi_tile(listResult)
+#' viTileResult = plot_vi_tile(listResult = listResult, order = "median")
 #' viTileResult$variableTilePlot
 #' viTileResult$variableTilePlot_category
+#' viTileResult2 = plot_vi_tile(listResult = listResult, order = "AIC")
+#' viTileResult2$variableTilePlot ## Note the different order on the AIC line
 
-plot_vi_tile = function(listResult){
+plot_vi_tile = function(listResult, order = "median"){
   apesMleBetaBinaryList = purrr::map_dfr(listResult, "apesMleBetaBinary", .id = "bootNum")
   apesModelDfList = purrr::map_dfr(listResult, "apesModelDf", .id = "bootNum")
 
@@ -41,20 +44,64 @@ plot_vi_tile = function(listResult){
   bicOptimalMedianSize = apesModelDfList %>% dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinBic")) %>%
     dplyr::pull(modelSize) %>% median(na.rm = TRUE)
 
+
+
   apesMleBetaBinaryPlotdf = apesMleBetaBinaryList %>%
     dplyr::group_by(variables, modelName) %>%
     dplyr::summarise(freqSelected = mean(fittedBeta)) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       modelSize = stringr::str_replace_all(modelName, "apesModel_", "") %>% as.integer,
-      variables = forcats::fct_reorder(
-        variables, freqSelected, stats::quantile, 0.5) %>%
-        forcats::fct_relevel("Int") %>%
-        forcats::fct_shift(),
-      freqSelected_category = base::cut(
-        freqSelected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE
-      )
-    ) %>% as.tibble
+      freqSelected_category = base::cut(freqSelected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE)) %>%
+    tibble::as_tibble()
+
+  allModelSize = apesMleBetaBinaryPlotdf$modelSize %>% unique
+
+  if(order == "median"){
+    apesMleBetaBinaryPlotdf = apesMleBetaBinaryPlotdf %>%
+      dplyr::mutate(
+        variables = forcats::fct_reorder(
+          variables, freqSelected, stats::quantile, 0.5) %>%
+          forcats::fct_relevel("Int") %>%
+          forcats::fct_shift())
+  }
+
+  if(order == "AIC"){
+    byAIC = apesMleBetaBinaryPlotdf %>%
+      dplyr::filter(modelSize == allModelSize[which.min(abs(allModelSize - aicOptimalMedianSize))]) %>%
+      dplyr::mutate(
+        freqSelected = dplyr::coalesce(freqSelected, 0),
+        variables = forcats::fct_reorder(
+          variables, freqSelected) %>%
+          forcats::fct_relevel("Int") %>%
+          forcats::fct_shift())
+
+    apesMleBetaBinaryPlotdf = apesMleBetaBinaryPlotdf %>%
+      dplyr::mutate(
+        variables = forcats::fct_relevel(variables, levels(byAIC$variables)) %>%
+          forcats::fct_relevel("Int") %>%
+          forcats::fct_shift())
+  }
+
+
+  if(order == "BIC"){
+    byBIC = apesMleBetaBinaryPlotdf %>%
+      dplyr::filter(modelSize == allModelSize[which.min(abs(allModelSize - bicOptimalMedianSize))]) %>%
+      dplyr::mutate(
+        freqSelected = dplyr::coalesce(freqSelected, 0),
+        variables = forcats::fct_reorder(
+          variables, freqSelected) %>%
+          forcats::fct_relevel("Int") %>%
+          forcats::fct_shift())
+
+    apesMleBetaBinaryPlotdf = apesMleBetaBinaryPlotdf %>%
+      dplyr::mutate(
+        variables = forcats::fct_relevel(variables, levels(byBIC$variables)) %>%
+          forcats::fct_relevel("Int") %>%
+          forcats::fct_shift())
+  }
+
+
 
   variableTilePlot = apesMleBetaBinaryPlotdf %>%
     ggplot2::ggplot(aes(x = modelSize,
@@ -71,7 +118,7 @@ plot_vi_tile = function(listResult){
     ggplot2::labs(
       title = "Variable inclusion tile plot, continuous colouring") +
     ggplot2::theme_classic(18) +
-    ggplot2::theme(legend.text = element_text(angle = 45, hjust = 0.7),
+    ggplot2::theme(legend.text = element_text(angle = 90, hjust = 0.7),
                    legend.position = "bottom")
 
   # variableTilePlot

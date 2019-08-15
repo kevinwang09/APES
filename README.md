@@ -5,10 +5,10 @@
 
 [![Travis build
 status](https://travis-ci.org/kevinwang09/APES.svg?branch=master)](https://travis-ci.org/kevinwang09/APES)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/kevinwang09/APES?branch=master&svg=true)](https://ci.appveyor.com/project/kevinwang09/APES)
 [![Coverage
 status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](https://codecov.io/github/kevinwang09/APES?branch=master)
+
+<img src="inst/APES_logo.png" align="right" width="200" />
 
 APproximated Exhaustive Search (APES) for Generalised Linear Models is a
 model selection method to be published by Kevin YX. Wang, Garth Tarr,
@@ -18,7 +18,8 @@ This is a repository for the R package of APES. It will be eventually be
 integrated into the mplot package
 (<https://github.com/garthtarr/mplot>).
 
-This is unpublished work, please do not distribute yet.
+The accompanying paper is provisionally accepted by Australia and New
+Zealand Journal of Statistics.
 
 ## Installation
 
@@ -44,11 +45,6 @@ GLMs.
 
 ``` r
 library(APES)
-#> Registered S3 methods overwritten by 'ggplot2':
-#>   method         from 
-#>   [.quosures     rlang
-#>   c.quosures     rlang
-#>   print.quosures rlang
 
 set.seed(10)
 n = 100
