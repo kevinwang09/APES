@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.8</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>plot_vi_tile</span>(<span class='no'>listResult</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_vi_tile</span>(<span class='no'>listResult</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='st'>"median"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,6 +139,10 @@
     <tr>
       <th>listResult</th>
       <td><p>a list of APES outputs</p></td>
+    </tr>
+    <tr>
+      <th>order</th>
+      <td><p>The ordering of variables. Either "median", "AIC" or "BIC"</p></td>
     </tr>
     </table>
     
@@ -185,8 +189,9 @@
 #&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
 #&gt; [1] "Finished solving linear regression approximation"
-#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='no'>viTileResult</span> <span class='kw'>=</span> <span class='fu'>plot_vi_tile</span>(<span class='no'>listResult</span>)
-<span class='no'>viTileResult</span>$<span class='no'>variableTilePlot</span></div><div class='img'><img src='plot_vi_tile-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>viTileResult</span>$<span class='no'>variableTilePlot_category</span></div><div class='img'><img src='plot_vi_tile-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='no'>viTileResult</span> <span class='kw'>=</span> <span class='fu'>plot_vi_tile</span>(<span class='kw'>listResult</span> <span class='kw'>=</span> <span class='no'>listResult</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='st'>"median"</span>)
+<span class='no'>viTileResult</span>$<span class='no'>variableTilePlot</span></div><div class='img'><img src='plot_vi_tile-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>viTileResult</span>$<span class='no'>variableTilePlot_category</span></div><div class='img'><img src='plot_vi_tile-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>viTileResult2</span> <span class='kw'>=</span> <span class='fu'>plot_vi_tile</span>(<span class='kw'>listResult</span> <span class='kw'>=</span> <span class='no'>listResult</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='st'>"AIC"</span>)
+<span class='no'>viTileResult2</span>$<span class='no'>variableTilePlot</span> <span class='co'>## Note the different order on the AIC line</span></div><div class='img'><img src='plot_vi_tile-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
