@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Perform APES-logistic regression using either the leaps or bestsubset package — apes_logit • APES</title>
+<title>Perform APES Cox PH regression using either the leaps or bestsubset package — apes_cox • APES</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Perform APES-logistic regression using either the leaps or bestsubset package — apes_logit" />
-<meta property="og:description" content="Perform APES-logistic regression using either the leaps or bestsubset package" />
+<meta property="og:title" content="Perform APES Cox PH regression using either the leaps or bestsubset package — apes_cox" />
+<meta property="og:description" content="Perform APES Cox PH regression using either the leaps or bestsubset package" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,16 +126,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Perform APES-logistic regression using either the leaps or bestsubset package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/apes_logit.R'><code>R/apes_logit.R</code></a></small>
-    <div class="hidden name"><code>apes_logit.Rd</code></div>
+    <h1>Perform APES Cox PH regression using either the leaps or bestsubset package</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/apes_cox.R'><code>R/apes_cox.R</code></a></small>
+    <div class="hidden name"><code>apes_cox.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Perform APES-logistic regression using either the leaps or bestsubset package</p>
+    <p>Perform APES Cox PH regression using either the leaps or bestsubset package</p>
     </div>
 
-    <pre class="usage"><span class='fu'>apes_logit</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>Pi</span>, <span class='no'>k</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>60</span>)</pre>
+    <pre class="usage"><span class='fu'>apes_cox</span>(<span class='no'>x</span>, <span class='no'>time</span>, <span class='no'>status</span>, <span class='no'>k</span>, <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>60</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,16 +145,17 @@
       <td><p>The n by p design matrix for logistic regression</p></td>
     </tr>
     <tr>
-      <th>y</th>
-      <td><p>The response vector for logistic regression of length n</p></td>
+      <th>time</th>
+      <td><p>survival time in survival analysis</p></td>
     </tr>
     <tr>
-      <th>Pi</th>
-      <td><p>Esimated probabilities of each observation using a baseline model. It should be a vector of length n.</p></td>
+      <th>status</th>
+      <td><p>survival status in survival analysis</p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>Model size to explore. If leaps was selected as the estimator, then model up to size max(k) will be explored. If mio was selected as the estimator, then model sizes specified in k will be explored.</p></td>
+      <td><p>Model size to explore. If "leaps" was selected as the estimator, then model up to size max(k) will be explored.
+If "mio" was selected as the estimator, then model sizes specified in k will be explored.</p></td>
     </tr>
     <tr>
       <th>estimator</th>
@@ -184,34 +185,23 @@ It is a binarised, linear version of the previous <code>apesMleBeta</code> outpu
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>10</span>)
-<span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>10101</span>)
+<span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>200</span>
 <span class='no'>p</span> <span class='kw'>=</span> <span class='fl'>10</span>
-<span class='no'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>
-<span class='no'>beta</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, -<span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>0</span>, <span class='no'>p</span>-<span class='fl'>2</span>))
-<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='no'>p</span>)
+<span class='no'>nzc</span> <span class='kw'>=</span> <span class='no'>p</span>/<span class='fl'>3</span>
+<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>n</span>*<span class='no'>p</span>), <span class='no'>n</span>, <span class='no'>p</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>x</span>) <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"X"</span>, <span class='fl'>1</span>:<span class='no'>p</span>)
-<span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='expit.html'>expit</a></span>(<span class='no'>x</span> <span class='kw'>%*%</span> <span class='no'>beta</span>))
-<span class='no'>Pi</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm.fit</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>family</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span>(<span class='kw'>link</span> <span class='kw'>=</span> <span class='st'>"logit"</span>))$<span class='no'>fitted.values</span>
-<span class='no'>apesLeapsResult</span> <span class='kw'>=</span> <span class='fu'>apes_logit</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='no'>apesLeapsResult</span>$<span class='no'>apesModelDf</span></div><div class='output co'>#&gt; # A tibble: 10 x 8
-#&gt;    method modelName modelSize apesMleLoglike mleAIC mleBIC status
-#&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt; 
-#&gt;  1 apes   apesMode…         2          -59.4   123.   128. leaps…
-#&gt;  2 apes   apesMode…         3          -53.3   113.   120. leaps…
-#&gt;  3 apes   apesMode…         4          -51.8   112.   122. leaps…
-#&gt;  4 apes   apesMode…         5          -51.2   112.   125. leaps…
-#&gt;  5 apes   apesMode…         6          -50.6   113.   129. leaps…
-#&gt;  6 apes   apesMode…         7          -50.1   114.   132. leaps…
-#&gt;  7 apes   apesMode…         8          -50.1   116.   137. leaps…
-#&gt;  8 apes   apesMode…         9          -50.1   118.   142. leaps…
-#&gt;  9 apes   apesMode…        10          -50.0   120.   146. leaps…
-#&gt; 10 apes   apesMode…        11          -49.9   122.   151. leaps…
-#&gt; # … with 1 more variable: icOptimalModels &lt;chr&gt;</div><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='co'>## You need to install Gurobi before uing the mio option</span>
-<span class='no'>apesMioResult</span> <span class='kw'>=</span> <span class='fu'>apes_logit</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>Pi</span> <span class='kw'>=</span> <span class='no'>Pi</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>k</span>,
-                               <span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>, <span class='kw'>time.limit</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+<span class='no'>beta</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='no'>nzc</span>))
+<span class='no'>fx</span> <span class='kw'>=</span> <span class='no'>x</span>[,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='no'>nzc</span>)] <span class='kw'>%*%</span> <span class='no'>beta</span>
+<span class='no'>hx</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='no'>fx</span>)
+<span class='no'>ty</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Exponential.html'>rexp</a></span>(<span class='no'>n</span>, <span class='no'>hx</span>)
+<span class='no'>tcens</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>) <span class='co'># censoring indicator</span>
+<span class='no'>time</span> <span class='kw'>=</span> <span class='no'>ty</span>
+<span class='no'>status</span> <span class='kw'>=</span> <span class='fl'>1</span>-<span class='no'>tcens</span>
+<span class='no'>apesLeapsResult</span> <span class='kw'>=</span> <span class='fu'>apes_cox</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>time</span>, <span class='kw'>status</span> <span class='kw'>=</span> <span class='no'>status</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='no'>p</span>,
+<span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"leaps"</span>)</div><div class='output co'>#&gt; [1] "Finished solving linear regression approximation"</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>apesMioResult</span> <span class='kw'>=</span> <span class='fu'>apes_cox</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='no'>time</span>, <span class='kw'>status</span> <span class='kw'>=</span> <span class='no'>status</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='no'>p</span>,
+<span class='kw'>estimator</span> <span class='kw'>=</span> <span class='st'>"mio"</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
