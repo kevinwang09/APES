@@ -74,3 +74,11 @@ apesLeapsResult$apesModelDf
 #> 10 apes   apesMode…        11          -49.9   122.   151. leaps…
 #> # … with 1 more variable: icOptimalModels <chr>
 ```
+
+# References
+
+  - Wang, K. Y., Tarr, G., Yang, J. Y., & Mueller, S. (2019). Fast and
+    approximate exhaustive variable selection for generalised linear
+    models with APES. Australian & New Zealand Journal of Statistics,
+    61(4), 445–465. <https://doi.org/10.1111/anzs.12276>
+  - Icon made by Freepik from www.flaticon.com

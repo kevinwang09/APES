@@ -54,3 +54,9 @@ apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
                                estimator = "leaps")
 apesLeapsResult$apesModelDf
 ```
+
+
+# References
++ Wang, K. Y., Tarr, G., Yang, J. Y., & Mueller, S. (2019). Fast and approximate exhaustive variable selection for generalised linear models with APES. Australian & New Zealand Journal of Statistics, 61(4), 445–465. https://doi.org/10.1111/anzs.12276
++ Icon made by Freepik from www.flaticon.com
+
