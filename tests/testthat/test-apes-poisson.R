@@ -12,7 +12,7 @@ mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
 apesLeapsResult = apes_poisson(x = x, y = y, mu = mu, k = k,
                                estimator = "leaps")
 
-testthat::expect_equal(which.min(apesLeapsResult$apesModelDf$mleBIC), 2)
+testthat::expect_equal(unname(which.min(apesLeapsResult$apesModelDf$mleBIC)), 2)
 
 
 if("bestsubset" %in% rownames(installed.packages())){

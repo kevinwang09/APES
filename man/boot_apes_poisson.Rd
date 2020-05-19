@@ -4,8 +4,17 @@
 \alias{boot_apes_poisson}
 \title{Bootstrap version of apes_logit}
 \usage{
-boot_apes_poisson(x, y, mu, k, estimator = "leaps", time.limit = 60,
-  nBoot = 100, workers = 1, seed = NULL)
+boot_apes_poisson(
+  x,
+  y,
+  mu,
+  k,
+  estimator = "leaps",
+  time.limit = 60,
+  nBoot = 100,
+  workers = 1,
+  seed = NULL
+)
 }
 \arguments{
 \item{x}{The n by p design matrix for Poisson regression}

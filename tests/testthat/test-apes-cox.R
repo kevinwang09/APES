@@ -16,7 +16,7 @@ status = 1-tcens
 apesLeapsResult = apes_cox(x = x, time = time, status = status, k = p,
 estimator = "leaps")
 
-testthat::expect_equal(which.min(apesLeapsResult$apesModelDf$mleBIC), round(nzc))
+testthat::expect_equal(unname(which.min(apesLeapsResult$apesModelDf$mleBIC)), round(nzc))
 
 
 if("bestsubset" %in% rownames(installed.packages())){

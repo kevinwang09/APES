@@ -5,6 +5,10 @@ date: "26/08/2018"
 output:
   html_document:
     self_contained: no
+vignette: >
+  %\VignetteIndexEntry{Birthweight-Logistic}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Introduction 

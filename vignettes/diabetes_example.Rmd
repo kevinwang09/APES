@@ -5,6 +5,10 @@ date: "22/08/2018"
 output:
   html_document:
     self_contained: no
+vignette: >
+  %\VignetteIndexEntry{Diabetes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 

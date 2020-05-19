@@ -12,7 +12,7 @@ Pi = glm.fit(x = x, y = y, family = binomial(link = "logit"))$fitted.values
 apesLeapsResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
                              estimator = "leaps")
 
-testthat::expect_equal(which.min(apesLeapsResult$apesModelDf$mleBIC), 2)
+testthat::expect_equal(unname(which.min(apesLeapsResult$apesModelDf$mleBIC)), 2)
 
 
 if("bestsubset" %in% rownames(installed.packages())){
