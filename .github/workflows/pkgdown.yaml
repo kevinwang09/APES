@@ -33,6 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages("remotes")
+          remotes::install_github(repo="ryantibs/best-subset", subdir="bestsubset")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_dev("pkgdown")
         shell: Rscript {0}
