@@ -9,6 +9,13 @@ jobs:
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      NOT_CRAN: true
+      _R_CHECK_FORCE_SUGGESTS_: false
+      _R_CHECK_LATEX_VIGNETTES_: false
+      _R_CHECK_WEAVE_VIGNETTES_: false
+      _R_CHECK_FORCE_SUGGESTS_: false
+      VDIFFR_RUN_TESTS: false
+
     steps:
       - uses: actions/checkout@v2
 
