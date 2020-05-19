@@ -8,3 +8,4 @@
 ^\.Rproj\.user$
 .travis.yml
 ^pkgdown$
+^\.github$

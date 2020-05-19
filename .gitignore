@@ -5,3 +5,5 @@ Meta
 .Ruserdata
 gurobi.log
 docs/
+docs
+inst/doc
