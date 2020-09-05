@@ -2,7 +2,7 @@
 #' @param x numeric
 #' @export
 #' @rdname transforms
-#' @importFrom assertthat assertthat
+#' @importFrom assertthat assert_that
 #' @examples
 #' curve(logit, from = 0.1, to = 0.9)
 logit = function(x){
