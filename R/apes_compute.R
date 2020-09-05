@@ -1,4 +1,10 @@
-apes_compute = function(x, y, linear_y, fitted_values,variable_names, k, estimator = "leaps", model_type, time_limit = 10, verbose = FALSE){
+apes_compute = function(x, y, fitted_values,variable_names, k, estimator = "leaps", model_type, time_limit = 10, verbose = FALSE){
+  if(model_type == "binomial"){
+    linear_y = logit(fitted_values) + (y - fitted_values)/(fitted_values * (1 - fitted_values))
+  } else if(model_type == "poisson"){
+    linear_y = log(fitted_values) + (1/fitted_values)*(y - fitted_values)
+  }
+
   n = nrow(x)
   p = ncol(x)
 
@@ -159,5 +165,7 @@ apes_compute = function(x, y, linear_y, fitted_values,variable_names, k, estimat
     selected_model_beta = selected_model_beta,
     model_avg_beta = model_avg_beta,
     response_tibble = response_tibble)
+
+  class(result) = "apes"
   return(result)
 }
