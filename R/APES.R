@@ -13,7 +13,7 @@
 #' model size model when the "mio" estimator was selected. It will not affect the speed if leaps.
 #' @param verbose Whether to print off messages during computations
 #' @param n_boot Number of bootstrap runs, default to 0, which doesn't perform any sampling.
-#' @param workers Number of cores, only supporting furrr for now
+#' @param workers Number of cores used for parallel processing for the bootstrap
 #' @import leaps
 #' @import tibble
 #' @import furrr
@@ -40,8 +40,10 @@
 #' apes(model = model)
 #'
 #' apes(model = model, n_boot = 2)
+#' apes(model = model, n_boot = 2, workers = 1)
+#' apes(model = model, n_boot = 2, workers = 2)
 apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, verbose = FALSE,
-                 n_boot = 0L, workers = 1){
+                 n_boot = 0L, workers = 1L){
 
   extracts = mextract(model = model)
   x = extracts$x
@@ -61,19 +63,6 @@ apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, verbose
   ## Determine k to search through
   if(is.null(k)){k = seq_len(p)}
 
-  single_boot_apes = function(boot_index){
-    res = apes_compute(x = x[boot_index,],
-                       y = y[boot_index],
-                       fitted_values = fitted_values,
-                       variable_names = variable_names,
-                       k = k,
-                       estimator = estimator,
-                       time_limit = time_limit,
-                       model_type = model_type,
-                       verbose = verbose)
-    return(res)
-  }
-
   if(n_boot == 0L){
     result = apes_compute(
       x = x,
@@ -86,17 +75,42 @@ apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, verbose
       model_type = model_type,
       verbose = verbose)
   } else {
+
     list_boot_index = base::replicate(
       n = n_boot,
       expr = sample(seq_len(n), replace = TRUE),
       simplify = FALSE)
 
-    result = furrr::future_map(
+    if(workers > 1L) {
+      plan(multisession, workers = workers)
+      result = furrr::future_map(
         .x = list_boot_index,
-        .f = single_boot_apes, .progress = TRUE)
-
+        .f = ~ apes_compute(x = x[.x,],
+                            y = y[.x],
+                            fitted_values = fitted_values,
+                            variable_names = variable_names,
+                            k = k,
+                            estimator = estimator,
+                            time_limit = time_limit,
+                            model_type = model_type,
+                            verbose = verbose),
+        .progress = FALSE)
+      plan(sequential)
+    } else {
+      result = purrr::map(
+        .x = list_boot_index,
+        .f = ~ apes_compute(x = x[.x,],
+                            y = y[.x],
+                            fitted_values = fitted_values,
+                            variable_names = variable_names,
+                            k = k,
+                            estimator = estimator,
+                            time_limit = time_limit,
+                            model_type = model_type,
+                            verbose = verbose))
+    }
     names(result) = paste0("boot_num", seq_len(n_boot))
-}
+  }
   return(result)
 }
 

@@ -11,7 +11,7 @@ apes(
   time_limit = 10L,
   verbose = FALSE,
   n_boot = 0L,
-  workers = 1
+  workers = 1L
 )
 }
 \arguments{
@@ -34,8 +34,6 @@ model size model when the "mio" estimator was selected. It will not affect the s
 \item{verbose}{Whether to print off messages during computations}
 
 \item{n_boot}{Number of bootstrap runs, default to 0, which doesn't perform any sampling.}
-
-\item{workers}{Number of cores, only supporting furrr for now}
 }
 \description{
 Perform APES model selection
@@ -57,4 +55,12 @@ y = rpois(n = n, lambda = exp(x \%*\% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "poisson")
 apes(model = model)
+
+apes(model = model, n_boot = 2)
+
+\dontrun{
+library(furrr)
+library(future)
+apes(model = model, n_boot = 10, workers = 2)
+}
 }
