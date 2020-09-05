@@ -27,10 +27,13 @@
 #' colnames(x) = paste0("X", 1:p)
 #' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
 #' data = data.frame(y, x)
-#'
 #' model = glm(y ~ ., data = data, family = "binomial")
 #' APES(model = model)
-
+#'
+#' y = rpois(n = n, lambda = exp(x %*% beta))
+#' data = data.frame(y, x)
+#' model = glm(y ~ ., data = data, family = "poisson")
+#' APES(model = model)
 APES <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, verbose = FALSE){
   extracts = mextract(model = model)
   x = extracts$x
@@ -39,21 +42,47 @@ APES <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, verbose
   p = extracts$p
   model_type = extracts$model_type
   fitted_values = extracts$fitted_values
+  variable_names = extracts$variable_names
+
+  ## Determine k to search through
+  if(is.null(k)){
+    k = seq_len(p)
+  }
 
   if(model_type == "binomial"){
     linear_y = logit(fitted_values) + (y - fitted_values)/(fitted_values * (1 - fitted_values))
-  } else if(model_type == "poisson"){
-
+    apes_result = apes_compute(x = x,
+                               y = y,
+                               linear_y = linear_y,
+                               fitted_values = fitted_values,
+                               variable_names = variable_names,
+                               k = k,
+                               estimator = estimator,
+                               time_limit = time_limit,
+                               model_type = "binomial",
+                               verbose = verbose)
+    } else if(model_type == "poisson"){
+      linear_y = log(fitted_values) + (1/fitted_values)*(y - fitted_values)
+      apes_result = apes_compute(x = x,
+                                 y = y,
+                                 linear_y = linear_y,
+                                 fitted_values = fitted_values,
+                                 variable_names = variable_names,
+                                 k = k,
+                                 estimator = estimator,
+                                 time_limit = time_limit,
+                                 model_type = "poisson",
+                                 verbose = verbose)
   }
 
-  result = list(
-    linear_y = linear_y
-  )
-  class(result) = "APES"
-  return(result)
+  class(apes_result) = "APES"
+  return(apes_result)
 }
 
 print.APES = function(x, ...) {
-  cat("This is the result \n")
-  print(x$linear_y)
+  cat("Time taken: \n")
+  print(x$time_used)
+
+  cat("\n APES model selection data frame: \n")
+  print(x$apes_model_df)
 }

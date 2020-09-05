@@ -1,7 +1,7 @@
 Package: APES
 Type: Package
 Title: APproximated Exhaustive Search for GLM
-Version: 0.5.0
+Version: 0.6.0
 Authors@R: c(
     person(given = "Kevin", family = "Wang", email = "kevin.wang@sydney.edu.au", role = c("aut", "cre")),
     person(given = "Garth", family = "Tarr", email = "garth.tarr@sydney.edu.au", role = c("aut")),
@@ -10,7 +10,7 @@ Authors@R: c(
     )
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
 Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models
-License: Unpublished, do not distribute.
+License: GPL-3
 Encoding: UTF-8
 LazyData: false
 Imports:

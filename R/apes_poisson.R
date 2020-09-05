@@ -204,27 +204,3 @@ apes_poisson = function(x, y, mu, k, estimator = "leaps", time.limit = 60){
   )
   return(result)
 }
-####################################
-## Calculate the log-likelihood of logisitic regression using yPois and estimated pis
-loglikeMu = function(yPois, mus){
-  # loglike = yPois*log(pis) + (1-yPois)*log(1-pis)
-  loglike = -mus + yPois * log(mus) - log(factorial(yPois))
-  return(sum(loglike))
-}
-#####################################
-## Calculate estimated pis using beta
-beta2Mu = function(X, beta){
-  xint = cbind(Int = 1,X)
-  exp(xint[, names(beta)] %*% as.matrix(beta))
-}
-#####################################
-## Given an indicators of variables, design matrix and the yPois, we refit the MLE-logisitic. X should not have an Intercept term
-refittingMle_poisson = function(indicator, X, yPois){
-  xTemp = cbind(Int = 1, X[,indicator])
-  colnames(xTemp) = c("Int", colnames(X)[indicator])
-
-  stats::glm.fit(x = xTemp,
-          y = yPois,
-          # etastart = fullModel$linear.predictors,
-          family = stats::poisson(link = "log"))
-}

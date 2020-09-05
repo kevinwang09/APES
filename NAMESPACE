@@ -2,8 +2,8 @@
 
 export(APES)
 export(apes_cox)
-export(apes_logit)
 export(apes_logit_mio_combine)
+export(apes_logit_old)
 export(apes_poisson)
 export(apes_var_freq)
 export(boot_apes_logit)

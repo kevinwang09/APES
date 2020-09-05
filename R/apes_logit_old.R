@@ -44,7 +44,7 @@
 #' apesMioResult = apes_logit(x = x, y = y, Pi = Pi, k = k,
 #'                                estimator = "mio", time.limit = 5)
 #' }
-apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
+apes_logit_old = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
 
   ###### Begin setting up linear regression #######
   variables = c("Int", colnames(x))
@@ -221,81 +221,4 @@ apes_logit = function(x, y, Pi, k, estimator = "leaps", time.limit = 60){
     responseTibble = responseTibble
   )
   return(result)
-}
-####################################
-####################################
-####################################
-####################################
-####################################
-#####################################
-icOptimal = function(ic, symbol){
-  if(length(which.min(ic)) == 0){
-    res = NA
-  } else {
-    res = rep("", length(ic))
-    res[which.min(ic)] = symbol
-  }
-  return(res)
-}
-######################################
-## Calculate the log-likelihood of logisitic regression using yBinom and estimated pis
-loglikePi = function(yBinom, pis){
-  loglike = yBinom*log(pis) + (1-yBinom)*log(1-pis)
-  return(sum(loglike))
-}
-#####################################
-## Calculate estimated pis using beta
-beta2Pi = function(X, beta){
-  xint = cbind(Int = 1,X)
-  expit(xint[, names(beta)] %*% as.matrix(beta))
-}
-#####################################
-## Given an indicators of variables, design matrix and the yBinom, we refit the MLE-logisitic. X should not have an Intercept term
-refittingMle_logit = function(indicator, X, yBinom){
-  xTemp = cbind(Int = 1, X[,indicator])
-  colnames(xTemp) = c("Int", colnames(X)[indicator])
-
-  stats::glm.fit(x = xTemp,
-                 y = yBinom,
-                 # etastart = fullModel$linear.predictors,
-                 family = stats::binomial(link = "logit"))
-}
-#####################################
-icOptimal = function(ic, symbol){
-  if(length(which.min(ic)) == 0){
-    res = NA
-  } else {
-    res = rep("", length(ic))
-    res[which.min(ic)] = symbol
-  }
-  return(res)
-}
-#####################################
-minIcMatrix = function(ic, mat){
-  if(length(which.min(ic)) == 0){
-    res = NA
-  } else {
-    res = mat[,which.min(ic)]
-  }
-  return(res)
-}
-#####################################
-mleModelToBeta = function(mleModels, variables){
-  mleBeta = purrr::map(mleModels, "coefficients") %>%
-    purrr::map(t) %>%
-    purrr::map(data.frame) %>%
-    dplyr::bind_rows() %>% t
-
-  mleBeta[is.na(mleBeta)] = 0L
-  variablesOrdered = base::intersect(rownames(mleBeta), variables) %>% gtools::mixedsort()
-  mleBeta = mleBeta[variablesOrdered,,drop = FALSE]
-
-  tmp = matrix(0L,
-               nrow = length(variables),
-               ncol = ncol(mleBeta),
-               dimnames = list(variables, colnames(mleBeta))) ## To avoid a variable is never selected, we create an empty matrix
-
-  tmp[rownames(mleBeta), ] = mleBeta
-
-  return(tmp)
 }
