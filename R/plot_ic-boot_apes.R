@@ -1,10 +1,11 @@
 #' @title AIC or BIC path plot
 #' @param list_result a list of APES outputs
-#' @param type Either "AIC" or "BIC"
+#' @param order Either "BIC" (default) or "AIC"
 #' @author Kevin Wang
 #' @import ggplot2
 #' @import purrr
 #' @importFrom magrittr %>%
+#' @rdname plot.boot_apes
 #' @export
 #' @examples
 #' set.seed(10)
@@ -20,9 +21,9 @@
 #'
 #' list_result = apes(model = model, n_boot = 20)
 #'
-#' plot_apes_ic(list_result = list_result)
+#' plot_ic_boot_apes(list_result = list_result)
 
-plot_apes_ic = function(list_result, type = "BIC"){
+plot_ic_boot_apes = function(list_result, order = "BIC"){
   apes_model_df_bind = purrr::map_dfr(list_result, "apes_model_df", .id = "boot_num") %>%
     group_by(boot_num) %>%
     dplyr::mutate(
@@ -31,7 +32,7 @@ plot_apes_ic = function(list_result, type = "BIC"){
     )
 
 
-  if(type == "BIC"){
+  if(order == "BIC"){
     g = apes_model_df_bind %>%
       ggplot2::ggplot() +
       ggplot2::geom_line(aes(x = .data$model_size, y = .data$mle_bic, group = .data$boot_num)) +
@@ -45,7 +46,7 @@ plot_apes_ic = function(list_result, type = "BIC"){
       ggplot2::theme(legend.position = "bottom")
   }
 
-  if(type == "AIC"){
+  if(order == "AIC"){
     g = apes_model_df_bind %>%
       ggplot2::ggplot() +
       ggplot2::geom_line(aes(x = .data$model_size, y = .data$mle_aic, group = .data$boot_num)) +

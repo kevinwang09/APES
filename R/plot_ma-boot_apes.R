@@ -6,13 +6,14 @@
 #' these model averaged coefficient values across all bootstrap runs.
 #' On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
 #' @param list_result a list of APES outputs
-#' @param type either "AIC" (default) or "BIC"
+#' @param order either "BIC" (default) or "AIC"
 #' @author Kevin Wang
 #' @import dplyr
 #' @import ggplot2
 #' @import purrr
 #' @import directlabels
 #' @importFrom magrittr %>%
+#' @rdname plot.boot_apes
 #' @export
 #' @examples
 #' set.seed(10)
@@ -28,20 +29,20 @@
 #'
 #' list_result = apes(model = model, n_boot = 20)
 #'
-#' plot_ma_coef(list_result = list_result)
+#' plot_ma_boot_apes(list_result = list_result)
 
-plot_ma_coef = function(list_result, type = "AIC"){
+plot_ma_boot_apes = function(list_result, order = "BIC"){
   model_avg_beta = purrr::map(list_result, "model_avg_beta")
 
-  stopifnot(type %in% c("AIC", "BIC"))
+  stopifnot(order %in% c("AIC", "BIC"))
 
-  if(type == "AIC") {
+  if(order == "AIC") {
     model_avg_beta_aic = purrr::map(model_avg_beta, ~.x[,"aic_weight_coef"]) %>%
       do.call(cbind, .)
     cummean_model_avg = apply(model_avg_beta_aic, 1, dplyr::cummean)
   }
 
-  if(type == "BIC"){
+  if(order == "BIC"){
     model_avg_beta_bic = purrr::map(model_avg_beta, ~.x[,"bic_weight_coef"]) %>%
       do.call(cbind, .)
     cummean_model_avg = apply(model_avg_beta_bic, 1, dplyr::cummean)
@@ -66,7 +67,7 @@ plot_ma_coef = function(list_result, type = "AIC"){
                     directlabels::dl.trans(x = x + 0.5))) +
     ggplot2::xlim(1, nrow(cummean_model_avg) + 5) +
     ggplot2::labs(
-      title = paste("Cumulative MA coefficients using ", type),
+      title = paste("Cumulative MA coefficients using ", order),
       x = "Number of bootstraps",
       y = "Cumulative averaged MA coefficients") +
     ggplot2::theme_classic(18) +

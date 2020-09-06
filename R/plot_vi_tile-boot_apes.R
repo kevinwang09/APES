@@ -15,6 +15,7 @@
 #' @return apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
 #' @return variableTilePlot a ggplot with continuous colouring
 #' @return variableTilePlot_category a ggplot with discrete colouring
+#' @rdname plot.boot_apes
 #' @export
 #' @examples
 #' set.seed(10)

@@ -16,6 +16,7 @@
 #' @importFrom magrittr %>%
 #' @return boot_vars_plotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
 #' @return vi_plot a ggplot
+#' @rdname plot.boot_apes
 #' @export
 #' @examples
 #' set.seed(10)
