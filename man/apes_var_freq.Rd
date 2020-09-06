@@ -4,10 +4,10 @@
 \alias{apes_var_freq}
 \title{Calculates the frequency that a variable is selected}
 \usage{
-apes_var_freq(listResult, ic = "BIC")
+apes_var_freq(list_result, ic = "BIC")
 }
 \arguments{
-\item{listResult}{a list of APES outputs}
+\item{list_result}{a list of APES outputs}
 
 \item{ic}{Either "AIC" or "BIC"}
 }
@@ -22,12 +22,14 @@ k = 1:10
 beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
-y = rpois(n = n, lambda = exp(x \%*\% beta))
-mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
+data = data.frame(y, x)
+model = glm(y ~ ., data = data, family = "binomial")
 
-listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-apes_var_freq(listResult = listResult, ic = "AIC")
-apes_var_freq(listResult = listResult, ic = "BIC")
+list_result = apes(model = model, n_boot = 50)
+
+apes_var_freq(list_result = list_result, ic = "AIC")
+apes_var_freq(list_result = list_result, ic = "BIC")
 }
 \author{
 Kevin Wang

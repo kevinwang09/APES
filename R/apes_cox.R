@@ -204,10 +204,10 @@ apes_cox = function(x, time, status, k, estimator = "leaps", time.limit = 60){
 ####################################
 ####################################
 ## Given an indicators of variables, design matrix and the yBinom, we refit the Cox. X should not have an Intercept term
-refitting_cox = function(indicator, x, time, status){
-  df_tmp = data.frame(x[,indicator], time, status)
-  colnames(df_tmp) = c(colnames(x)[indicator], "time", "status")
-
-  return(survival::coxph(survival::Surv(time, status) ~ ., data = df_tmp))
+refitting_cox = function(indicator, x, y){
+  # df_tmp = data.frame(x[,indicator], time, status)
+  # colnames(df_tmp) = c(colnames(x)[indicator], "time", "status")
+  xtmp = x[,indicator, drop = FALSE]
+  return(survival::coxph(y ~ xtmp))
 }
 #####################################

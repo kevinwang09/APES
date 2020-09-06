@@ -1,10 +1,10 @@
 #' @title Calculates the frequency that a variable is selected
-#' @param listResult a list of APES outputs
+#' @param list_result a list of APES outputs
 #' @param ic Either "AIC" or "BIC"
 #' @author Kevin Wang
 #' @import dplyr
-#' @import stringr
-#' @import purrr
+#' @importFrom stringr str_detect
+#' @importFrom purrr map_dfr
 #' @importFrom magrittr %>%
 #' @export
 #' @examples
@@ -15,43 +15,40 @@
 #' beta = c(1, -1, rep(0, p-2))
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
-#' y = rpois(n = n, lambda = exp(x %*% beta))
-#' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+#' data = data.frame(y, x)
+#' model = glm(y ~ ., data = data, family = "binomial")
 #'
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 50)
-#' apes_var_freq(listResult = listResult, ic = "AIC")
-#' apes_var_freq(listResult = listResult, ic = "BIC")
+#' list_result = apes(model = model, n_boot = 50)
+#'
+#' apes_var_freq(list_result = list_result, ic = "AIC")
+#' apes_var_freq(list_result = list_result, ic = "BIC")
 
-apes_var_freq = function(listResult, ic = "BIC"){
-  apesModelDf = purrr::map_dfr(listResult, "apesModelDf",  .id = "bootNum")
-  apesMleBetaBinaryDf = purrr::map_dfr(listResult, "apesMleBetaBinary",  .id = "bootNum") %>%
-    dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
+apes_var_freq = function(list_result, ic = "BIC"){
+  list_apes_model_df = purrr::map_dfr(list_result, "apes_model_df",  .id = "boot_num") %>%
+    dplyr::mutate(boot_num_model_name = base::paste(boot_num, model_name, sep = "_"))
+
+  list_apes_mle_beta_binary = purrr::map_dfr(list_result, "apes_mle_beta_binary",  .id = "boot_num") %>%
+    dplyr::mutate(boot_num_model_name = base::paste(boot_num, model_name, sep = "_"))
 
   if(ic == "AIC"){
-    icOptimalModels = apesModelDf %>%
-      dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinAic")) %>%
-      dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
-
-    cat("Summary of model sizes selected by AIC \n")
+    ic_optimal_models = list_apes_model_df %>%
+      dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_aic"))
   }
 
   if(ic == "BIC"){
-    icOptimalModels = apesModelDf %>%
-      dplyr::filter(stringr::str_detect(icOptimalModels, "apesMinBic")) %>%
-      dplyr::mutate(bootNum_modelName = base::paste(bootNum, modelName, sep = "_"))
-
-    cat("Summary of model sizes selected by BIC \n")
-
+    ic_optimal_models = list_apes_model_df %>%
+      dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_bic"))
   }
 
-  icOptimalVariables = apesMleBetaBinaryDf %>%
-    dplyr::filter(bootNum_modelName %in% icOptimalModels$bootNum_modelName)
+  ic_optimal_variables = list_apes_mle_beta_binary %>%
+    dplyr::filter(boot_num_model_name %in% ic_optimal_models$boot_num_model_name)
 
-  icOptimalVariables_freq = icOptimalVariables %>%
+  ic_optimal_variables_freq = ic_optimal_variables %>%
     dplyr::group_by(variables) %>%
-    dplyr::summarise(freq = mean(fittedBeta)) %>%
+    dplyr::summarise(freq = mean(fitted_beta), .groups = "drop") %>%
     dplyr::arrange(dplyr::desc(freq)) %>%
     dplyr::ungroup()
 
-  return(icOptimalVariables_freq)
+  return(ic_optimal_variables_freq)
 }

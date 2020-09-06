@@ -24,9 +24,14 @@ mextract = function(model){
 
 
 
-  family = stats::family(model)
-  model_type = family$family
+  if(class(model)[1] == "coxph"){
+    model_type = "coxph"
+  } else if(class(model)[1] == "glm"){
+    model_type = stats::family(model)$family
+  }
+
   fitted_values = model$fitted.values
+  linear_predictors = model$linear.predictors
 
   return(list(
     y = y,
@@ -35,7 +40,8 @@ mextract = function(model){
     p = p,
     variable_names = variable_names,
     model_type = model_type,
-    fitted_values = fitted_values))
+    fitted_values = fitted_values,
+    linear_predictors = linear_predictors))
 }
 
 icOptimal = function(ic, symbol){

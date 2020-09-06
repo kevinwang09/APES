@@ -28,7 +28,8 @@ Imports:
   reshape2,
   stringr, 
   survival,
-  tibble
+  tibble,
+  rlang
 Suggests:
     bestsubset,
     covr,

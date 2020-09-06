@@ -1,8 +1,10 @@
-apes_compute = function(x, y, fitted_values,variable_names, k, estimator = "leaps", model_type, time_limit = 10, verbose = FALSE){
+apes_compute = function(x, y, fitted_values, linear_predictors, variable_names, k, estimator = "leaps", model_type, time_limit = 10, verbose = FALSE){
   if(model_type == "binomial"){
     linear_y = logit(fitted_values) + (y - fitted_values)/(fitted_values * (1 - fitted_values))
   } else if(model_type == "poisson"){
     linear_y = log(fitted_values) + (1/fitted_values)*(y - fitted_values)
+  } else if(model_type == "coxph"){
+    linear_y = linear_predictors
   }
 
   n = nrow(x)
@@ -101,6 +103,18 @@ apes_compute = function(x, y, fitted_values,variable_names, k, estimator = "leap
     apes_mle_loglike = apply(apes_mle_theta, 2, function(mleMu){loglikeMu(yPois = y, mus = mleMu)})
     apes_mle_bic = -2*apes_mle_loglike + log(n)*apes_model_size
     apes_mle_aic = -2*apes_mle_loglike + 2*apes_model_size
+  } else if(model_type == "coxph"){
+    apes_mle_models = apply(apes_indicator, 2, function(indicator){
+      refitting_cox(indicator = indicator, x = x, y = y)
+    })
+
+    apes_mle_beta = mleModelToBeta(mleModels = apes_mle_models, variables = variable_names)
+    colnames(apes_mle_beta) = apes_model_name
+
+
+    apes_mle_loglike = purrr::map_dbl(apes_mle_models, stats::logLik)
+    apes_mle_bic = -2*apes_mle_loglike + log(n)*apes_model_size
+    apes_mle_aic = -2*apes_mle_loglike + 2*apes_model_size
   }
 
   apes_model_df = tibble::tibble(
@@ -118,18 +132,19 @@ apes_compute = function(x, y, fitted_values,variable_names, k, estimator = "leap
   ########################## End distribution-specific re-fitting ######################################
   ######################### Observation tibble #########################
   obs_num = paste0("obs", 1:n)
-  colnames(apes_mle_theta) = apes_model_name
-  rownames(apes_mle_theta) = obs_num
+  # colnames(apes_mle_theta) = apes_model_name
+  # rownames(apes_mle_theta) = obs_num
 
-  apes_min_aic_mean = minIcMatrix(ic = apes_mle_aic, mat = apes_mle_theta)
-  apes_min_bic_mean = minIcMatrix(ic = apes_mle_bic, mat = apes_mle_theta)
+  # apes_min_aic_mean = minIcMatrix(ic = apes_mle_aic, mat = apes_mle_theta)
+  # apes_min_bic_mean = minIcMatrix(ic = apes_mle_bic, mat = apes_mle_theta)
 
   response_tibble = tibble::tibble(obs_num = obs_num,
                                    y = y,
                                    fitted_values = fitted_values,
-                                   linear_y = linear_y,
-                                   apes_min_aic_mean = apes_min_aic_mean,
-                                   apes_min_bic_mean = apes_min_bic_mean)
+                                   linear_y = linear_y
+                                   # apes_min_aic_mean = apes_min_aic_mean,
+                                   # apes_min_bic_mean = apes_min_bic_mean
+                                   )
 
   apes_mle_beta_binary = reshape2::melt(apes_mle_beta != 0,
                                         varnames = c("variables", "model_name"),
@@ -165,7 +180,6 @@ apes_compute = function(x, y, fitted_values,variable_names, k, estimator = "leap
     selected_model_beta = selected_model_beta,
     model_avg_beta = model_avg_beta,
     response_tibble = response_tibble)
-
   class(result) = "apes"
   return(result)
 }

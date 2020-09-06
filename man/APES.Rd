@@ -34,6 +34,8 @@ model size model when the "mio" estimator was selected. It will not affect the s
 \item{verbose}{Whether to print off messages during computations}
 
 \item{n_boot}{Number of bootstrap runs, default to 0, which doesn't perform any sampling.}
+
+\item{workers}{Number of cores used for parallel processing for the bootstrap}
 }
 \description{
 Perform APES model selection
@@ -46,21 +48,29 @@ k = 1:10
 beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
+
+## Logistic regression example
 y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "binomial")
 apes(model = model)
 
+## Poisson regression example
 y = rpois(n = n, lambda = exp(x \%*\% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "poisson")
 apes(model = model)
 
+## Bootstrap examples
 apes(model = model, n_boot = 2)
+apes(model = model, n_boot = 2, workers = 1)
+## apes(model = model, n_boot = 2, workers = 2)
 
-\dontrun{
-library(furrr)
-library(future)
-apes(model = model, n_boot = 10, workers = 2)
-}
+## Cox regression example
+hx = exp(x \%*\% beta)
+time = rexp(n, hx)
+censor = rbinom(n = n, prob = 0.3, size = 1) # censoring indicator
+data = data.frame(x, time = time, censor = censor)
+model = survival::coxph(survival::Surv(time, censor) ~ ., data = data)
+apes(model = model)
 }
