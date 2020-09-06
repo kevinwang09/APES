@@ -6,11 +6,14 @@ k = 1:10
 beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
-y = rpois(n = n, lambda = exp(x %*% beta))
-mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+data = data.frame(y, x)
+model = glm(y ~ ., data = data, family = "binomial")
 
-listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
-viTileResult = plot_vi_tile(listResult)
-vdiffr::expect_doppelganger("Variable inclusion tile plot, continuous colouring", viTileResult$variableTilePlot)
-vdiffr::expect_doppelganger("Variable inclusion tile plot, discrete colouring", viTileResult$variableTilePlot_category)
+list_result = apes(model = model, n_boot = 20)
+
+
+vi_tile_result = plot_vi_tile_boot_apes(list_result = list_result)
+vdiffr::expect_doppelganger("Variable inclusion tile plot, continuous colouring", vi_tile_result$variable_tile_plot)
+vdiffr::expect_doppelganger("Variable inclusion tile plot, discrete colouring", vi_tile_result$variable_tile_plot_category)
 

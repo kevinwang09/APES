@@ -4,10 +4,10 @@
 \alias{plot_ma_coef}
 \title{Average of model average plot}
 \usage{
-plot_ma_coef(listResult, type = "AIC")
+plot_ma_coef(list_result, type = "AIC")
 }
 \arguments{
-\item{listResult}{a list of APES outputs}
+\item{list_result}{a list of APES outputs}
 
 \item{type}{either "AIC" (default) or "BIC"}
 }
@@ -29,13 +29,13 @@ k = 1:10
 beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
-y = rpois(n = n, lambda = exp(x \%*\% beta))
-mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
+data = data.frame(y, x)
+model = glm(y ~ ., data = data, family = "binomial")
 
-listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
+list_result = apes(model = model, n_boot = 20)
 
-plot_ma_coef(listResult, type = "AIC")
-plot_ma_coef(listResult, type = "BIC")
+plot_ma_coef(list_result = list_result)
 }
 \author{
 Kevin Wang

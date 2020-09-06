@@ -7,15 +7,15 @@
 #' For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
 #' look at which variables are selected in that model.
 #' The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
-#' @param listResult a list of APES outputs
+#' @param list_result a list of APES outputs
 #' @author Kevin Wang
 #' @import dplyr
 #' @import ggplot2
 #' @import purrr
 #' @import directlabels
 #' @importFrom magrittr %>%
-#' @return bootVarPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
-#' @return viPlot a ggplot
+#' @return boot_vars_plotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
+#' @return vi_plot a ggplot
 #' @export
 #' @examples
 #' set.seed(10)
@@ -25,43 +25,40 @@
 #' beta = c(1, -1, rep(0, p-2))
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
-#' y = rpois(n = n, lambda = exp(x %*% beta))
-#' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+#' data = data.frame(y, x)
+#' model = glm(y ~ ., data = data, family = "binomial")
 #'
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
-#' viPlotResult = plot_vi(listResult)
-#' viPlotResult$viPlot
+#' list_result = apes(model = model, n_boot = 50)
+#'
+#' plot_vi_boot_apes(list_result = list_result)
+plot_vi_boot_apes = function(list_result){
+  n = nrow(list_result[[1]]$response_tibble) ## Number of observations
 
-
-
-plot_vi = function(listResult){
-  n = nrow(listResult[[1]]$responseTibble) ## Number of observations
   penalty = seq(0, 2*log(n), by = 0.1)
-  list_apesModelDf = purrr::map(listResult, "apesModelDf")
-  list_apesMleBetaBinary = purrr::map(listResult, "apesMleBetaBinary")
+  list_apes_model_df = purrr::map(list_result, "apes_model_df")
+  list_apes_mle_beta_binary = purrr::map(list_result, "apes_mle_beta_binary")
 
-  bootOptimumVariablesDf = purrr::map2_dfr(
-    .x = list_apesModelDf,
-    .y = list_apesMleBetaBinary,
+  boot_opt_vars = purrr::map2_dfr(
+    .x = list_apes_model_df,
+    .y = list_apes_mle_beta_binary,
 
-    ~ getOptimumVariables(
+    ~ get_opt_vars(
       penalty = penalty,
-      apesModelDf = .x,
-      apesMleBetaBinary = .y),
-    .id = "bootNum")
+      apes_model_df = .x,
+      apes_mle_beta_binary = .y),
+    .id = "boot_num")
 
 
-  bootVarPlotdf = bootOptimumVariablesDf %>%
+  boot_vars_plotdf = boot_opt_vars %>%
     group_by(penalty, variables) %>%
-    summarise(bootSelectProb = mean(fittedBeta)) %>%
+    summarise(boot_select_prob = mean(fitted_beta), .groups = "drop") %>%
     ungroup() %>%
     dplyr::mutate(variables = as.character(variables))
 
-
-
-  viPlot = bootVarPlotdf %>%
+  vi_plot = boot_vars_plotdf %>%
     ggplot2::ggplot(aes(x = penalty,
-               y = bootSelectProb,
+               y = boot_select_prob,
                colour = variables,
                group = variables,
                label = variables)) +
@@ -85,55 +82,48 @@ plot_vi = function(listResult){
 
 
 
-  result = list(
-    bootVarPlotdf = bootVarPlotdf,
-    viPlot = viPlot
-  )
+  result = list(boot_vars_plotdf = boot_vars_plotdf, vi_plot = vi_plot)
 
 
   return(result)
 }
 
-
-
-
-getOptimumVariables = function(
+get_opt_vars = function(
   penalty,
-  apesModelDf,
-  apesMleBetaBinary){
+  apes_model_df,
+  apes_mle_beta_binary){
 
   ## Get likeihood and model size to construct GIC
-  logLike = apesModelDf$apesMleLoglike
-  modelSize = apesModelDf$modelSize
+  log_like = apes_model_df$apes_mle_loglike
+  model_size = apes_model_df$model_size
 
   ## Construct the grip of values
-  penaltyGrid = purrr::map(penalty,
-                           ~ -2*logLike + .x * modelSize) %>%
+  penalty_grid = purrr::map(penalty, ~ -2*log_like + .x * model_size) %>%
     do.call(cbind, .)
 
   ## Find the minimum using GIC, for each penalty
-  optimumIndex = penaltyGrid %>% apply(2, which.min)
+  optimum_index = penalty_grid %>% apply(2, which.min)
 
   ## Find the models selected at each penalty
-  optimumModelDf = dplyr::mutate(
-    apesModelDf[optimumIndex,] %>%
+  opt_model_tbl = dplyr::mutate(
+    apes_model_df[optimum_index,] %>%
       dplyr::select(
-        modelName,
-        modelSize,
-        apesMleLoglike),
+        model_name,
+        model_size,
+        apes_mle_loglike),
     penalty)
 
   ## Find the variables corresponding to each selected model under GIC
-  optimumBetaBinary = purrr::map(
-    optimumModelDf$modelName,
-    ~ dplyr::filter(apesMleBetaBinary, modelName == .x)
+  opt_beta_binary = purrr::map(
+    opt_model_tbl$model_name,
+    ~ dplyr::filter(apes_mle_beta_binary, model_name == .x)
   )
-  names(optimumBetaBinary) = round(penalty, 5)
+  names(opt_beta_binary) = round(penalty, 5)
 
   ## Output the optimum variable data frame
-  optimumVariableDataFrame = optimumBetaBinary %>%
+  opt_vars_tbl = opt_beta_binary %>%
     dplyr::bind_rows(.id = "penalty") %>%
     dplyr::mutate(penalty = as.numeric(penalty))
 
-  return(optimumVariableDataFrame)
+  return(opt_vars_tbl)
 }

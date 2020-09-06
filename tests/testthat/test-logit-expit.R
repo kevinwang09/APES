@@ -5,6 +5,3 @@ x = seq(from = 0.001, to = 0.999, length.out = 100)
 expect_equal(x, expit(logit(x)))
 
 expect_equal(x, logit(expit(x)))
-
-expect_error(logit(0))
-expect_error(logit(1))

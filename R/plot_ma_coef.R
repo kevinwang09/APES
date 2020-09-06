@@ -5,7 +5,7 @@
 #' As we have multiple bootstrapped APES output, we can cummulatively average
 #' these model averaged coefficient values across all bootstrap runs.
 #' On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
-#' @param listResult a list of APES outputs
+#' @param list_result a list of APES outputs
 #' @param type either "AIC" (default) or "BIC"
 #' @author Kevin Wang
 #' @import dplyr
@@ -22,47 +22,40 @@
 #' beta = c(1, -1, rep(0, p-2))
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
-#' y = rpois(n = n, lambda = exp(x %*% beta))
-#' mu = glm.fit(x = x, y = y, family = poisson(link = "log"))$fitted.values
+#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+#' data = data.frame(y, x)
+#' model = glm(y ~ ., data = data, family = "binomial")
 #'
-#' listResult = boot_apes_poisson(x = x, y = y, mu = mu, k = k, estimator = "leaps", nBoot = 20)
+#' list_result = apes(model = model, n_boot = 20)
 #'
-#' plot_ma_coef(listResult, type = "AIC")
-#' plot_ma_coef(listResult, type = "BIC")
+#' plot_ma_coef(list_result = list_result)
 
-plot_ma_coef = function(listResult, type = "AIC"){
-  modelAvgBeta = purrr::map(listResult,"modelAvgBeta")
+plot_ma_coef = function(list_result, type = "AIC"){
+  model_avg_beta = purrr::map(list_result, "model_avg_beta")
 
   stopifnot(type %in% c("AIC", "BIC"))
 
   if(type == "AIC") {
-    modelAvgBetaAic = purrr::map(modelAvgBeta, ~.x[,"aicWeightCoef"]) %>%
+    model_avg_beta_aic = purrr::map(model_avg_beta, ~.x[,"aic_weight_coef"]) %>%
       do.call(cbind, .)
-    cummeanModelAvg = apply(modelAvgBetaAic, 1, dplyr::cummean)
+    cummean_model_avg = apply(model_avg_beta_aic, 1, dplyr::cummean)
   }
 
   if(type == "BIC"){
-    modelAvgBetaBic = purrr::map(modelAvgBeta, ~.x[,"bicWeightCoef"]) %>%
+    model_avg_beta_bic = purrr::map(model_avg_beta, ~.x[,"bic_weight_coef"]) %>%
       do.call(cbind, .)
-    cummeanModelAvg = apply(modelAvgBetaBic, 1, dplyr::cummean)
+    cummean_model_avg = apply(model_avg_beta_bic, 1, dplyr::cummean)
   }
 
-  # modelAvgBetaAic %>% t %>%  matplot
-  #
-  # apply(modelAvgBetaAic, 1, cummean) %>% matplot()
+  cummean_model_avg_plotdf = reshape2::melt(
+    cummean_model_avg,
+    varnames = c("cum_boot_num", "variables"),
+    value.name = "ma_values")
 
-
-
-
-  cummeanModelAvgPlotdf = reshape2::melt(
-    cummeanModelAvg,
-    varnames = c("cumBootNum", "variables"),
-    value.name = "maValues")
-
-  result = cummeanModelAvgPlotdf %>%
+  result = cummean_model_avg_plotdf %>%
     ggplot2::ggplot(aes(
-      x = cumBootNum,
-      y = maValues,
+      x = cum_boot_num,
+      y = ma_values,
       colour = variables,
       group = variables,
       label = variables)) +
@@ -71,13 +64,13 @@ plot_ma_coef = function(listResult, type = "AIC"){
       method = list("last.qp",
                     cex = 1.2,
                     directlabels::dl.trans(x = x + 0.5))) +
-    ggplot2::xlim(1, nrow(cummeanModelAvg) + 5) +
+    ggplot2::xlim(1, nrow(cummean_model_avg) + 5) +
     ggplot2::labs(
       title = paste("Cumulative MA coefficients using ", type),
       x = "Number of bootstraps",
       y = "Cumulative averaged MA coefficients") +
     ggplot2::theme_classic(18) +
     ggplot2::theme(legend.position = "none")
-  return(result)
 
+  return(result)
 }

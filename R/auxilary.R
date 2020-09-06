@@ -139,3 +139,9 @@ refittingMle_poisson = function(indicator, X, yPois){
                  # etastart = fullModel$linear.predictors,
                  family = stats::poisson(link = "log"))
 }
+#####################################
+## Given an indicators of variables, design matrix and the yBinom, we refit the Cox. X should not have an Intercept term
+refitting_cox = function(indicator, x, y){
+  xtmp = x[,indicator, drop = FALSE]
+  return(survival::coxph(y ~ xtmp))
+}

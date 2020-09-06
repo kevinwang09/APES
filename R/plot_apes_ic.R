@@ -1,0 +1,64 @@
+#' @title AIC or BIC path plot
+#' @param list_result a list of APES outputs
+#' @param type Either "AIC" or "BIC"
+#' @author Kevin Wang
+#' @import ggplot2
+#' @import purrr
+#' @importFrom magrittr %>%
+#' @export
+#' @examples
+#' set.seed(10)
+#' n = 100
+#' p = 10
+#' k = 1:10
+#' beta = c(1, -1, rep(0, p-2))
+#' x = matrix(rnorm(n*p), ncol = p)
+#' colnames(x) = paste0("X", 1:p)
+#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+#' data = data.frame(y, x)
+#' model = glm(y ~ ., data = data, family = "binomial")
+#'
+#' list_result = apes(model = model, n_boot = 20)
+#'
+#' plot_apes_ic(list_result = list_result)
+
+plot_apes_ic = function(list_result, type = "BIC"){
+  apes_model_df_bind = purrr::map_dfr(list_result, "apes_model_df", .id = "boot_num") %>%
+    group_by(boot_num) %>%
+    dplyr::mutate(
+      mle_bic_min = (mle_bic == min(mle_bic)),
+      mle_aic_min = (mle_aic == min(mle_aic))
+    )
+
+
+  if(type == "BIC"){
+    g = apes_model_df_bind %>%
+      ggplot2::ggplot() +
+      ggplot2::geom_line(aes(x = model_size, y = mle_bic, group = boot_num)) +
+      ggplot2::geom_point(aes(x = model_size, y = mle_bic, colour = mle_bic_min, size = mle_bic_min)) +
+      ggplot2::scale_color_manual(values = c("TRUE" = "red", "FALSE" = "black")) +
+      ggplot2::scale_size_manual(values = c("TRUE" = 2, "FALSE" = 0)) +
+      ggplot2::theme_classic(18) +
+      ggplot2::labs(title = "APES BIC path plot",
+                    x = "Model size (including intercept)",
+                    y = "BIC for each bootstrap run") +
+      ggplot2::theme(legend.position = "bottom")
+  }
+
+  if(type == "AIC"){
+    g = apes_model_df_bind %>%
+      ggplot2::ggplot() +
+      ggplot2::geom_line(aes(x = model_size, y = mle_aic, group = boot_num)) +
+      ggplot2::geom_point(aes(x = model_size, y = mle_aic, colour = mle_aic_min, size = mle_aic_min)) +
+      ggplot2::scale_color_manual(values = c("TRUE" = "red", "FALSE" = "black")) +
+      ggplot2::scale_size_manual(values = c("TRUE" = 2, "FALSE" = 0)) +
+      ggplot2::theme_classic(18) +
+      ggplot2::labs(title = "APES AIC path plot",
+                    x = "Model size (including intercept)",
+                    y = "AIC for each bootstrap run") +
+      ggplot2::theme(legend.position = "bottom")
+  }
+
+  return(g)
+
+}
