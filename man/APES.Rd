@@ -50,20 +50,20 @@ x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
 
 ## Logistic regression example
-y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
-data = data.frame(y, x)
-model = glm(y ~ ., data = data, family = "binomial")
-apes(model = model)
+## y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
+## data = data.frame(y, x)
+## model = glm(y ~ ., data = data, family = "binomial")
+## apes(model = model)
 
 ## Poisson regression example
-y = rpois(n = n, lambda = exp(x \%*\% beta))
-data = data.frame(y, x)
-model = glm(y ~ ., data = data, family = "poisson")
-apes(model = model)
+## y = rpois(n = n, lambda = exp(x \%*\% beta))
+## data = data.frame(y, x)
+## model = glm(y ~ ., data = data, family = "poisson")
+## apes(model = model)
 
 ## Bootstrap examples
-apes(model = model, n_boot = 2)
-apes(model = model, n_boot = 2, workers = 1)
+## apes(model = model, n_boot = 2
+## apes(model = model, n_boot = 2, workers = 1)
 ## apes(model = model, n_boot = 2, workers = 2)
 
 ## Cox regression example

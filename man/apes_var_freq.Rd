@@ -26,7 +26,7 @@ y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "binomial")
 
-list_result = apes(model = model, n_boot = 50)
+list_result = apes(model = model, n_boot = 20)
 
 apes_var_freq(list_result = list_result, ic = "AIC")
 apes_var_freq(list_result = list_result, ic = "BIC")

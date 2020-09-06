@@ -34,8 +34,8 @@ plot_apes_ic = function(list_result, type = "BIC"){
   if(type == "BIC"){
     g = apes_model_df_bind %>%
       ggplot2::ggplot() +
-      ggplot2::geom_line(aes(x = model_size, y = mle_bic, group = boot_num)) +
-      ggplot2::geom_point(aes(x = model_size, y = mle_bic, colour = mle_bic_min, size = mle_bic_min)) +
+      ggplot2::geom_line(aes(x = .data$model_size, y = .data$mle_bic, group = .data$boot_num)) +
+      ggplot2::geom_point(aes(x = .data$model_size, y = .data$mle_bic, colour = .data$mle_bic_min, size = .data$mle_bic_min)) +
       ggplot2::scale_color_manual(values = c("TRUE" = "red", "FALSE" = "black")) +
       ggplot2::scale_size_manual(values = c("TRUE" = 2, "FALSE" = 0)) +
       ggplot2::theme_classic(18) +
@@ -48,8 +48,8 @@ plot_apes_ic = function(list_result, type = "BIC"){
   if(type == "AIC"){
     g = apes_model_df_bind %>%
       ggplot2::ggplot() +
-      ggplot2::geom_line(aes(x = model_size, y = mle_aic, group = boot_num)) +
-      ggplot2::geom_point(aes(x = model_size, y = mle_aic, colour = mle_aic_min, size = mle_aic_min)) +
+      ggplot2::geom_line(aes(x = .data$model_size, y = .data$mle_aic, group = .data$boot_num)) +
+      ggplot2::geom_point(aes(x = .data$model_size, y = .data$mle_aic, colour = .data$mle_aic_min, size = .data$mle_aic_min)) +
       ggplot2::scale_color_manual(values = c("TRUE" = "red", "FALSE" = "black")) +
       ggplot2::scale_size_manual(values = c("TRUE" = 2, "FALSE" = 0)) +
       ggplot2::theme_classic(18) +

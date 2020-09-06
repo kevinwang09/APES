@@ -79,7 +79,7 @@ apes_compute = function(x, y, fitted_values, linear_predictors, variable_names, 
   ########################## Distribution-specific re-fitting ######################################
   if(model_type == "binomial"){
     apes_mle_models = apply(apes_indicator, 2, function(indicator){
-      refittingMle_logit(indicator = indicator, X = x, y = y)
+      refittingMle_logit(indicator = indicator, X = x, yBinom = y)
     })
 
     apes_mle_beta = mleModelToBeta(mleModels = apes_mle_models, variables = variable_names)

@@ -1,7 +1,7 @@
 #' Variable inclusion plot in tile format
 #' @title Variable Inclusion Plot in tile format
 #' @description This function displays the same information as plot_vi, but in a tile plot format.
-#' @param listResult a list of APES outputs
+#' @param list_result a list of APES outputs
 #' @param order The ordering of variables. Either "median", "AIC" or "BIC"
 #' @author Kevin Wang
 #' @import dplyr
@@ -11,6 +11,7 @@
 #' @import RColorBrewer
 #' @import forcats
 #' @importFrom magrittr %>%
+#' @importFrom stats median
 #' @return apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
 #' @return variableTilePlot a ggplot with continuous colouring
 #' @return variableTilePlot_category a ggplot with discrete colouring
@@ -36,10 +37,10 @@ plot_vi_tile_boot_apes = function(list_result, order = "median"){
 
   aic_opt_median_size = apes_model_df_bind %>%
     dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_aic")) %>%
-    dplyr::pull(model_size) %>% median(na.rm = TRUE)
+    dplyr::pull(model_size) %>% stats::median(na.rm = TRUE)
   bic_opt_median_size = apes_model_df_bind %>%
     dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_bic")) %>%
-    dplyr::pull(model_size) %>% median(na.rm = TRUE)
+    dplyr::pull(model_size) %>% stats::median(na.rm = TRUE)
 
   apes_mle_beta_binary_plotdf = apes_mle_beta_binary_bind %>%
     dplyr::group_by(variables, model_name) %>%
@@ -99,9 +100,9 @@ plot_vi_tile_boot_apes = function(list_result, order = "median"){
 
 
   var_tile_plot = apes_mle_beta_binary_plotdf %>%
-    ggplot2::ggplot(aes(x = model_size,
-               y = variables,
-               fill = freq_selected)) +
+    ggplot2::ggplot(aes(x = .data$model_size,
+               y = .data$variables,
+               fill = .data$freq_selected)) +
     ggplot2::geom_tile(colour = "gray") +
     ggplot2::scale_x_continuous(breaks = seq(min(apes_mle_beta_binary_plotdf$model_size),
                                              max(apes_mle_beta_binary_plotdf$model_size), by = 1L)) +
@@ -121,16 +122,16 @@ plot_vi_tile_boot_apes = function(list_result, order = "median"){
 
 
   var_tile_plot_category = apes_mle_beta_binary_plotdf %>%
-    ggplot2::ggplot(aes(x = model_size,
-               y = variables,
-               fill = freq_selected_category)) +
+    ggplot2::ggplot(aes(x = .data$model_size,
+               y = .data$variables,
+               fill = .data$freq_selected_category)) +
     ggplot2::geom_tile(colour = "gray") +
     ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
     ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
     ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
     ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
     ggplot2::scale_fill_manual(
-      values = colorRampPalette(RColorBrewer::brewer.pal(3, "YlGnBu"))(5)
+      values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(3, "YlGnBu"))(5)
     ) +
     ggplot2::labs(
       x = "Model size (including intercept)",

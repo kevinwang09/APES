@@ -6,6 +6,7 @@
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_dfr
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' set.seed(10)
@@ -19,7 +20,7 @@
 #' data = data.frame(y, x)
 #' model = glm(y ~ ., data = data, family = "binomial")
 #'
-#' list_result = apes(model = model, n_boot = 50)
+#' list_result = apes(model = model, n_boot = 20)
 #'
 #' apes_var_freq(list_result = list_result, ic = "AIC")
 #' apes_var_freq(list_result = list_result, ic = "BIC")

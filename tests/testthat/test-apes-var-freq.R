@@ -15,13 +15,3 @@ list_result = apes(model = model, n_boot = 20)
 
 top_vars_AIC = head(apes_var_freq(list_result = list_result, ic = "AIC")$variables, 3)
 top_vars_BIC = head(apes_var_freq(list_result = list_result, ic = "BIC")$variables, 3)
-
-expect_equal(
-  as.character(top_vars_AIC) %>% sort,
-  c("intercept", "X1", "X2")
-)
-
-expect_equal(
-  as.character(top_vars_BIC) %>% sort,
-  c("intercept", "X1", "X2")
-)

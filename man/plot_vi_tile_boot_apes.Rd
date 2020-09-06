@@ -7,9 +7,9 @@
 plot_vi_tile_boot_apes(list_result, order = "median")
 }
 \arguments{
-\item{order}{The ordering of variables. Either "median", "AIC" or "BIC"}
+\item{list_result}{a list of APES outputs}
 
-\item{listResult}{a list of APES outputs}
+\item{order}{The ordering of variables. Either "median", "AIC" or "BIC"}
 }
 \value{
 apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot

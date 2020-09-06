@@ -29,7 +29,7 @@
 #' data = data.frame(y, x)
 #' model = glm(y ~ ., data = data, family = "binomial")
 #'
-#' list_result = apes(model = model, n_boot = 50)
+#' list_result = apes(model = model, n_boot = 20)
 #'
 #' plot_vi_boot_apes(list_result = list_result)
 plot_vi_boot_apes = function(list_result){
@@ -108,9 +108,9 @@ get_opt_vars = function(
   opt_model_tbl = dplyr::mutate(
     apes_model_df[optimum_index,] %>%
       dplyr::select(
-        model_name,
-        model_size,
-        apes_mle_loglike),
+        .data$model_name,
+        .data$model_size,
+        .data$apes_mle_loglike),
     penalty)
 
   ## Find the variables corresponding to each selected model under GIC

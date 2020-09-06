@@ -9,7 +9,7 @@ Authors@R: c(
     person(given = "Samuel", family = "Mueller", email = "samuel.mueller@sydney.edu.au", role = c("aut"))
     )
 Maintainer: Kevin Wang <kevin.wang@sydney.edu.au>
-Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models
+Description: A package to perform APproximated Exhaustive Search for Generalised Linear Models.
 License: GPL-3
 Encoding: UTF-8
 LazyData: false

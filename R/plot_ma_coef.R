@@ -54,11 +54,11 @@ plot_ma_coef = function(list_result, type = "AIC"){
 
   result = cummean_model_avg_plotdf %>%
     ggplot2::ggplot(aes(
-      x = cum_boot_num,
-      y = ma_values,
-      colour = variables,
-      group = variables,
-      label = variables)) +
+      x = .data$cum_boot_num,
+      y = .data$ma_values,
+      colour = .data$variables,
+      group = .data$variables,
+      label = .data$variables)) +
     ggplot2::geom_line() +
     directlabels::geom_dl(
       method = list("last.qp",

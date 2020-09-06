@@ -7,7 +7,7 @@ output:
   html_document:
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{An introduction to the scMerge package}
+  %\VignetteIndexEntry{An introduction to the APES package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,22 +18,6 @@ vignette: >
 ```{r}
 library(APES)
 ```
-
-# Example 
-```{r}
-set.seed(10)
-n = 100
-p = 10
-k = 1:10
-beta = c(1, -1, rep(0, p-2))
-x = matrix(rnorm(n*p), ncol = p)
-colnames(x) = paste0("X", 1:p)
-y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
-
-M = glm(y ~ x, family = "binomial")
-APES(M)
-```
-
 
 # Session Info
 ```{r}
