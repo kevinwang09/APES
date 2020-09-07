@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Authors • APES</title>
+<title>Perform APES model selection — apes • APES</title>
 
 
 <!-- jquery -->
@@ -18,8 +18,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
-<link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script>
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
@@ -33,13 +33,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="Authors" />
+<meta property="og:title" content="Perform APES model selection — apes" />
+<meta property="og:description" content="Perform APES model selection" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-authors">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -70,7 +71,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">APES</a>
+        <a class="navbar-link" href="../index.html">APES</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
@@ -78,16 +79,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">
+  <a href="../index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="articles/APES.html">Get started</a>
+  <a href="../articles/APES.html">Get started</a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -97,13 +98,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/birthweight_logit.html">Birthweight Logistic Regression</a>
+      <a href="../articles/birthweight_logit.html">Birthweight Logistic Regression</a>
     </li>
     <li>
-      <a href="articles/birthweight_poisson.html">Birthweight Poisson Regression</a>
+      <a href="../articles/birthweight_poisson.html">Birthweight Poisson Regression</a>
     </li>
     <li>
-      <a href="articles/diabetes_example.html">Diabetes example</a>
+      <a href="../articles/diabetes_example.html">Diabetes example</a>
     </li>
   </ul>
 </li>
@@ -126,34 +127,77 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Authors</h1>
+    <h1>Perform APES model selection</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/apes.R'><code>R/apes.R</code></a></small>
+    <div class="hidden name"><code>APES.Rd</code></div>
     </div>
 
-    <ul class="list-unstyled">
-      <li>
-        <p><strong>Kevin Wang</strong>. Author, maintainer. 
-        </p>
-      </li>
-      <li>
-        <p><strong>Garth Tarr</strong>. Author. 
-        </p>
-      </li>
-      <li>
-        <p><strong>Jean Yang</strong>. Author. 
-        </p>
-      </li>
-      <li>
-        <p><strong>Samuel Mueller</strong>. Author. 
-        </p>
-      </li>
-    </ul>
+    <div class="ref-description">
+    <p>Perform APES model selection</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>apes</span>(
+  <span class='kw'>model</span>,
+  k = <span class='kw'>NULL</span>,
+  estimator = <span class='st'>"leaps"</span>,
+  time_limit = <span class='fl'>10L</span>,
+  verbose = <span class='fl'>FALSE</span>,
+  n_boot = <span class='fl'>0L</span>,
+  workers = <span class='fl'>1L</span>
+)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>model</th>
+      <td><p>A "glm" class object</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>Model size to explore. Default to NULL, which searches through all variables in the model.
+Alternatively, user can input a vector. If estimator is:</p><ul>
+<li><p>"leaps", then models up to size max(k) wil be explored.</p></li>
+<li><p>"mio", then models with specified values will be explored.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>estimator</th>
+      <td><p>Either "leaps" (default) or "mio", which correspond to
+optimisation algorithms available in
+the leaps and bestsubset package, respectively.</p></td>
+    </tr>
+    <tr>
+      <th>time_limit</th>
+      <td><p>The time limit for the maximum time allocated to each
+model size model when the "mio" estimator was selected. It will not affect the speed if leaps.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether to print off messages during computations</p></td>
+    </tr>
+    <tr>
+      <th>n_boot</th>
+      <td><p>Number of bootstrap runs, default to 0, which doesn't perform any sampling.</p></td>
+    </tr>
+    <tr>
+      <th>workers</th>
+      <td><p>Number of cores used for parallel processing for the bootstrap</p></td>
+    </tr>
+    </table>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"></pre>
   </div>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
+  </div>
 </div>
-
 
 
       <footer>

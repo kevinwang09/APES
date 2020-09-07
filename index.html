@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="APproximated Exhaustive Search for GLM">
-<meta property="og:description" content="A package to perform APproximated Exhaustive Search for Generalised Linear Models">
+<meta property="og:description" content="A package to perform APproximated Exhaustive Search for Generalised Linear Models.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -64,9 +64,6 @@
     </li>
     <li>
       <a href="articles/diabetes_example.html">Diabetes example</a>
-    </li>
-    <li>
-      <a href="articles/test.html">test</a>
     </li>
   </ul>
 </li>
@@ -102,43 +99,139 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"kevinwang09/APES"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://devtools.r-lib.org">devtools</a></span>)
+<span class="kw">devtools</span>::<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"kevinwang09/APES"</span>)
+</pre></div>
 </div>
 <div id="a-quick-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#a-quick-example" class="anchor"></a>A quick example</h2>
 <p>Suppose we have a data with 100 rows and 10 variables, and we wish to perform an exhaustive variable selection using the classical logistic model. Exhaustive variable selection is known to be time consuming, so this might take a long time. APES is a variable selection method that first converts the logistic model into a linear model first and then uses a best-subset algorithm (such as leaps or mixed integer optimisation) to search for the best linear model to obtain the best variables. These selected variables in the linear space then represents the best model for the original logistic model.</p>
 <p>The application of APES is not restricted to logistic model but to all GLMs.</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">APES</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/kevinwang09/APES">APES</a></span>)
 
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">10</span>)
-<span class="no">n</span> <span class="kw">=</span> <span class="fl">100</span>
-<span class="no">p</span> <span class="kw">=</span> <span class="fl">10</span>
-<span class="no">k</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">p</span>
-<span class="no">beta</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, -<span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="no">p</span>-<span class="fl">2</span>))
-<span class="no">x</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="no">n</span>*<span class="no">p</span>), <span class="kw">ncol</span> <span class="kw">=</span> <span class="no">p</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="no">x</span>) <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"X"</span>, <span class="fl">1</span>:<span class="no">p</span>)
-<span class="no">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(<span class="kw">n</span> <span class="kw">=</span> <span class="no">n</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">prob</span> <span class="kw">=</span> <span class="fu"><a href="reference/expit.html">expit</a></span>(<span class="no">x</span> <span class="kw">%*%</span> <span class="no">beta</span>))
-<span class="no">Pi</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm.fit</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">y</span>, <span class="kw">family</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html">binomial</a></span>(<span class="kw">link</span> <span class="kw">=</span> <span class="st">"logit"</span>))$<span class="no">fitted.values</span>
-<span class="no">apesLeapsResult</span> <span class="kw">=</span> <span class="fu"><a href="reference/apes_logit.html">apes_logit</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">y</span>, <span class="kw">Pi</span> <span class="kw">=</span> <span class="no">Pi</span>, <span class="kw">k</span> <span class="kw">=</span> <span class="no">k</span>,
-                               <span class="kw">estimator</span> <span class="kw">=</span> <span class="st">"leaps"</span>)
-<span class="co">#&gt; [1] "Finished solving linear regression approximation"</span>
-<span class="no">apesLeapsResult</span>$<span class="no">apesModelDf</span>
+<span class="kw">n</span> <span class="op">=</span> <span class="fl">100</span>
+<span class="kw">p</span> <span class="op">=</span> <span class="fl">10</span>
+<span class="kw">k</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>
+<span class="kw">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="kw">p</span><span class="op">-</span><span class="fl">2</span>))
+<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="kw">n</span><span class="op">*</span><span class="kw">p</span>), ncol = <span class="kw">p</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">x</span>) <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="kw">p</span>)
+
+<span class="kw">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(n = <span class="kw">n</span>, size = <span class="fl">1</span>, prob = <span class="fu"><a href="reference/logit.html">expit</a></span>(<span class="kw">x</span> <span class="op">%*%</span> <span class="kw">beta</span>))
+<span class="kw">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">y</span>, <span class="kw">x</span>)
+<span class="kw">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="kw">y</span> <span class="op">~</span> <span class="kw">.</span>, data = <span class="kw">data</span>, family = <span class="st">"binomial"</span>)
+<span class="fu"><a href="reference/apes.html">apes</a></span>(model = <span class="kw">model</span>)
+<span class="co">#&gt; $apes_model_df</span>
 <span class="co">#&gt; # A tibble: 10 x 8</span>
-<span class="co">#&gt;    method modelName modelSize apesMleLoglike mleAIC mleBIC status</span>
-<span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt; </span>
-<span class="co">#&gt;  1 apes   apesMode…         2          -59.4   123.   128. leaps…</span>
-<span class="co">#&gt;  2 apes   apesMode…         3          -53.3   113.   120. leaps…</span>
-<span class="co">#&gt;  3 apes   apesMode…         4          -51.8   112.   122. leaps…</span>
-<span class="co">#&gt;  4 apes   apesMode…         5          -51.2   112.   125. leaps…</span>
-<span class="co">#&gt;  5 apes   apesMode…         6          -50.6   113.   129. leaps…</span>
-<span class="co">#&gt;  6 apes   apesMode…         7          -50.1   114.   132. leaps…</span>
-<span class="co">#&gt;  7 apes   apesMode…         8          -50.1   116.   137. leaps…</span>
-<span class="co">#&gt;  8 apes   apesMode…         9          -50.1   118.   142. leaps…</span>
-<span class="co">#&gt;  9 apes   apesMode…        10          -50.0   120.   146. leaps…</span>
-<span class="co">#&gt; 10 apes   apesMode…        11          -49.9   122.   151. leaps…</span>
-<span class="co">#&gt; # … with 1 more variable: icOptimalModels &lt;chr&gt;</span></pre></div>
+<span class="co">#&gt;    method model_name model_size apes_mle_loglike mle_aic mle_bic status</span>
+<span class="co">#&gt;    &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; </span>
+<span class="co">#&gt;  1 apes   apes_mode…          2            -59.4    123.    128. leaps…</span>
+<span class="co">#&gt;  2 apes   apes_mode…          3            -53.3    113.    120. leaps…</span>
+<span class="co">#&gt;  3 apes   apes_mode…          4            -51.8    112.    122. leaps…</span>
+<span class="co">#&gt;  4 apes   apes_mode…          5            -51.2    112.    125. leaps…</span>
+<span class="co">#&gt;  5 apes   apes_mode…          6            -50.6    113.    129. leaps…</span>
+<span class="co">#&gt;  6 apes   apes_mode…          7            -50.1    114.    132. leaps…</span>
+<span class="co">#&gt;  7 apes   apes_mode…          8            -50.1    116.    137. leaps…</span>
+<span class="co">#&gt;  8 apes   apes_mode…          9            -50.1    118.    142. leaps…</span>
+<span class="co">#&gt;  9 apes   apes_mode…         10            -50.0    120.    146. leaps…</span>
+<span class="co">#&gt; 10 apes   apes_mode…         11            -49.9    122.    151. leaps…</span>
+<span class="co">#&gt; # … with 1 more variable: ic_opt_models &lt;chr&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $apes_mle_beta</span>
+<span class="co">#&gt;           apes_model_2 apes_model_3 apes_model_4 apes_model_5 apes_model_6</span>
+<span class="co">#&gt; intercept   -0.1837717   -0.0541247  -0.04056027  -0.02417405   0.03110599</span>
+<span class="co">#&gt; X1           0.0000000    0.9097537   0.91178021   0.94363885   0.90119152</span>
+<span class="co">#&gt; X2          -1.0242090   -1.1231560  -1.14496345  -1.19155438  -1.21713022</span>
+<span class="co">#&gt; X3           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000</span>
+<span class="co">#&gt; X4           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000</span>
+<span class="co">#&gt; X5           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000</span>
+<span class="co">#&gt; X6           0.0000000    0.0000000  -0.39158670  -0.42195420  -0.47907411</span>
+<span class="co">#&gt; X7           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000</span>
+<span class="co">#&gt; X8           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000</span>
+<span class="co">#&gt; X9           0.0000000    0.0000000   0.00000000  -0.31797158  -0.34747481</span>
+<span class="co">#&gt; X10          0.0000000    0.0000000   0.00000000   0.00000000  -0.32596713</span>
+<span class="co">#&gt;           apes_model_7 apes_model_8 apes_model_9 apes_model_10 apes_model_11</span>
+<span class="co">#&gt; intercept  -0.02537646  -0.03499840 -0.035311695  -0.033665114   -0.03719786</span>
+<span class="co">#&gt; X1          0.90212184   0.90188902  0.903462199   0.897326247    0.89767827</span>
+<span class="co">#&gt; X2         -1.26346112  -1.25336923 -1.255116974  -1.267791328   -1.28695784</span>
+<span class="co">#&gt; X3          0.00000000   0.08668873  0.085645946   0.078934792    0.09639943</span>
+<span class="co">#&gt; X4          0.23862872   0.24372960  0.244554920   0.235973676    0.24004701</span>
+<span class="co">#&gt; X5          0.00000000   0.00000000  0.000000000   0.000000000   -0.09331309</span>
+<span class="co">#&gt; X6         -0.52805565  -0.53206755 -0.531958021  -0.522720700   -0.51654913</span>
+<span class="co">#&gt; X7          0.00000000   0.00000000 -0.007390793  -0.007214945   -0.01401226</span>
+<span class="co">#&gt; X8          0.00000000   0.00000000  0.000000000   0.072018505    0.08240456</span>
+<span class="co">#&gt; X9         -0.35429359  -0.34056237 -0.340276500  -0.334880672   -0.33863067</span>
+<span class="co">#&gt; X10        -0.35526480  -0.36409743 -0.365341478  -0.348944738   -0.35094527</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $apes_mle_beta_binary</span>
+<span class="co">#&gt; # A tibble: 110 x 3</span>
+<span class="co">#&gt;    variables model_name   fitted_beta</span>
+<span class="co">#&gt;    &lt;fct&gt;     &lt;fct&gt;        &lt;lgl&gt;      </span>
+<span class="co">#&gt;  1 intercept apes_model_2 TRUE       </span>
+<span class="co">#&gt;  2 X1        apes_model_2 FALSE      </span>
+<span class="co">#&gt;  3 X2        apes_model_2 TRUE       </span>
+<span class="co">#&gt;  4 X3        apes_model_2 FALSE      </span>
+<span class="co">#&gt;  5 X4        apes_model_2 FALSE      </span>
+<span class="co">#&gt;  6 X5        apes_model_2 FALSE      </span>
+<span class="co">#&gt;  7 X6        apes_model_2 FALSE      </span>
+<span class="co">#&gt;  8 X7        apes_model_2 FALSE      </span>
+<span class="co">#&gt;  9 X8        apes_model_2 FALSE      </span>
+<span class="co">#&gt; 10 X9        apes_model_2 FALSE      </span>
+<span class="co">#&gt; # … with 100 more rows</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $time_used</span>
+<span class="co">#&gt; Time difference of 1.871586e-05 mins</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $selected_model_beta</span>
+<span class="co">#&gt;           apes_min_aic apes_min_bic</span>
+<span class="co">#&gt; intercept  -0.04056027   -0.0541247</span>
+<span class="co">#&gt; X1          0.91178021    0.9097537</span>
+<span class="co">#&gt; X2         -1.14496345   -1.1231560</span>
+<span class="co">#&gt; X3          0.00000000    0.0000000</span>
+<span class="co">#&gt; X4          0.00000000    0.0000000</span>
+<span class="co">#&gt; X5          0.00000000    0.0000000</span>
+<span class="co">#&gt; X6         -0.39158670    0.0000000</span>
+<span class="co">#&gt; X7          0.00000000    0.0000000</span>
+<span class="co">#&gt; X8          0.00000000    0.0000000</span>
+<span class="co">#&gt; X9          0.00000000    0.0000000</span>
+<span class="co">#&gt; X10         0.00000000    0.0000000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $model_avg_beta</span>
+<span class="co">#&gt;           aic_weight_coef bic_weight_coef</span>
+<span class="co">#&gt; intercept   -0.0280111380   -4.975428e-02</span>
+<span class="co">#&gt; X1           0.9143184235    8.989310e-01</span>
+<span class="co">#&gt; X2          -1.1764903378   -1.132568e+00</span>
+<span class="co">#&gt; X3           0.0043666618    1.530326e-05</span>
+<span class="co">#&gt; X4           0.0322490168    4.025344e-04</span>
+<span class="co">#&gt; X5          -0.0001696129   -1.670955e-08</span>
+<span class="co">#&gt; X6          -0.3526317102   -1.373989e-01</span>
+<span class="co">#&gt; X7          -0.0001463119   -1.319753e-07</span>
+<span class="co">#&gt; X8           0.0004751834    1.326869e-07</span>
+<span class="co">#&gt; X9          -0.1649975503   -2.058866e-02</span>
+<span class="co">#&gt; X10         -0.0948133452   -3.703995e-03</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $response_tibble</span>
+<span class="co">#&gt; # A tibble: 100 x 4</span>
+<span class="co">#&gt;    obs_num     y fitted_values linear_y</span>
+<span class="co">#&gt;    &lt;chr&gt;   &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 obs1        0        0.820     -4.05</span>
+<span class="co">#&gt;  2 obs2        0        0.285     -2.32</span>
+<span class="co">#&gt;  3 obs3        1        0.389      2.12</span>
+<span class="co">#&gt;  4 obs4        1        0.233      3.10</span>
+<span class="co">#&gt;  5 obs5        1        0.514      2.00</span>
+<span class="co">#&gt;  6 obs6        0        0.331     -2.20</span>
+<span class="co">#&gt;  7 obs7        0        0.110     -3.21</span>
+<span class="co">#&gt;  8 obs8        1        0.875      3.09</span>
+<span class="co">#&gt;  9 obs9        0        0.0107    -5.54</span>
+<span class="co">#&gt; 10 obs10       0        0.0383    -4.26</span>
+<span class="co">#&gt; # … with 90 more rows</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "apes"</span>
+</pre></div>
 </div>
 </div>
 <div id="references" class="section level1">
@@ -166,7 +259,7 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>Unpublished, do not distribute.</li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
 <div class="developers">
@@ -182,7 +275,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/kevinwang09/APES"><img src="https://travis-ci.org/kevinwang09/APES.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://github.com/kevinwang09/APES/actions"><img src="https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/github/kevinwang09/APES?branch=master"><img src="https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
 </ul>
 </div>
