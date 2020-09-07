@@ -117,7 +117,7 @@ apes(model = model)
 #> # … with 100 more rows
 #> 
 #> $time_used
-#> Time difference of 2.506971e-05 mins
+#> Time difference of 1.871586e-05 mins
 #> 
 #> $selected_model_beta
 #>           apes_min_aic apes_min_bic
