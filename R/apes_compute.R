@@ -118,17 +118,15 @@ apes_compute = function(x, y, fitted_values, linear_predictors, variable_names, 
   }
 
   apes_model_df = tibble::tibble(
-    method = "apes",
     model_name = apes_model_name,
     model_size = apes_model_size,
+    ic_opt_models = paste0(
+      icOptimal(ic = apes_mle_aic, "apes_min_aic"),
+      icOptimal(ic = apes_mle_bic, "apes_min_bic")),
     apes_mle_loglike = apes_mle_loglike,
     mle_aic = apes_mle_aic,
     mle_bic = apes_mle_bic,
-    status = status,
-    ic_opt_models = paste0(
-      icOptimal(ic = apes_mle_aic, "apes_min_aic"),
-      icOptimal(ic = apes_mle_bic, "apes_min_bic"))
-  )
+    status = status)
   ########################## End distribution-specific re-fitting ######################################
   ######################### Observation tibble #########################
   obs_num = paste0("obs", 1:n)

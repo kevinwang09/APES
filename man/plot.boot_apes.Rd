@@ -53,10 +53,8 @@ As we have multiple bootstrapped APES output, we can cummulatively average
 these model averaged coefficient values across all bootstrap runs.
 On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
 
-A list. \itemize{
-\item \code{boot_vars_plotdf} a tibble with all the necessary values to plot a variable inclusion plot
-\item \cite{vip} a variable inclusion plot in ggplot format.
-}
+a variable inclusion plot in ggplot format. An attribute of the name
+boot_vars_plotdf is a tibble with all the necessary values to plot a variable inclusion plot
 
 A list. \itemize{
 \item \code{apes_mle_beta_binary_plotdf} a tibble with all the necessary values to plot a tile variable inclusion plot

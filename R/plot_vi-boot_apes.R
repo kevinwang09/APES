@@ -13,10 +13,8 @@
 #' @import purrr
 #' @import directlabels
 #' @importFrom magrittr %>%
-#' @return A list. \itemize{
-#' \item \code{boot_vars_plotdf} a tibble with all the necessary values to plot a variable inclusion plot
-#' \item \cite{vip} a variable inclusion plot in ggplot format.
-#' }
+#' @return a variable inclusion plot in ggplot format. An attribute of the name
+#' boot_vars_plotdf is a tibble with all the necessary values to plot a variable inclusion plot
 #' @rdname plot.boot_apes
 #' @export
 plot_vip_boot_apes = function(x){
@@ -69,8 +67,8 @@ plot_vip_boot_apes = function(x){
 
 
 
-  result = list(boot_vars_plotdf = boot_vars_plotdf, vip = vip)
-
+  result = vip
+  attr(result, "boot_vars_plotdf") = boot_vars_plotdf
 
   return(result)
 }
