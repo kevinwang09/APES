@@ -10,16 +10,10 @@ status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](h
 
 <img src="inst/APES_logo.png" align="right" width="200" />
 
-APproximated Exhaustive Search (APES) for Generalised Linear Models is a
-model selection method to be published by Kevin YX. Wang, Garth Tarr,
-Jean YH Yang and Samuel Mueller at the University of Sydney.
-
-This is a repository for the R package of APES. It will be eventually be
-integrated into the mplot package
-(<https://github.com/garthtarr/mplot>).
-
-The accompanying paper is provisionally accepted by Australia and New
-Zealand Journal of Statistics.
+APproximated Exhaustive Search (APES) is a model selection method for
+Generalised Linear Models. The accompanying paper is [Wang et.
+al. (2019)](https://doi.org/10.1111/anzs.12276). You can find the
+vignette [here](https://kevinwang09.github.io/APES/articles/APES.html).
 
 ## Installation
 
@@ -30,26 +24,31 @@ devtools::install_github("kevinwang09/APES")
 
 ## A quick example
 
-Suppose we have a data with 100 rows and 10 variables, and we wish to
-perform an exhaustive variable selection using the classical logistic
-model. Exhaustive variable selection is known to be time consuming, so
-this might take a long time. APES is a variable selection method that
-first converts the logistic model into a linear model first and then
-uses a best-subset algorithm (such as leaps or mixed integer
-optimisation) to search for the best linear model to obtain the best
-variables. These selected variables in the linear space then represents
-the best model for the original logistic model.
+Suppose we have a data with 100 rows and 20 variables, and we have
+fitted a logistic regression model. We may wish to perform an exhaustive
+variable selection on such a model to determine which variables produce
+the most parsimonious model. However, performing an exhaustive variable
+selection means looking through 2^20 = 1,048,576 models\! Exhaustive
+variable selection is known to be time consuming, and this might take a
+long time.
 
-The application of APES is not restricted to logistic model but to all
-GLMs.
+APES is a variable selection method that first converts the logistic
+model into a linear model and then it uses a best-subset algorithm (such
+as leaps or mixed integer optimisation) to search for the best linear
+model. The selected linear models are then converted into logistic
+models. The reason for doing this is that the exhaustive variable
+selection can be performed much faster in the linear model space.
+
+The current implementation of APES supports logistic, poisson and Cox
+regression models.
 
 ``` r
 library(APES)
 
 set.seed(10)
-n = 100
-p = 10
-k = 1:10
+n = 1000
+p = 20
+k = 1:p
 beta = c(1, -1, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
@@ -57,115 +56,82 @@ colnames(x) = paste0("X", 1:p)
 y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "binomial")
-print(apes(model = model))
-#> $apes_model_df
-#> # A tibble: 10 x 8
+summary(model)
+#> 
+#> Call:
+#> glm(formula = y ~ ., family = "binomial", data = data)
+#> 
+#> Deviance Residuals: 
+#>     Min       1Q   Median       3Q      Max  
+#> -3.1502  -0.8479   0.2829   0.8797   2.2778  
+#> 
+#> Coefficients:
+#>             Estimate Std. Error z value Pr(>|z|)    
+#> (Intercept)  0.12740    0.07635   1.669   0.0952 .  
+#> X1           1.04245    0.09097  11.460   <2e-16 ***
+#> X2          -1.04108    0.08898 -11.700   <2e-16 ***
+#> X3          -0.01534    0.07520  -0.204   0.8383    
+#> X4           0.01154    0.07347   0.157   0.8752    
+#> X5           0.03467    0.07388   0.469   0.6389    
+#> X6          -0.02448    0.07435  -0.329   0.7419    
+#> X7           0.07472    0.07873   0.949   0.3425    
+#> X8           0.06330    0.07423   0.853   0.3937    
+#> X9           0.08220    0.07613   1.080   0.2802    
+#> X10          0.03663    0.07932   0.462   0.6442    
+#> X11         -0.13036    0.07409  -1.760   0.0785 .  
+#> X12          0.01714    0.07661   0.224   0.8230    
+#> X13          0.05608    0.07619   0.736   0.4617    
+#> X14          0.01551    0.07869   0.197   0.8438    
+#> X15         -0.04453    0.07605  -0.586   0.5582    
+#> X16          0.03157    0.07405   0.426   0.6698    
+#> X17          0.12395    0.07826   1.584   0.1132    
+#> X18          0.08298    0.07408   1.120   0.2627    
+#> X19         -0.03889    0.07473  -0.520   0.6028    
+#> X20         -0.14015    0.07754  -1.807   0.0707 .  
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> (Dispersion parameter for binomial family taken to be 1)
+#> 
+#>     Null deviance: 1384.7  on 999  degrees of freedom
+#> Residual deviance: 1054.9  on 979  degrees of freedom
+#> AIC: 1096.9
+#> 
+#> Number of Fisher Scoring iterations: 4
+apes(model = model)
+#> Time taken: 
+#> Time difference of 4.553397e-05 mins
+#> 
+#>  APES model selection data frame: 
+#> # A tibble: 20 x 8
 #>    method model_name model_size apes_mle_loglike mle_aic mle_bic status
 #>    <chr>  <chr>           <dbl>            <dbl>   <dbl>   <dbl> <chr> 
-#>  1 apes   apes_mode…          2            -59.4    123.    128. leaps…
-#>  2 apes   apes_mode…          3            -53.3    113.    120. leaps…
-#>  3 apes   apes_mode…          4            -51.8    112.    122. leaps…
-#>  4 apes   apes_mode…          5            -51.2    112.    125. leaps…
-#>  5 apes   apes_mode…          6            -50.6    113.    129. leaps…
-#>  6 apes   apes_mode…          7            -50.1    114.    132. leaps…
-#>  7 apes   apes_mode…          8            -50.1    116.    137. leaps…
-#>  8 apes   apes_mode…          9            -50.1    118.    142. leaps…
-#>  9 apes   apes_mode…         10            -50.0    120.    146. leaps…
-#> 10 apes   apes_mode…         11            -49.9    122.    151. leaps…
+#>  1 apes   apes_mode…          2            -622.   1248.   1258. leaps…
+#>  2 apes   apes_mode…          3            -535.   1077.   1091. leaps…
+#>  3 apes   apes_mode…          4            -533.   1074.   1094. leaps…
+#>  4 apes   apes_mode…          5            -533.   1076.   1101. leaps…
+#>  5 apes   apes_mode…          6            -533.   1078.   1107. leaps…
+#>  6 apes   apes_mode…          7            -533.   1080.   1114. leaps…
+#>  7 apes   apes_mode…          8            -533.   1081.   1120. leaps…
+#>  8 apes   apes_mode…          9            -531.   1080.   1124. leaps…
+#>  9 apes   apes_mode…         10            -530.   1081.   1130. leaps…
+#> 10 apes   apes_mode…         11            -530.   1083.   1137. leaps…
+#> 11 apes   apes_mode…         12            -530.   1084.   1143. leaps…
+#> 12 apes   apes_mode…         13            -530.   1086.   1150. leaps…
+#> 13 apes   apes_mode…         14            -530.   1088.   1157. leaps…
+#> 14 apes   apes_mode…         15            -530.   1090.   1163. leaps…
+#> 15 apes   apes_mode…         16            -530.   1091.   1170. leaps…
+#> 16 apes   apes_mode…         17            -528.   1091.   1174. leaps…
+#> 17 apes   apes_mode…         18            -528.   1091.   1180. leaps…
+#> 18 apes   apes_mode…         19            -528.   1093.   1187. leaps…
+#> 19 apes   apes_mode…         20            -527.   1095.   1193. leaps…
+#> 20 apes   apes_mode…         21            -527.   1097.   1200. leaps…
 #> # … with 1 more variable: ic_opt_models <chr>
-#> 
-#> $apes_mle_beta
-#>           apes_model_2 apes_model_3 apes_model_4 apes_model_5 apes_model_6
-#> intercept   -0.1837717   -0.0541247  -0.04056027  -0.02417405   0.03110599
-#> X1           0.0000000    0.9097537   0.91178021   0.94363885   0.90119152
-#> X2          -1.0242090   -1.1231560  -1.14496345  -1.19155438  -1.21713022
-#> X3           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000
-#> X4           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000
-#> X5           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000
-#> X6           0.0000000    0.0000000  -0.39158670  -0.42195420  -0.47907411
-#> X7           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000
-#> X8           0.0000000    0.0000000   0.00000000   0.00000000   0.00000000
-#> X9           0.0000000    0.0000000   0.00000000  -0.31797158  -0.34747481
-#> X10          0.0000000    0.0000000   0.00000000   0.00000000  -0.32596713
-#>           apes_model_7 apes_model_8 apes_model_9 apes_model_10 apes_model_11
-#> intercept  -0.02537646  -0.03499840 -0.035311695  -0.033665114   -0.03719786
-#> X1          0.90212184   0.90188902  0.903462199   0.897326247    0.89767827
-#> X2         -1.26346112  -1.25336923 -1.255116974  -1.267791328   -1.28695784
-#> X3          0.00000000   0.08668873  0.085645946   0.078934792    0.09639943
-#> X4          0.23862872   0.24372960  0.244554920   0.235973676    0.24004701
-#> X5          0.00000000   0.00000000  0.000000000   0.000000000   -0.09331309
-#> X6         -0.52805565  -0.53206755 -0.531958021  -0.522720700   -0.51654913
-#> X7          0.00000000   0.00000000 -0.007390793  -0.007214945   -0.01401226
-#> X8          0.00000000   0.00000000  0.000000000   0.072018505    0.08240456
-#> X9         -0.35429359  -0.34056237 -0.340276500  -0.334880672   -0.33863067
-#> X10        -0.35526480  -0.36409743 -0.365341478  -0.348944738   -0.35094527
-#> 
-#> $apes_mle_beta_binary
-#> # A tibble: 110 x 3
-#>    variables model_name   fitted_beta
-#>    <fct>     <fct>        <lgl>      
-#>  1 intercept apes_model_2 TRUE       
-#>  2 X1        apes_model_2 FALSE      
-#>  3 X2        apes_model_2 TRUE       
-#>  4 X3        apes_model_2 FALSE      
-#>  5 X4        apes_model_2 FALSE      
-#>  6 X5        apes_model_2 FALSE      
-#>  7 X6        apes_model_2 FALSE      
-#>  8 X7        apes_model_2 FALSE      
-#>  9 X8        apes_model_2 FALSE      
-#> 10 X9        apes_model_2 FALSE      
-#> # … with 100 more rows
-#> 
-#> $time_used
-#> Time difference of 2.5781e-05 mins
-#> 
-#> $selected_model_beta
-#>           apes_min_aic apes_min_bic
-#> intercept  -0.04056027   -0.0541247
-#> X1          0.91178021    0.9097537
-#> X2         -1.14496345   -1.1231560
-#> X3          0.00000000    0.0000000
-#> X4          0.00000000    0.0000000
-#> X5          0.00000000    0.0000000
-#> X6         -0.39158670    0.0000000
-#> X7          0.00000000    0.0000000
-#> X8          0.00000000    0.0000000
-#> X9          0.00000000    0.0000000
-#> X10         0.00000000    0.0000000
-#> 
-#> $model_avg_beta
-#>           aic_weight_coef bic_weight_coef
-#> intercept   -0.0280111380   -4.975428e-02
-#> X1           0.9143184235    8.989310e-01
-#> X2          -1.1764903378   -1.132568e+00
-#> X3           0.0043666618    1.530326e-05
-#> X4           0.0322490168    4.025344e-04
-#> X5          -0.0001696129   -1.670955e-08
-#> X6          -0.3526317102   -1.373989e-01
-#> X7          -0.0001463119   -1.319753e-07
-#> X8           0.0004751834    1.326869e-07
-#> X9          -0.1649975503   -2.058866e-02
-#> X10         -0.0948133452   -3.703995e-03
-#> 
-#> $response_tibble
-#> # A tibble: 100 x 4
-#>    obs_num     y fitted_values linear_y
-#>    <chr>   <dbl>         <dbl>    <dbl>
-#>  1 obs1        0        0.820     -4.05
-#>  2 obs2        0        0.285     -2.32
-#>  3 obs3        1        0.389      2.12
-#>  4 obs4        1        0.233      3.10
-#>  5 obs5        1        0.514      2.00
-#>  6 obs6        0        0.331     -2.20
-#>  7 obs7        0        0.110     -3.21
-#>  8 obs8        1        0.875      3.09
-#>  9 obs9        0        0.0107    -5.54
-#> 10 obs10       0        0.0383    -4.26
-#> # … with 90 more rows
-#> 
-#> attr(,"class")
-#> [1] "apes"
 ```
+
+The best model of each model size are stored and the best model of all
+can be selected using an information criterion such as the Akaike
+Information Criterion or the Bayesian Information Criterion.
 
 # References
 

@@ -1,11 +1,5 @@
-#' Visualise model averaging results
-#' @title Average of model average plot
-#' @description This function is suitable for a list of bootstrap APES outputs.
-#' From each bootstrap run, APES stores coefficient values averaged across all models considered.
-#' As we have multiple bootstrapped APES output, we can cummulatively average
-#' these model averaged coefficient values across all bootstrap runs.
-#' On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
-#' @param list_result a list of APES outputs
+#' @title Model averaged coefficient plot for bootstrapped APES result.
+#' @param x An object of class \code{boot_apes}
 #' @param order either "BIC" (default) or "AIC"
 #' @author Kevin Wang
 #' @import dplyr
@@ -13,26 +7,14 @@
 #' @import purrr
 #' @import directlabels
 #' @importFrom magrittr %>%
+#' @return A ggplot. From each bootstrap run, APES stores coefficient values averaged across all models considered.
+#' As we have multiple bootstrapped APES output, we can cummulatively average
+#' these model averaged coefficient values across all bootstrap runs.
+#' On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
 #' @rdname plot.boot_apes
 #' @export
-#' @examples
-#' set.seed(10)
-#' n = 100
-#' p = 10
-#' k = 1:10
-#' beta = c(1, -1, rep(0, p-2))
-#' x = matrix(rnorm(n*p), ncol = p)
-#' colnames(x) = paste0("X", 1:p)
-#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
-#' data = data.frame(y, x)
-#' model = glm(y ~ ., data = data, family = "binomial")
-#'
-#' list_result = apes(model = model, n_boot = 20)
-#'
-#' plot_ma_boot_apes(list_result = list_result)
-
-plot_ma_boot_apes = function(list_result, order = "BIC"){
-  model_avg_beta = purrr::map(list_result, "model_avg_beta")
+plot_ma_boot_apes = function(x, order = "BIC"){
+  model_avg_beta = purrr::map(x, "model_avg_beta")
 
   stopifnot(order %in% c("AIC", "BIC"))
 

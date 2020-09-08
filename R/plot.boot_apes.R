@@ -1,4 +1,3 @@
-#' Variable inclusion plot in tile format
 #' @title Generic plotting function for class \code{boot_apes}
 #' @param x An object of class \code{boot_apes}
 #' @param type Type of plot:
@@ -12,10 +11,10 @@
 #' \item{"ma"}: Model averaged coefficient across bootstrap runs.
 #' The weighted averages can be calculated from either "AIC" or "BIC" using the order argument.
 #' }
-#' @param order Either "AIC", "BIC".
+#' @param order Either "AIC", "BIC". If type is selected to be "vi_tile", then also takes the value "median".
 #' @param ... additional parameters (not currently used)
 #' @rdname plot.boot_apes
-#' @return A ggplot output
+#' @return A ggplot output corresponding to the select plotting type.
 #' @export
 #' @examples
 #' set.seed(10)
@@ -31,17 +30,21 @@
 #'
 #' list_result = apes(model = model, n_boot = 20)
 #'
-#' plot(list_result, type = "vi_tile")
-#' plot(list_result, type = "vi")
-#' plot(list_result, type = "ic")
+#' plot(list_result, type = "vip_tile")
+#' plot(list_result, type = "vip")
+#' plot(list_result, type = "path")
 #' plot(list_result, type = "ma")
-plot.boot_apes = function(x, type = c("vi_tile", "vi", "ic", "ma"), order = c("BIC", "AIC"), ...){
+plot.boot_apes = function(x, type = c("vip_tile", "vip", "path", "ma"), order = c("BIC", "AIC", "median"), ...){
   type = match.arg(type)
   order = match.arg(order)
 
+  if(order == "median" & type == "path") {
+    stop("Path plot does not accept 'median' as order input")
+  }
+
   switch(type,
-         vi_tile = plot_vi_tile_boot_apes(list_result = x, order = order),
-         vi = plot_vi_boot_apes(list_result = x),
-         ic = plot_ic_boot_apes(list_result = x, order = order),
-         ma = plot_ma_boot_apes(list_result = x, order = order))
+         vip_tile = plot_vip_tile_boot_apes(x = x, order = order),
+         vip = plot_vip_boot_apes(x = x),
+         path = plot_path_boot_apes(x = x, order = order),
+         ma = plot_ma_boot_apes(x = x, order = order))
 }

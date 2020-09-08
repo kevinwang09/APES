@@ -3,21 +3,26 @@
 %   R/plot_ma-boot_apes.R, R/plot_vi-boot_apes.R, R/plot_vi_tile-boot_apes.R
 \name{plot.boot_apes}
 \alias{plot.boot_apes}
-\alias{plot_ic_boot_apes}
+\alias{plot_path_boot_apes}
 \alias{plot_ma_boot_apes}
-\alias{plot_vi_boot_apes}
-\alias{plot_vi_tile_boot_apes}
+\alias{plot_vip_boot_apes}
+\alias{plot_vip_tile_boot_apes}
 \title{Generic plotting function for class \code{boot_apes}}
 \usage{
-\method{plot}{boot_apes}(x, type = c("vi_tile", "vi", "ic", "ma"), order = c("BIC", "AIC"), ...)
+\method{plot}{boot_apes}(
+  x,
+  type = c("vip_tile", "vip", "path", "ma"),
+  order = c("BIC", "AIC", "median"),
+  ...
+)
 
-plot_ic_boot_apes(list_result, order = "BIC")
+plot_path_boot_apes(x, order = "BIC")
 
-plot_ma_boot_apes(list_result, order = "BIC")
+plot_ma_boot_apes(x, order = "BIC")
 
-plot_vi_boot_apes(list_result)
+plot_vip_boot_apes(x)
 
-plot_vi_tile_boot_apes(list_result, order = "median")
+plot_vip_tile_boot_apes(x, order = "median")
 }
 \arguments{
 \item{x}{An object of class \code{boot_apes}}
@@ -37,31 +42,29 @@ The weighted averages can be calculated from either "AIC" or "BIC" using the ord
 \item{order}{The ordering of variables. Either "median", "AIC" or "BIC"}
 
 \item{...}{additional parameters (not currently used)}
-
-\item{list_result}{a list of APES outputs}
 }
 \value{
-A ggplot output
+A ggplot output corresponding to the select plotting type.
 
-boot_vars_plotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
+A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.
 
-vi_plot a ggplot
-
-apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
-
-variableTilePlot a ggplot with continuous colouring
-
-variableTilePlot_category a ggplot with discrete colouring
-}
-\description{
-Variable inclusion plot in tile format
-
-This function is suitable for a list of bootstrap APES outputs.
-From each bootstrap run, APES stores coefficient values averaged across all models considered.
+A ggplot. From each bootstrap run, APES stores coefficient values averaged across all models considered.
 As we have multiple bootstrapped APES output, we can cummulatively average
 these model averaged coefficient values across all bootstrap runs.
 On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
 
+A list. \itemize{
+\item \code{boot_vars_plotdf} a tibble with all the necessary values to plot a variable inclusion plot
+\item \cite{vip} a variable inclusion plot in ggplot format.
+}
+
+A list. \itemize{
+\item \code{apes_mle_beta_binary_plotdf} a tibble with all the necessary values to plot a tile variable inclusion plot
+\item \code{var_tile_plot} a ggplot with continuous colouring
+\item \code{var_tile_plot_category} a ggplot with discrete colouring
+}
+}
+\description{
 This function is suitable for a list of bootstrap APES outputs.
 From each bootstrap run, APES stores log-likelihood for every model it considered.
 In this function, we then consider general information criterion (GIC) of the form
@@ -71,13 +74,6 @@ look at which variables are selected in that model.
 The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
 
 This function displays the same information as plot_vi, but in a tile plot format.
-}
-\details{
-Visualise model averaging results
-
-Variable inclusion plot
-
-Variable inclusion plot in tile format
 }
 \examples{
 set.seed(10)
@@ -93,66 +89,10 @@ model = glm(y ~ ., data = data, family = "binomial")
 
 list_result = apes(model = model, n_boot = 20)
 
-plot(list_result, type = "vi_tile")
-plot(list_result, type = "vi")
-plot(list_result, type = "ic")
+plot(list_result, type = "vip_tile")
+plot(list_result, type = "vip")
+plot(list_result, type = "path")
 plot(list_result, type = "ma")
-set.seed(10)
-n = 100
-p = 10
-k = 1:10
-beta = c(1, -1, rep(0, p-2))
-x = matrix(rnorm(n*p), ncol = p)
-colnames(x) = paste0("X", 1:p)
-y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
-data = data.frame(y, x)
-model = glm(y ~ ., data = data, family = "binomial")
-
-list_result = apes(model = model, n_boot = 20)
-
-plot_ic_boot_apes(list_result = list_result)
-set.seed(10)
-n = 100
-p = 10
-k = 1:10
-beta = c(1, -1, rep(0, p-2))
-x = matrix(rnorm(n*p), ncol = p)
-colnames(x) = paste0("X", 1:p)
-y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
-data = data.frame(y, x)
-model = glm(y ~ ., data = data, family = "binomial")
-
-list_result = apes(model = model, n_boot = 20)
-
-plot_ma_boot_apes(list_result = list_result)
-set.seed(10)
-n = 100
-p = 10
-k = 1:10
-beta = c(1, -1, rep(0, p-2))
-x = matrix(rnorm(n*p), ncol = p)
-colnames(x) = paste0("X", 1:p)
-y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
-data = data.frame(y, x)
-model = glm(y ~ ., data = data, family = "binomial")
-
-list_result = apes(model = model, n_boot = 20)
-
-plot_vi_boot_apes(list_result = list_result)
-set.seed(10)
-n = 100
-p = 10
-k = 1:10
-beta = c(1, -1, rep(0, p-2))
-x = matrix(rnorm(n*p), ncol = p)
-colnames(x) = paste0("X", 1:p)
-y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
-data = data.frame(y, x)
-model = glm(y ~ ., data = data, family = "binomial")
-
-list_result = apes(model = model, n_boot = 20)
-
-plot_vi_tile_boot_apes(list_result = list_result)
 }
 \author{
 Kevin Wang

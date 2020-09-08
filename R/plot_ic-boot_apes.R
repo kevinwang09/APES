@@ -1,30 +1,15 @@
-#' @title AIC or BIC path plot
-#' @param list_result a list of APES outputs
+#' @title AIC or BIC path plot for bootstrapped APES result
+#' @param x An object of class \code{boot_apes}
 #' @param order Either "BIC" (default) or "AIC"
 #' @author Kevin Wang
 #' @import ggplot2
 #' @import purrr
 #' @importFrom magrittr %>%
 #' @rdname plot.boot_apes
+#' @return A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.
 #' @export
-#' @examples
-#' set.seed(10)
-#' n = 100
-#' p = 10
-#' k = 1:10
-#' beta = c(1, -1, rep(0, p-2))
-#' x = matrix(rnorm(n*p), ncol = p)
-#' colnames(x) = paste0("X", 1:p)
-#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
-#' data = data.frame(y, x)
-#' model = glm(y ~ ., data = data, family = "binomial")
-#'
-#' list_result = apes(model = model, n_boot = 20)
-#'
-#' plot_ic_boot_apes(list_result = list_result)
-
-plot_ic_boot_apes = function(list_result, order = "BIC"){
-  apes_model_df_bind = purrr::map_dfr(list_result, "apes_model_df", .id = "boot_num") %>%
+plot_path_boot_apes = function(x, order = "BIC"){
+  apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num") %>%
     group_by(boot_num) %>%
     dplyr::mutate(
       mle_bic_min = (mle_bic == min(mle_bic)),
@@ -61,5 +46,4 @@ plot_ic_boot_apes = function(list_result, order = "BIC"){
   }
 
   return(g)
-
 }

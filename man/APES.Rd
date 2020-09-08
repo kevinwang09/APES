@@ -9,13 +9,15 @@ apes(
   k = NULL,
   estimator = "leaps",
   time_limit = 10L,
+  really_big = FALSE,
   verbose = FALSE,
   n_boot = 0L,
   workers = 1L
 )
 }
 \arguments{
-\item{model}{A "glm" class object}
+\item{model}{A "full" model with all variables of interest fitted to it.
+Accepts either a "glm" class or "coxph" class object.}
 
 \item{k}{Model size to explore. Default to NULL, which searches through all variables in the model.
 Alternatively, user can input a vector. If estimator is:
@@ -29,16 +31,27 @@ optimisation algorithms available in
 the leaps and bestsubset package, respectively.}
 
 \item{time_limit}{The time limit for the maximum time allocated to each
-model size model when the "mio" estimator was selected. It will not affect the speed if leaps.}
+model size model when the "mio" estimator was selected. It will not affect the computational speed if "leaps" is selected as the estimator.}
 
-\item{verbose}{Whether to print off messages during computations}
+\item{really_big}{If set to FALSE (by default), then it will prevent variable selection greater than 30 variables.
+We recommend only setting this argument to TRUE if the number of variables exceed 30 while simultaneous setting the
+"estimator" argument to "mio".}
+
+\item{verbose}{Whether to print off messages during computations.}
 
 \item{n_boot}{Number of bootstrap runs, default to 0, which doesn't perform any sampling.}
 
 \item{workers}{Number of cores used for parallel processing for the bootstrap}
 }
+\value{
+Either an object of class "apes" in case "n_boot" is set to zero or
+an object of class "boot_apes" in case "n_boot" is set to a positive integer.
+}
 \description{
-Perform APES model selection
+This is the main function of the APES package. Approximated exhaustive selection
+will be performed on the input GLM model. Note that the feature dimensions equals to the number of
+columns if all columns are numeric. If factor/categorical variables are present in the input
+"glm" object, then the feature dimension also includes all the levels of factors. See vignette.
 }
 \examples{
 set.seed(10)

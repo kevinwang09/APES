@@ -11,7 +11,7 @@ model = glm(y ~ ., data = data, family = "binomial")
 
 list_result = apes(model = model, n_boot = 20)
 
-plot(list_result, type = "vi_tile")
-plot(list_result, type = "vi")
-plot(list_result, type = "ic")
+plot(list_result, type = "vip_tile")
+plot(list_result, type = "vip")
+plot(list_result, type = "path")
 plot(list_result, type = "ma")

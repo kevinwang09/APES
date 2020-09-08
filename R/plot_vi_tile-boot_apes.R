@@ -1,7 +1,6 @@
-#' Variable inclusion plot in tile format
-#' @title Variable Inclusion Plot in tile format
+#' @title Variable Inclusion Plot in tile format for bootstrapped APES result
 #' @description This function displays the same information as plot_vi, but in a tile plot format.
-#' @param list_result a list of APES outputs
+#' @param x An object of class \code{boot_apes}
 #' @param order The ordering of variables. Either "median", "AIC" or "BIC"
 #' @author Kevin Wang
 #' @import dplyr
@@ -12,29 +11,16 @@
 #' @import forcats
 #' @importFrom magrittr %>%
 #' @importFrom stats median
-#' @return apesMleBetaBinaryPlotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
-#' @return variableTilePlot a ggplot with continuous colouring
-#' @return variableTilePlot_category a ggplot with discrete colouring
+#' @return A list. \itemize{
+#' \item \code{apes_mle_beta_binary_plotdf} a tibble with all the necessary values to plot a tile variable inclusion plot
+#' \item \code{var_tile_plot} a ggplot with continuous colouring
+#' \item \code{var_tile_plot_category} a ggplot with discrete colouring
+#' }
 #' @rdname plot.boot_apes
 #' @export
-#' @examples
-#' set.seed(10)
-#' n = 100
-#' p = 10
-#' k = 1:10
-#' beta = c(1, -1, rep(0, p-2))
-#' x = matrix(rnorm(n*p), ncol = p)
-#' colnames(x) = paste0("X", 1:p)
-#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
-#' data = data.frame(y, x)
-#' model = glm(y ~ ., data = data, family = "binomial")
-#'
-#' list_result = apes(model = model, n_boot = 20)
-#'
-#' plot_vi_tile_boot_apes(list_result = list_result)
-plot_vi_tile_boot_apes = function(list_result, order = "median"){
-  apes_mle_beta_binary_bind = purrr::map_dfr(list_result, "apes_mle_beta_binary", .id = "boot_num")
-  apes_model_df_bind = purrr::map_dfr(list_result, "apes_model_df", .id = "boot_num")
+plot_vip_tile_boot_apes = function(x, order = "median"){
+  apes_mle_beta_binary_bind = purrr::map_dfr(x, "apes_mle_beta_binary", .id = "boot_num")
+  apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num")
 
   aic_opt_median_size = apes_model_df_bind %>%
     dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_aic")) %>%

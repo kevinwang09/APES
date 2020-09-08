@@ -1,5 +1,4 @@
-#' Variable inclusion plot
-#' @title Variable Inclusion Plot
+#' @title Variable Inclusion Plot for bootstrapped APES result
 #' @description This function is suitable for a list of bootstrap APES outputs.
 #' From each bootstrap run, APES stores log-likelihood for every model it considered.
 #' In this function, we then consider general information criterion (GIC) of the form
@@ -7,38 +6,25 @@
 #' For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
 #' look at which variables are selected in that model.
 #' The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
-#' @param list_result a list of APES outputs
+#' @param x An object of class \code{boot_apes}
 #' @author Kevin Wang
 #' @import dplyr
 #' @import ggplot2
 #' @import purrr
 #' @import directlabels
 #' @importFrom magrittr %>%
-#' @return boot_vars_plotdf a tibble (data.frame) with all the necessary values to plot a variable inclusion plot
-#' @return vi_plot a ggplot
+#' @return A list. \itemize{
+#' \item \code{boot_vars_plotdf} a tibble with all the necessary values to plot a variable inclusion plot
+#' \item \cite{vip} a variable inclusion plot in ggplot format.
+#' }
 #' @rdname plot.boot_apes
 #' @export
-#' @examples
-#' set.seed(10)
-#' n = 100
-#' p = 10
-#' k = 1:10
-#' beta = c(1, -1, rep(0, p-2))
-#' x = matrix(rnorm(n*p), ncol = p)
-#' colnames(x) = paste0("X", 1:p)
-#' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
-#' data = data.frame(y, x)
-#' model = glm(y ~ ., data = data, family = "binomial")
-#'
-#' list_result = apes(model = model, n_boot = 20)
-#'
-#' plot_vi_boot_apes(list_result = list_result)
-plot_vi_boot_apes = function(list_result){
-  n = nrow(list_result[[1]]$response_tibble) ## Number of observations
+plot_vip_boot_apes = function(x){
+  n = nrow(x[[1]]$response_tibble) ## Number of observations
 
   penalty = seq(0, 2*log(n), by = 0.1)
-  list_apes_model_df = purrr::map(list_result, "apes_model_df")
-  list_apes_mle_beta_binary = purrr::map(list_result, "apes_mle_beta_binary")
+  list_apes_model_df = purrr::map(x, "apes_model_df")
+  list_apes_mle_beta_binary = purrr::map(x, "apes_mle_beta_binary")
 
   boot_opt_vars = purrr::map2_dfr(
     .x = list_apes_model_df,
@@ -57,7 +43,7 @@ plot_vi_boot_apes = function(list_result){
     ungroup() %>%
     dplyr::mutate(variables = as.character(variables))
 
-  vi_plot = boot_vars_plotdf %>%
+  vip = boot_vars_plotdf %>%
     ggplot2::ggplot(aes(x = penalty,
                y = boot_select_prob,
                colour = variables,
@@ -83,7 +69,7 @@ plot_vi_boot_apes = function(list_result){
 
 
 
-  result = list(boot_vars_plotdf = boot_vars_plotdf, vi_plot = vi_plot)
+  result = list(boot_vars_plotdf = boot_vars_plotdf, vip = vip)
 
 
   return(result)
