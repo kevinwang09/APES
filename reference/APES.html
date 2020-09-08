@@ -222,7 +222,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"binomial"</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 0.001199083 mins
+#&gt; Time difference of 0.002308667 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; <span style='color: #555555;'># A tibble: 10 x 8</span><span>
@@ -245,7 +245,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"poisson"</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 8.014838e-06 mins
+#&gt; Time difference of 7.935365e-06 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; </span><span style='color: #555555;'># A tibble: 10 x 8</span><span>
@@ -264,11 +264,11 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 #&gt; </span><span style='color: #555555;'># … with 1 more variable: ic_opt_models </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'>
 <span class='co'>## Bootstrap examples</span>
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>)
-</div><div class='output co'>#&gt; Time taken:  0.005185584  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.00960782  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>, workers = <span class='fl'>1</span>)
-</div><div class='output co'>#&gt; Time taken:  0.00155315  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.001792002  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>, workers = <span class='fl'>2</span>)
-</div><div class='output co'>#&gt; Time taken:  0.08411313  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.1390205  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'>
 <span class='co'>## Cox regression example</span>
 <span class='kw'>hx</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='kw'>x</span> <span class='op'>%*%</span> <span class='kw'>beta</span>)
@@ -278,7 +278,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='kw'>model</span> <span class='op'>=</span> <span class='kw'>survival</span>::<span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span>(<span class='kw'>survival</span>::<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='kw'>time</span>, <span class='kw'>censor</span>) <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 8.483728e-06 mins
+#&gt; Time difference of 1.099904e-05 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; </span><span style='color: #555555;'># A tibble: 10 x 8</span><span>
