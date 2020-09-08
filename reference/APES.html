@@ -40,7 +40,10 @@
 
 
 <meta property="og:title" content="Perform APES model selection — apes" />
-<meta property="og:description" content="Perform APES model selection" />
+<meta property="og:description" content="This is the main function of the APES package. Approximated exhaustive selection
+will be performed on the input GLM model. Note that the feature dimensions equals to the number of
+columns if all columns are numeric. If factor/categorical variables are present in the input
+&quot;glm&quot; object, then the feature dimension also includes all the levels of factors. See vignette." />
 
 
 
@@ -135,7 +138,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Perform APES model selection</p>
+    <p>This is the main function of the APES package. Approximated exhaustive selection
+will be performed on the input GLM model. Note that the feature dimensions equals to the number of
+columns if all columns are numeric. If factor/categorical variables are present in the input
+"glm" object, then the feature dimension also includes all the levels of factors. See vignette.</p>
     </div>
 
     <pre class="usage"><span class='fu'>apes</span>(
@@ -143,6 +149,7 @@
   k = <span class='kw'>NULL</span>,
   estimator = <span class='st'>"leaps"</span>,
   time_limit = <span class='fl'>10L</span>,
+  really_big = <span class='fl'>FALSE</span>,
   verbose = <span class='fl'>FALSE</span>,
   n_boot = <span class='fl'>0L</span>,
   workers = <span class='fl'>1L</span>
@@ -153,7 +160,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>A "glm" class object</p></td>
+      <td><p>A "full" model with all variables of interest fitted to it.
+Accepts either a "glm" class or "coxph" class object.</p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -172,11 +180,17 @@ the leaps and bestsubset package, respectively.</p></td>
     <tr>
       <th>time_limit</th>
       <td><p>The time limit for the maximum time allocated to each
-model size model when the "mio" estimator was selected. It will not affect the speed if leaps.</p></td>
+model size model when the "mio" estimator was selected. It will not affect the computational speed if "leaps" is selected as the estimator.</p></td>
+    </tr>
+    <tr>
+      <th>really_big</th>
+      <td><p>If set to FALSE (by default), then it will prevent variable selection greater than 30 variables.
+We recommend only setting this argument to TRUE if the number of variables exceed 30 while simultaneous setting the
+"estimator" argument to "mio".</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>Whether to print off messages during computations</p></td>
+      <td><p>Whether to print off messages during computations.</p></td>
     </tr>
     <tr>
       <th>n_boot</th>
@@ -188,6 +202,10 @@ model size model when the "mio" estimator was selected. It will not affect the s
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Either an object of class "apes" in case "n_boot" is set to zero or
+an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>10</span>)
@@ -204,7 +222,7 @@ model size model when the "mio" estimator was selected. It will not affect the s
 <span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"binomial"</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 2.358357e-05 mins
+#&gt; Time difference of 0.001199083 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; <span style='color: #555555;'># A tibble: 10 x 8</span><span>
@@ -227,7 +245,7 @@ model size model when the "mio" estimator was selected. It will not affect the s
 <span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"poisson"</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 9.000301e-06 mins
+#&gt; Time difference of 8.014838e-06 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; </span><span style='color: #555555;'># A tibble: 10 x 8</span><span>
@@ -246,11 +264,11 @@ model size model when the "mio" estimator was selected. It will not affect the s
 #&gt; </span><span style='color: #555555;'># … with 1 more variable: ic_opt_models </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'>
 <span class='co'>## Bootstrap examples</span>
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>)
-</div><div class='output co'>#&gt; Time taken:  0.003118002  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.005185584  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>, workers = <span class='fl'>1</span>)
-</div><div class='output co'>#&gt; Time taken:  0.001481799  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.00155315  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>, workers = <span class='fl'>2</span>)
-</div><div class='output co'>#&gt; Time taken:  0.09137141  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.08411313  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'>
 <span class='co'>## Cox regression example</span>
 <span class='kw'>hx</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='kw'>x</span> <span class='op'>%*%</span> <span class='kw'>beta</span>)
@@ -260,7 +278,7 @@ model size model when the "mio" estimator was selected. It will not affect the s
 <span class='kw'>model</span> <span class='op'>=</span> <span class='kw'>survival</span>::<span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span>(<span class='kw'>survival</span>::<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='kw'>time</span>, <span class='kw'>censor</span>) <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 1.078049e-05 mins
+#&gt; Time difference of 8.483728e-06 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; </span><span style='color: #555555;'># A tibble: 10 x 8</span><span>
