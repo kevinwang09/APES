@@ -21,11 +21,7 @@ knitr::opts_chunk$set(
 <img src="inst/APES_logo.png" align="right" width="200" />
 
 
-APproximated Exhaustive Search (APES) for Generalised Linear Models is a model selection method to be published by Kevin YX. Wang, Garth Tarr, Jean YH Yang and Samuel Mueller at the University of Sydney. 
-
-This is a repository for the R package of APES. It will be eventually be integrated into the mplot package (https://github.com/garthtarr/mplot).
-
-The accompanying paper is provisionally accepted by Australia and New Zealand Journal of Statistics. 
+APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models. The accompanying paper is [Wang et. al. (2019)](https://doi.org/10.1111/anzs.12276) . 
 
 ## Installation
 
@@ -33,7 +29,8 @@ The accompanying paper is provisionally accepted by Australia and New Zealand Jo
 library(devtools)
 devtools::install_github("kevinwang09/APES")
 ```
-## A quick example 
+
+## A quick example
 Suppose we have a data with 100 rows and 10 variables, and we wish to perform an exhaustive variable selection using the classical logistic model. Exhaustive variable selection is known to be time consuming, so this might take a long time. APES is a variable selection method that first converts the logistic model into a linear model first and then uses a best-subset algorithm (such as leaps or mixed integer optimisation) to search for the best linear model to obtain the best variables. These selected variables in the linear space then represents the best model for the original logistic model. 
 
 The application of APES is not restricted to logistic model but to all GLMs. 
@@ -52,7 +49,7 @@ colnames(x) = paste0("X", 1:p)
 y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "binomial")
-apes(model = model)
+print(apes(model = model))
 ```
 
 

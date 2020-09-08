@@ -45,7 +45,7 @@
 #' apes(model = model)
 #'
 #' ## Bootstrap examples
-#' apes(model = model, n_boot = 2
+#' apes(model = model, n_boot = 2)
 #' apes(model = model, n_boot = 2, workers = 1)
 #' apes(model = model, n_boot = 2, workers = 2)
 #'
@@ -137,6 +137,7 @@ apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, verbose
   return(result)
 }
 
+#' @export
 print.apes = function(x, ...) {
   cat("Time taken: \n")
   print(x$time_used)
@@ -145,11 +146,13 @@ print.apes = function(x, ...) {
   print(x$apes_model_df)
 }
 
+#' @export
 print.boot_apes = function(x, ...) {
   cat("Time taken: ", attr(x, "time_used"), " minutes \n")
   cat("Total number of bootstrap APES results: ", length(x))
 }
 
+#' @export
 summary.boot_apes = function(x, ...){
   cat("Summary of top variables selected by BIC: \n")
   print(apes_var_freq(list_result = x, ic = "BIC"))

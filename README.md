@@ -57,7 +57,7 @@ colnames(x) = paste0("X", 1:p)
 y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "binomial")
-apes(model = model)
+print(apes(model = model))
 #> $apes_model_df
 #> # A tibble: 10 x 8
 #>    method model_name model_size apes_mle_loglike mle_aic mle_bic status
@@ -117,7 +117,7 @@ apes(model = model)
 #> # … with 100 more rows
 #> 
 #> $time_used
-#> Time difference of 1.871586e-05 mins
+#> Time difference of 2.5781e-05 mins
 #> 
 #> $selected_model_beta
 #>           apes_min_aic apes_min_bic
