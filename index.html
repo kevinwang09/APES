@@ -123,7 +123,7 @@
 <span class="kw">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(n = <span class="kw">n</span>, size = <span class="fl">1</span>, prob = <span class="fu"><a href="reference/logit.html">expit</a></span>(<span class="kw">x</span> <span class="op">%*%</span> <span class="kw">beta</span>))
 <span class="kw">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">y</span>, <span class="kw">x</span>)
 <span class="kw">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="kw">y</span> <span class="op">~</span> <span class="kw">.</span>, data = <span class="kw">data</span>, family = <span class="st">"binomial"</span>)
-<span class="fu"><a href="reference/apes.html">apes</a></span>(model = <span class="kw">model</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="reference/apes.html">apes</a></span>(model = <span class="kw">model</span>))
 <span class="co">#&gt; $apes_model_df</span>
 <span class="co">#&gt; # A tibble: 10 x 8</span>
 <span class="co">#&gt;    method model_name model_size apes_mle_loglike mle_aic mle_bic status</span>
@@ -183,7 +183,7 @@
 <span class="co">#&gt; # … with 100 more rows</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $time_used</span>
-<span class="co">#&gt; Time difference of 1.871586e-05 mins</span>
+<span class="co">#&gt; Time difference of 2.5781e-05 mins</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $selected_model_beta</span>
 <span class="co">#&gt;           apes_min_aic apes_min_bic</span>
@@ -288,7 +288,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
 </div>
 
       </footer>
