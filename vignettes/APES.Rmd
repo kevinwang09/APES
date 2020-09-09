@@ -3,21 +3,78 @@ title: "An introduction to the APES package"
 author:
 - name: Kevin Y.X. Wang
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
-output:
-  html_document:
-    toc_float: true
-vignette: >
-  %\VignetteIndexEntry{An introduction to the APES package}
+- name: Garth Tarr
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Jean Y.H. Yang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Samuel Mueller
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+output: 
+  rmarkdown::html_vignette
+vignette: |
+  %\VignetteIndexEntry{APES}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 # Introduction 
 
+APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models (GLMs). The main motivation for this work is to improve the speed of exhaustive variable selection for GLMs. The accompanying paper is [Wang et. al. (2019)](https://doi.org/10.1111/anzs.12276). 
+
+Suppose we have a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable, `y`. This is what we termed as a "full" model, i.e. a model with all available predictor variables. Some variables are the true data generating variables and looking at the model summary, we see these variables has very small p-values. However, we can also expect to see some variables with p-values that are below the p = 0.05 cut-off by chance. Should we also include these variables in our final model? 
+
 ```{r}
 library(APES)
+
+set.seed(123)
+n = 500
+p = 20
+k = 1:p
+beta = c(1, -1, rep(0, p-2))
+x = matrix(rnorm(n*p), ncol = p)
+colnames(x) = paste0("X", 1:p)
+y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
+data = data.frame(y, x)
+
+## Fitting a full model 
+model = glm(y ~ ., data = data, family = "binomial")
+summary(model)
 ```
+
+This is the classic problem of variable selection. One of the most intuitive variable selection method is to look at every combination of variables, obtain the fit of these variables and pick the best one. This is known as exhaustive variable selection and in total, there are $2^p$ possibilities to explore, with $p$ being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through 2^20 = 1,048,576 models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run --- seems too long!
+
+At its core, APES is designed to speed up this variable selection procedure. APES will first converts the full logistic model into a linear model. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space. In addition, linear models can benefit from best-subset algorithms which can search for the best linear model without searching through all $2^p$ candidate models. By default, APES uses the leaps-and-bound algorithm (from the `leaps` package) and mixed integer optimisation (from the `bestsubset` package) algorithm as the best-subset algorithms of choice. After obtaining a set of best-fit models, APES will convert the results back to into logistic models and show the best model of each size. While the word "best" can be subjective depending on the data context, in our example, we define this word as the model with the smallest information criterion value with the most common choices being the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC). 
+
+It is important to note that APES only returns the best approximation to the exhaustive search, however, through extensive simulations in our paper, we have demonstrated that APES tends to always return informative models that are close to a genuine exhaustive search. 
+
+```{r}
+apes_result = apes(model = model)
+apes_result
+```
+
+In `apes_result`, APES will return the best model of each model size. APES will always include the intercept term in the model selection, and thus the selected models are always of size two (one intercept and one variable) and above. In `apes_result`, we see that it only takes a fraction of second to run and that the model selected by the BIC and AIC are of model size 3 and 8. This output is only a mere summary of the computed results. 
+
+```{r}
+names(apes_result)
+```
+
+Note that the BIC is known to be model selection consistent and since we generated this data with two informative variables, thus, the selected model is of model size 3 (including the intercept term). We can examine the precise non-zero coefficients as well. 
+
+```{r}
+apes_result$selected_model_beta
+```
+
+# More examples
+
+The example above is a mere simulation to illustrate the basic underlying theory of APES. Please see here and here for real-data examples of APES.
+
 
 # Session Info
 ```{r}

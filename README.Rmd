@@ -32,7 +32,7 @@ devtools::install_github("kevinwang09/APES")
 
 ## A quick example
 
-Suppose we have a data with 500 rows and 20 variables, and we have fitted a logistic regression model. We may wish to perform an exhaustive variable selection on such a model to determine which variables produce the most parsimonious model. However, performing an exhaustive variable selection means looking through 2^20 = 1,048,576 models! Exhaustive variable selection is known to be time consuming, and this might take a long time. 
+Suppose we have a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable. We may wish to perform an exhaustive variable selection on such a model to determine which variables produce the most parsimonious model. However, performing an exhaustive variable selection means looking through 2^20 = 1,048,576 models! Exhaustive variable selection is known to be time consuming, and this might take a long time. 
 
 APES is a variable selection method that first converts the logistic model into a linear model and then it uses a best-subset algorithm (such as leaps or mixed integer optimisation) to search for the best linear model. The selected linear models are then converted into logistic models. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space.
 
@@ -42,7 +42,7 @@ The current implementation of APES supports logistic, poisson and Cox regression
 library(APES)
 
 ## Simulating data
-set.seed(10)
+set.seed(123)
 n = 500
 p = 20
 k = 1:p
