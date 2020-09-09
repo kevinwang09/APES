@@ -57,7 +57,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/birthweight_logit.html">Birthweight Logistic Regression</a>
+      <a href="../articles/birthweight_logit.html">Birthweight data example</a>
     </li>
     <li>
       <a href="../articles/birthweight_poisson.html">Birthweight Poisson Regression</a>
@@ -91,10 +91,19 @@
       <h1 data-toc-skip>An introduction to the APES package</h1>
                         <h4 class="author">Kevin Y.X. Wang</h4>
             <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Garth Tarr</h4>
+            <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Jean Y.H. Yang</h4>
+            <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Samuel Mueller</h4>
+            <address class="author_afil">
       School of Mathematics and Statistics, The University of Sydney, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/APES.Rmd"><code>vignettes/APES.Rmd</code></a></small>
       <div class="hidden name"><code>APES.Rmd</code></div>
 
     </address>
+</address>
+</address>
+</address>
 </div>
 
     
@@ -102,53 +111,185 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
+<p>APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models (GLMs). The main motivation for this work is to improve the speed of exhaustive variable selection for GLMs. The accompanying paper is <a href="https://doi.org/10.1111/anzs.12276">Wang et. al. (2019)</a>.</p>
+<p>Suppose we have a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable, <code>y</code>. This is what we termed as a “full” model, i.e. a model with all available predictor variables. Some variables are the true data generating variables and looking at the model summary, we see these variables has very small p-values. However, we can also expect to see some variables with p-values that are below the p = 0.05 cut-off by chance. Should we also include these variables in our final model?</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/kevinwang09/APES">APES</a></span>)
+
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
+<span class="kw">n</span> <span class="op">=</span> <span class="fl">500</span>
+<span class="kw">p</span> <span class="op">=</span> <span class="fl">20</span>
+<span class="kw">k</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="kw">p</span>
+<span class="kw">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0</span>, <span class="kw">p</span><span class="op">-</span><span class="fl">2</span>))
+<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="kw">n</span><span class="op">*</span><span class="kw">p</span>), ncol = <span class="kw">p</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="kw">x</span>) <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="kw">p</span>)
+<span class="kw">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(n = <span class="kw">n</span>, size = <span class="fl">1</span>, prob = <span class="fu"><a href="../reference/logit.html">expit</a></span>(<span class="kw">x</span> <span class="op">%*%</span> <span class="kw">beta</span>))
+<span class="kw">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">y</span>, <span class="kw">x</span>)
+
+<span class="co">## Fitting a full model </span>
+<span class="kw">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="kw">y</span> <span class="op">~</span> <span class="kw">.</span>, data = <span class="kw">data</span>, family = <span class="st">"binomial"</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">model</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; glm(formula = y ~ ., family = "binomial", data = data)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Deviance Residuals: </span>
+<span class="co">#&gt;     Min       1Q   Median       3Q      Max  </span>
+<span class="co">#&gt; -2.3584  -0.8018   0.1758   0.7647   2.6839  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;               Estimate Std. Error z value Pr(&gt;|z|)    </span>
+<span class="co">#&gt; (Intercept)  0.0939968  0.1150063   0.817   0.4137    </span>
+<span class="co">#&gt; X1           1.3208484  0.1473539   8.964  &lt; 2e-16 ***</span>
+<span class="co">#&gt; X2          -1.1514327  0.1408347  -8.176 2.94e-16 ***</span>
+<span class="co">#&gt; X3          -0.1374777  0.1199204  -1.146   0.2516    </span>
+<span class="co">#&gt; X4          -0.1833097  0.1131186  -1.621   0.1051    </span>
+<span class="co">#&gt; X5           0.0592351  0.1245528   0.476   0.6344    </span>
+<span class="co">#&gt; X6          -0.0042151  0.1116729  -0.038   0.9699    </span>
+<span class="co">#&gt; X7           0.0333918  0.1140984   0.293   0.7698    </span>
+<span class="co">#&gt; X8           0.0544283  0.1150397   0.473   0.6361    </span>
+<span class="co">#&gt; X9          -0.0002908  0.1185977  -0.002   0.9980    </span>
+<span class="co">#&gt; X10          0.0070470  0.1191136   0.059   0.9528    </span>
+<span class="co">#&gt; X11          0.2215954  0.1197092   1.851   0.0642 .  </span>
+<span class="co">#&gt; X12         -0.0181208  0.1129557  -0.160   0.8725    </span>
+<span class="co">#&gt; X13          0.2642200  0.1134691   2.329   0.0199 *  </span>
+<span class="co">#&gt; X14         -0.1555926  0.1167591  -1.333   0.1827    </span>
+<span class="co">#&gt; X15          0.1706575  0.1209544   1.411   0.1583    </span>
+<span class="co">#&gt; X16          0.2097983  0.1134567   1.849   0.0644 .  </span>
+<span class="co">#&gt; X17         -0.0967993  0.1118631  -0.865   0.3869    </span>
+<span class="co">#&gt; X18         -0.0460395  0.1103086  -0.417   0.6764    </span>
+<span class="co">#&gt; X19         -0.0127950  0.1170941  -0.109   0.9130    </span>
+<span class="co">#&gt; X20          0.0626407  0.1140707   0.549   0.5829    </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; (Dispersion parameter for binomial family taken to be 1)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     Null deviance: 692.76  on 499  degrees of freedom</span>
+<span class="co">#&gt; Residual deviance: 480.70  on 479  degrees of freedom</span>
+<span class="co">#&gt; AIC: 522.7</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Number of Fisher Scoring iterations: 5</span>
 </pre></div>
+<p>This is the classic problem of variable selection. One of the most intuitive variable selection method is to look at every combination of variables, obtain the fit of these variables and pick the best one. This is known as exhaustive variable selection and in total, there are <span class="math inline">\(2^p\)</span> possibilities to explore, with <span class="math inline">\(p\)</span> being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through 2^20 = 1,048,576 models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run — seems too long!</p>
+<p>At its core, APES is designed to speed up this variable selection procedure. APES will first converts the full logistic model into a linear model. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space. In addition, linear models can benefit from best-subset algorithms which can search for the best linear model without searching through all <span class="math inline">\(2^p\)</span> candidate models. By default, APES uses the leaps-and-bound algorithm (from the <code>leaps</code> package) and mixed integer optimisation (from the <code>bestsubset</code> package) algorithm as the best-subset algorithms of choice. After obtaining a set of best-fit models, APES will convert the results back to into logistic models and show the best model of each size. While the word “best” can be subjective depending on the data context, in our example, we define this word as the model with the smallest information criterion value with the most common choices being the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC).</p>
+<p>It is important to note that APES only returns the best approximation to the exhaustive search, however, through extensive simulations in our paper, we have demonstrated that APES tends to always return informative models that are close to a genuine exhaustive search.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span>(model = <span class="kw">model</span>)
+<span class="kw">apes_result</span>
+<span class="co">#&gt; Time taken: </span>
+<span class="co">#&gt; Time difference of 0.0001791835 mins</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  APES model selection data frame: </span>
+<span class="co">#&gt; # A tibble: 20 x 7</span>
+<span class="co">#&gt;    model_name  model_size ic_opt_models apes_mle_loglike mle_aic mle_bic status </span>
+<span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  </span>
+<span class="co">#&gt;  1 apes_model…          2 ""                       -296.    597.    605. leaps_…</span>
+<span class="co">#&gt;  2 apes_model…          3 "apes_min_bi…            -251.    507.    520. leaps_…</span>
+<span class="co">#&gt;  3 apes_model…          4 ""                       -250.    508.    524. leaps_…</span>
+<span class="co">#&gt;  4 apes_model…          5 ""                       -248.    506.    527. leaps_…</span>
+<span class="co">#&gt;  5 apes_model…          6 ""                       -246.    503.    529. leaps_…</span>
+<span class="co">#&gt;  6 apes_model…          7 ""                       -245.    504.    533. leaps_…</span>
+<span class="co">#&gt;  7 apes_model…          8 "apes_min_ai…            -243.    502.    536. leaps_…</span>
+<span class="co">#&gt;  8 apes_model…          9 ""                       -243.    504.    542. leaps_…</span>
+<span class="co">#&gt;  9 apes_model…         10 ""                       -242.    504.    546. leaps_…</span>
+<span class="co">#&gt; 10 apes_model…         11 ""                       -242.    506.    552. leaps_…</span>
+<span class="co">#&gt; 11 apes_model…         12 ""                       -242.    508.    558. leaps_…</span>
+<span class="co">#&gt; 12 apes_model…         13 ""                       -242.    509.    564. leaps_…</span>
+<span class="co">#&gt; 13 apes_model…         14 ""                       -242.    511.    570. leaps_…</span>
+<span class="co">#&gt; 14 apes_model…         15 ""                       -242.    513.    576. leaps_…</span>
+<span class="co">#&gt; 15 apes_model…         16 ""                       -242.    515.    582. leaps_…</span>
+<span class="co">#&gt; 16 apes_model…         17 ""                       -241.    517.    589. leaps_…</span>
+<span class="co">#&gt; 17 apes_model…         18 ""                       -241.    519.    595. leaps_…</span>
+<span class="co">#&gt; 18 apes_model…         19 ""                       -241.    521.    601. leaps_…</span>
+<span class="co">#&gt; 19 apes_model…         20 ""                       -241.    523.    607. leaps_…</span>
+<span class="co">#&gt; 20 apes_model…         21 ""                       -240.    523.    611. leaps_…</span>
+</pre></div>
+<p>In <code>apes_result</code>, APES will return the best model of each model size. APES will always include the intercept term in the model selection, and thus the selected models are always of size two (one intercept and one variable) and above. In <code>apes_result</code>, we see that it only takes a fraction of second to run and that the model selected by the BIC and AIC are of model size 3 and 8. This output is only a mere summary of the computed results.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">apes_result</span>)
+<span class="co">#&gt; [1] "apes_model_df"        "apes_mle_beta"        "apes_mle_beta_binary"</span>
+<span class="co">#&gt; [4] "time_used"            "selected_model_beta"  "model_avg_beta"      </span>
+<span class="co">#&gt; [7] "response_tibble"</span>
+</pre></div>
+<p>Note that the BIC is known to be model selection consistent and since we generated this data with two informative variables, thus, the selected model is of model size 3 (including the intercept term). We can examine the precise non-zero coefficients as well.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">apes_result</span><span class="op">$</span><span class="kw">selected_model_beta</span>
+<span class="co">#&gt;           apes_min_aic apes_min_bic</span>
+<span class="co">#&gt; intercept   0.08157786   0.06389384</span>
+<span class="co">#&gt; X1          1.28437711   1.22646979</span>
+<span class="co">#&gt; X2         -1.13676644  -1.09257247</span>
+<span class="co">#&gt; X3          0.00000000   0.00000000</span>
+<span class="co">#&gt; X4         -0.16082625   0.00000000</span>
+<span class="co">#&gt; X5          0.00000000   0.00000000</span>
+<span class="co">#&gt; X6          0.00000000   0.00000000</span>
+<span class="co">#&gt; X7          0.00000000   0.00000000</span>
+<span class="co">#&gt; X8          0.00000000   0.00000000</span>
+<span class="co">#&gt; X9          0.00000000   0.00000000</span>
+<span class="co">#&gt; X10         0.00000000   0.00000000</span>
+<span class="co">#&gt; X11         0.22056007   0.00000000</span>
+<span class="co">#&gt; X12         0.00000000   0.00000000</span>
+<span class="co">#&gt; X13         0.25189145   0.00000000</span>
+<span class="co">#&gt; X14        -0.16229823   0.00000000</span>
+<span class="co">#&gt; X15         0.00000000   0.00000000</span>
+<span class="co">#&gt; X16         0.20846586   0.00000000</span>
+<span class="co">#&gt; X17         0.00000000   0.00000000</span>
+<span class="co">#&gt; X18         0.00000000   0.00000000</span>
+<span class="co">#&gt; X19         0.00000000   0.00000000</span>
+<span class="co">#&gt; X20         0.00000000   0.00000000</span>
+</pre></div>
+</div>
+<div id="more-examples" class="section level1">
+<h1 class="hasAnchor">
+<a href="#more-examples" class="anchor"></a>More examples</h1>
+<p>The example above is a mere simulation to illustrate the basic underlying theory of APES. Please see here and here for real-data examples of APES.</p>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb2"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
+<span class="co">#&gt; R version 4.0.2 (2020-06-22)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS Catalina 10.15.6</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt; [1] APES_0.6.0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;  [1] Rcpp_1.0.5             cpp11_0.2.1            plyr_1.8.6            </span>
+<span class="co">#&gt;  [4] compiler_4.0.2         pillar_1.4.6           RColorBrewer_1.1-2    </span>
+<span class="co">#&gt;  [7] forcats_0.5.0          directlabels_2020.6.17 tools_4.0.2           </span>
+<span class="co">#&gt; [10] digest_0.6.25          lattice_0.20-41        gtable_0.3.0          </span>
+<span class="co">#&gt; [13] evaluate_0.14          memoise_1.1.0          lifecycle_0.2.0       </span>
+<span class="co">#&gt; [16] tibble_3.0.3           pkgconfig_2.0.3        rlang_0.4.7           </span>
+<span class="co">#&gt; [19] Matrix_1.2-18          cli_2.0.2              parallel_4.0.2        </span>
+<span class="co">#&gt; [22] yaml_2.2.1             pkgdown_1.6.0.9000     xfun_0.17             </span>
+<span class="co">#&gt; [25] furrr_0.1.0            dplyr_1.0.2            stringr_1.4.0         </span>
+<span class="co">#&gt; [28] knitr_1.29             gtools_3.8.2           desc_1.2.0            </span>
+<span class="co">#&gt; [31] generics_0.0.2         fs_1.5.0               vctrs_0.3.4           </span>
+<span class="co">#&gt; [34] systemfonts_0.3.1      globals_0.12.5         rprojroot_1.3-2       </span>
+<span class="co">#&gt; [37] grid_4.0.2             tidyselect_1.1.0       glue_1.4.2            </span>
+<span class="co">#&gt; [40] listenv_0.8.0          R6_2.4.1               fansi_0.4.1           </span>
+<span class="co">#&gt; [43] survival_3.1-12        rmarkdown_2.3          reshape2_1.4.4        </span>
+<span class="co">#&gt; [46] ggplot2_3.3.2          purrr_0.3.4            magrittr_1.5          </span>
+<span class="co">#&gt; [49] leaps_3.1              splines_4.0.2          scales_1.1.1          </span>
+<span class="co">#&gt; [52] backports_1.1.9        codetools_0.2-16       htmltools_0.5.0       </span>
+<span class="co">#&gt; [55] ellipsis_0.3.1         assertthat_0.2.1       colorspace_1.4-1      </span>
+<span class="co">#&gt; [58] future_1.18.0          quadprog_1.5-8         ragg_0.3.1            </span>
+<span class="co">#&gt; [61] utf8_1.1.4             stringi_1.5.3          munsell_0.5.0         </span>
+<span class="co">#&gt; [64] crayon_1.3.4</span>
 </pre></div>
-<pre><code>## R version 4.0.2 (2020-06-22)
-## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Catalina 10.15.6
-## 
-## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-## [1] APES_0.6.0
-## 
-## loaded via a namespace (and not attached):
-##  [1] cpp11_0.2.1            compiler_4.0.2         pillar_1.4.6          
-##  [4] RColorBrewer_1.1-2     forcats_0.5.0          directlabels_2020.6.17
-##  [7] tools_4.0.2            digest_0.6.25          lattice_0.20-41       
-## [10] gtable_0.3.0           evaluate_0.14          memoise_1.1.0         
-## [13] lifecycle_0.2.0        tibble_3.0.3           pkgconfig_2.0.3       
-## [16] rlang_0.4.7            Matrix_1.2-18          parallel_4.0.2        
-## [19] yaml_2.2.1             pkgdown_1.6.0.9000     xfun_0.16             
-## [22] furrr_0.1.0            dplyr_1.0.2            stringr_1.4.0         
-## [25] knitr_1.29             desc_1.2.0             generics_0.0.2        
-## [28] fs_1.5.0               vctrs_0.3.4            systemfonts_0.3.0     
-## [31] globals_0.12.5         rprojroot_1.3-2        grid_4.0.2            
-## [34] tidyselect_1.1.0       glue_1.4.2             listenv_0.8.0         
-## [37] R6_2.4.1               survival_3.1-12        rmarkdown_2.3         
-## [40] ggplot2_3.3.2          purrr_0.3.4            magrittr_1.5          
-## [43] splines_4.0.2          scales_1.1.1           backports_1.1.9       
-## [46] codetools_0.2-16       htmltools_0.5.0        ellipsis_0.3.1        
-## [49] assertthat_0.2.1       colorspace_1.4-1       future_1.18.0         
-## [52] quadprog_1.5-8         ragg_0.3.1             stringi_1.4.6         
-## [55] munsell_0.5.0          crayon_1.3.4</code></pre>
 </div>
   </div>
 

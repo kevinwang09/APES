@@ -57,7 +57,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/birthweight_logit.html">Birthweight Logistic Regression</a>
+      <a href="articles/birthweight_logit.html">Birthweight data example</a>
     </li>
     <li>
       <a href="articles/birthweight_poisson.html">Birthweight Poisson Regression</a>
@@ -112,7 +112,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/kevinwang09/APES">APES</a></span>)
 
 <span class="co">## Simulating data</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">10</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123</span>)
 <span class="kw">n</span> <span class="op">=</span> <span class="fl">500</span>
 <span class="kw">p</span> <span class="op">=</span> <span class="fl">20</span>
 <span class="kw">k</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="kw">p</span>
@@ -129,62 +129,62 @@
 <span class="kw">apes_result</span> <span class="op">=</span> <span class="fu"><a href="reference/apes.html">apes</a></span>(model = <span class="kw">model</span>)
 <span class="kw">apes_result</span>
 <span class="co">#&gt; Time taken: </span>
-<span class="co">#&gt; Time difference of 0.0001144012 mins</span>
+<span class="co">#&gt; Time difference of 0.000280869 mins</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  APES model selection data frame: </span>
 <span class="co">#&gt; # A tibble: 20 x 7</span>
 <span class="co">#&gt;    model_name  model_size ic_opt_models apes_mle_loglike mle_aic mle_bic status </span>
 <span class="co">#&gt;    &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt;  1 apes_model…          2 ""                       -297.    599.    607. leaps_…</span>
-<span class="co">#&gt;  2 apes_model…          3 "apes_min_bi…            -270.    546.    558. leaps_…</span>
-<span class="co">#&gt;  3 apes_model…          4 ""                       -269.    545.    562. leaps_…</span>
-<span class="co">#&gt;  4 apes_model…          5 ""                       -267.    544.    565. leaps_…</span>
-<span class="co">#&gt;  5 apes_model…          6 ""                       -266.    545.    570. leaps_…</span>
-<span class="co">#&gt;  6 apes_model…          7 ""                       -266.    545.    575. leaps_…</span>
-<span class="co">#&gt;  7 apes_model…          8 ""                       -263.    543.    577. leaps_…</span>
-<span class="co">#&gt;  8 apes_model…          9 ""                       -262.    542.    580. leaps_…</span>
-<span class="co">#&gt;  9 apes_model…         10 ""                       -261.    543.    585. leaps_…</span>
-<span class="co">#&gt; 10 apes_model…         11 "apes_min_ai…            -260.    541.    587. leaps_…</span>
-<span class="co">#&gt; 11 apes_model…         12 ""                       -260.    543.    594. leaps_…</span>
-<span class="co">#&gt; 12 apes_model…         13 ""                       -258.    543.    598. leaps_…</span>
-<span class="co">#&gt; 13 apes_model…         14 ""                       -258.    544.    603. leaps_…</span>
-<span class="co">#&gt; 14 apes_model…         15 ""                       -257.    544.    608. leaps_…</span>
-<span class="co">#&gt; 15 apes_model…         16 ""                       -257.    546.    614. leaps_…</span>
-<span class="co">#&gt; 16 apes_model…         17 ""                       -257.    548.    620. leaps_…</span>
-<span class="co">#&gt; 17 apes_model…         18 ""                       -257.    550.    626. leaps_…</span>
-<span class="co">#&gt; 18 apes_model…         19 ""                       -257.    551.    631. leaps_…</span>
-<span class="co">#&gt; 19 apes_model…         20 ""                       -257.    553.    638. leaps_…</span>
-<span class="co">#&gt; 20 apes_model…         21 ""                       -256.    555.    643. leaps_…</span>
+<span class="co">#&gt;  1 apes_model…          2 ""                       -296.    597.    605. leaps_…</span>
+<span class="co">#&gt;  2 apes_model…          3 "apes_min_bi…            -251.    507.    520. leaps_…</span>
+<span class="co">#&gt;  3 apes_model…          4 ""                       -250.    508.    524. leaps_…</span>
+<span class="co">#&gt;  4 apes_model…          5 ""                       -248.    506.    527. leaps_…</span>
+<span class="co">#&gt;  5 apes_model…          6 ""                       -246.    503.    529. leaps_…</span>
+<span class="co">#&gt;  6 apes_model…          7 ""                       -245.    504.    533. leaps_…</span>
+<span class="co">#&gt;  7 apes_model…          8 "apes_min_ai…            -243.    502.    536. leaps_…</span>
+<span class="co">#&gt;  8 apes_model…          9 ""                       -243.    504.    542. leaps_…</span>
+<span class="co">#&gt;  9 apes_model…         10 ""                       -242.    504.    546. leaps_…</span>
+<span class="co">#&gt; 10 apes_model…         11 ""                       -242.    506.    552. leaps_…</span>
+<span class="co">#&gt; 11 apes_model…         12 ""                       -242.    508.    558. leaps_…</span>
+<span class="co">#&gt; 12 apes_model…         13 ""                       -242.    509.    564. leaps_…</span>
+<span class="co">#&gt; 13 apes_model…         14 ""                       -242.    511.    570. leaps_…</span>
+<span class="co">#&gt; 14 apes_model…         15 ""                       -242.    513.    576. leaps_…</span>
+<span class="co">#&gt; 15 apes_model…         16 ""                       -242.    515.    582. leaps_…</span>
+<span class="co">#&gt; 16 apes_model…         17 ""                       -241.    517.    589. leaps_…</span>
+<span class="co">#&gt; 17 apes_model…         18 ""                       -241.    519.    595. leaps_…</span>
+<span class="co">#&gt; 18 apes_model…         19 ""                       -241.    521.    601. leaps_…</span>
+<span class="co">#&gt; 19 apes_model…         20 ""                       -241.    523.    607. leaps_…</span>
+<span class="co">#&gt; 20 apes_model…         21 ""                       -240.    523.    611. leaps_…</span>
 <span class="kw">apes_result</span><span class="op">$</span><span class="kw">selected_model_beta</span>
 <span class="co">#&gt;           apes_min_aic apes_min_bic</span>
-<span class="co">#&gt; intercept   -0.1606897   -0.1920528</span>
-<span class="co">#&gt; X1           1.0891026    1.0773367</span>
-<span class="co">#&gt; X2          -0.8247133   -0.8352282</span>
-<span class="co">#&gt; X3           0.0000000    0.0000000</span>
-<span class="co">#&gt; X4           0.1467194    0.0000000</span>
-<span class="co">#&gt; X5           0.0000000    0.0000000</span>
-<span class="co">#&gt; X6           0.0000000    0.0000000</span>
-<span class="co">#&gt; X7           0.0000000    0.0000000</span>
-<span class="co">#&gt; X8           0.1607424    0.0000000</span>
-<span class="co">#&gt; X9           0.1913598    0.0000000</span>
-<span class="co">#&gt; X10          0.0000000    0.0000000</span>
-<span class="co">#&gt; X11         -0.1001883    0.0000000</span>
-<span class="co">#&gt; X12          0.0000000    0.0000000</span>
-<span class="co">#&gt; X13          0.1869966    0.0000000</span>
-<span class="co">#&gt; X14          0.0000000    0.0000000</span>
-<span class="co">#&gt; X15          0.0000000    0.0000000</span>
-<span class="co">#&gt; X16          0.0000000    0.0000000</span>
-<span class="co">#&gt; X17          0.2199132    0.0000000</span>
-<span class="co">#&gt; X18          0.2186733    0.0000000</span>
-<span class="co">#&gt; X19          0.0000000    0.0000000</span>
-<span class="co">#&gt; X20         -0.2280918    0.0000000</span>
+<span class="co">#&gt; intercept   0.08157786   0.06389384</span>
+<span class="co">#&gt; X1          1.28437711   1.22646979</span>
+<span class="co">#&gt; X2         -1.13676644  -1.09257247</span>
+<span class="co">#&gt; X3          0.00000000   0.00000000</span>
+<span class="co">#&gt; X4         -0.16082625   0.00000000</span>
+<span class="co">#&gt; X5          0.00000000   0.00000000</span>
+<span class="co">#&gt; X6          0.00000000   0.00000000</span>
+<span class="co">#&gt; X7          0.00000000   0.00000000</span>
+<span class="co">#&gt; X8          0.00000000   0.00000000</span>
+<span class="co">#&gt; X9          0.00000000   0.00000000</span>
+<span class="co">#&gt; X10         0.00000000   0.00000000</span>
+<span class="co">#&gt; X11         0.22056007   0.00000000</span>
+<span class="co">#&gt; X12         0.00000000   0.00000000</span>
+<span class="co">#&gt; X13         0.25189145   0.00000000</span>
+<span class="co">#&gt; X14        -0.16229823   0.00000000</span>
+<span class="co">#&gt; X15         0.00000000   0.00000000</span>
+<span class="co">#&gt; X16         0.20846586   0.00000000</span>
+<span class="co">#&gt; X17         0.00000000   0.00000000</span>
+<span class="co">#&gt; X18         0.00000000   0.00000000</span>
+<span class="co">#&gt; X19         0.00000000   0.00000000</span>
+<span class="co">#&gt; X20         0.00000000   0.00000000</span>
 </pre></div>
 <p>The best model of each model size are stored and the best model of all can be selected using an information criterion such as the Akaike Information Criterion (AIC) or the Bayesian Information Criterion (BIC). Notice how in the above output of APES, the true model size is identified as 3 and 2 by the AIC and BIC respectively. The selected model estimates are also shown.</p>
 <p>The bootstrap procedure can be used to understand the variable selection stability. The APES package also comes with some plotting functions that displays the bootstrapped results.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="kw">boot_result</span> <span class="op">=</span> <span class="fu"><a href="reference/apes.html">apes</a></span>(model = <span class="kw">model</span>, n_boot = <span class="fl">20</span>)
 <span class="kw">boot_result</span>
-<span class="co">#&gt; Time taken:  0.03168368  minutes </span>
+<span class="co">#&gt; Time taken:  0.0294419  minutes </span>
 <span class="co">#&gt; Total number of bootstrap APES results:  20</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"vip"</span>)
 </pre></div>

@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Birthweight Logistic Regression • APES</title>
+<title>Birthweight data example • APES</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Birthweight Logistic Regression">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Birthweight data example">
 <meta property="og:description" content="APES">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -57,7 +57,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/birthweight_logit.html">Birthweight Logistic Regression</a>
+      <a href="../articles/birthweight_logit.html">Birthweight data example</a>
     </li>
     <li>
       <a href="../articles/birthweight_poisson.html">Birthweight Poisson Regression</a>
@@ -88,15 +88,23 @@
       </header><script src="birthweight_logit_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Birthweight Logistic Regression</h1>
-                        <h4 class="author">Kevin Wang</h4>
-            
-            <h4 class="date">26/08/2018</h4>
-      
-      <small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/birthweight_logit.Rmd"><code>vignettes/birthweight_logit.Rmd</code></a></small>
+      <h1 data-toc-skip>Birthweight data example</h1>
+                        <h4 class="author">Kevin Y.X. Wang</h4>
+            <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Garth Tarr</h4>
+            <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Jean Y.H. Yang</h4>
+            <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Samuel Mueller</h4>
+            <address class="author_afil">
+      School of Mathematics and Statistics, The University of Sydney, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/birthweight_logit.Rmd"><code>vignettes/birthweight_logit.Rmd</code></a></small>
       <div class="hidden name"><code>birthweight_logit.Rmd</code></div>
 
-    </div>
+    </address>
+</address>
+</address>
+</address>
+</div>
 
     
     
@@ -105,105 +113,153 @@
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>In this document, we will perform APES on the <code>birthweight</code> data from the <code>MASS</code> package.</p>
 <p>There are 189 observations and 8 variables. The response variable is a binary variable indicating if an infant is in the low-weight group.</p>
-<!-- # Setting up the data -->
-<!-- ```{r} -->
-<!-- library(APES) -->
-<!-- library(MASS) -->
-<!-- library(tidyverse) -->
-<!-- library(mplot) -->
-<!-- library(directlabels) -->
-<!-- theme_set( -->
-<!--   theme_classic(14) + -->
-<!--     theme(legend.position = "bottom") -->
-<!-- ) -->
-<!-- ``` -->
-<!-- ## Loading data -->
-<!-- ```{r} -->
-<!-- data("birthwt", package = "MASS") -->
-<!-- bwt <- with(birthwt, { -->
-<!--   race <- factor(race, labels = c("white", "black", "other")) -->
-<!--   ptd <- factor(ptl > 0) -->
-<!--   ftv <- factor(ftv) -->
-<!--   levels(ftv)[-(1:2)] <- "2+" -->
-<!--   data.frame(low = factor(low),  -->
-<!--              age, lwt, race,  -->
-<!--              smoke = (smoke > 0),  -->
-<!--              ptd, ht = (ht > 0),  -->
-<!--              ui = (ui > 0), ftv) -->
-<!-- }) -->
-<!-- ``` -->
-<!-- # Single run of APES on diabetes data -->
-<!-- Due to the small size of this data, we will use the `leaps` estimator.  -->
-<!-- Since there are some factor variables, we will need to manually create the model matrix/design matrix.  -->
-<!-- ## Using the leaps estimator  -->
-<!-- ```{r} -->
-<!-- fullModel <- glm(low ~ ., family = binomial, data = bwt) -->
-<!-- round(summary(fullModel)$coef, 2) -->
-<!-- bwt = dplyr::mutate_if(bwt, is.factor, as.character) -->
-<!-- x = model.matrix(~0 + . - low, data = bwt)[,-3] -->
-<!-- dim(x) -->
-<!-- y = as.integer(as.character(bwt$low)) -->
-<!-- length(y) -->
-<!-- ``` -->
-<!-- ```{r} -->
-<!-- apes_logit_leaps = apes_logit( -->
-<!--   x = x, -->
-<!--   y = y, -->
-<!--   Pi = fullModel$fitted.values, -->
-<!--   k = 1:ncol(x),  -->
-<!--   estimator = "leaps") -->
-<!-- ``` -->
-<!-- <!-- # Running Lasso on diabetes data -->
-<p>–&gt; <!-- <!-- ```{r} --> –&gt; <!-- <!-- lasso_logit = glmnet::cv.glmnet(x = x, --> –&gt; <!-- <!--                                 y = y) --> –&gt; <!-- <!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") --> –&gt; <!-- <!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] --> –&gt; <!-- <!-- ``` --> –&gt;</p>
-<!-- <!-- # Running time  -->
-<p>–&gt;</p>
-<!-- <!-- ```{r} -->
-<p>–&gt; <!-- <!-- apes_logit_leaps$apesTimeDiff --> –&gt; <!-- <!-- apes_logit_mio$apesTimeDiff --> –&gt; <!-- <!-- ``` --> –&gt;</p>
-<!-- # Bootstrapping using leaps version  -->
-<!-- In most practical cases, a single run of any variable selection procedure is not stable. In order to explore stability of variable selection in this case, we can bootstrap on the 189 observations. The implementation of APES is fast enough that this can be done relatively fast. -->
-<!-- ```{r, results = 'hide'} -->
-<!-- t1 = Sys.time() -->
-<!-- listResult = APES::boot_apes_logit( -->
-<!--   x = x, -->
-<!--   y = y, -->
-<!--   Pi = fullModel$fitted.values, -->
-<!--   k = 1:ncol(x),  -->
-<!--   estimator = "leaps", -->
-<!--   nBoot = 100) -->
-<!-- t2 = Sys.time() -->
-<!-- ``` -->
-<!-- ## Variable selection plot  -->
-<!-- ```{r} -->
-<!-- viPlotResult = APES::plot_vi(listResult) -->
-<!-- viPlotResult$viPlot -->
-<!-- viTilePlotResult = APES::plot_vi_tile(listResult) -->
-<!-- viTilePlotResult -->
-<!-- ``` -->
-<!-- ```{r, warning = FALSE} -->
-<!-- plotly::ggplotly( -->
-<!--   viPlotResult$viPlot +  -->
-<!--     theme_classic(18)  -->
-<!-- ) -->
-<!-- ``` -->
-<!-- ## Model averaging coefficient plot -->
-<!-- ```{r} -->
-<!-- APES::plot_ma_coef(listResult, type = "AIC") +  -->
-<!--   labs(title = "AIC weighted coefficients") -->
-<!-- APES::plot_ma_coef(listResult, type = "BIC") + -->
-<!--   labs(title = "BIC weighted coefficients") -->
-<!-- ``` -->
-<!-- ## Model averaging weights plot -->
-<!-- ```{r} -->
-<!-- APES::plot_ma_weight(listResult, type = "AIC") +  -->
-<!--   labs(title = "AIC Weights") -->
-<!-- APES::plot_ma_weight(listResult, type = "BIC") +  -->
-<!--   labs(title = "BIC Weights") -->
-<!-- ``` -->
+</div>
+<div id="setting-up-the-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#setting-up-the-data" class="anchor"></a>Setting up the data</h1>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/kevinwang09/APES">APES</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://www.stats.ox.ac.uk/pub/MASS4">MASS</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
+</pre></div>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+## ✔ tibble  3.0.3     ✔ dplyr   1.0.2
+## ✔ tidyr   1.1.2     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ✖ dplyr::select() masks MASS::select()</code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu">theme_set</span>(
+  <span class="fu">theme_classic</span>(<span class="fl">14</span>) <span class="op">+</span>
+    <span class="fu">theme</span>(legend.position = <span class="st">"bottom"</span>))
+</pre></div>
+<div id="loading-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#loading-data" class="anchor"></a>Loading data</h2>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"birthwt"</span>, package = <span class="st">"MASS"</span>)
+
+<span class="kw">bwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">birthwt</span>, {
+  <span class="kw">race</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">race</span>, labels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"other"</span>))
+  <span class="kw">ptd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">ptl</span> <span class="op">&gt;</span> <span class="fl">0</span>)
+  <span class="kw">ftv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">ftv</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="kw">ftv</span>)[<span class="op">-</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>)] <span class="op">&lt;-</span> <span class="st">"2+"</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(low = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">low</span>),
+             <span class="kw">age</span>, <span class="kw">lwt</span>, <span class="kw">race</span>,
+             smoke = (<span class="kw">smoke</span> <span class="op">&gt;</span> <span class="fl">0</span>),
+             <span class="kw">ptd</span>, ht = (<span class="kw">ht</span> <span class="op">&gt;</span> <span class="fl">0</span>),
+             ui = (<span class="kw">ui</span> <span class="op">&gt;</span> <span class="fl">0</span>), <span class="kw">ftv</span>)
+})
+</pre></div>
+</div>
+</div>
+<div id="single-run-of-apes-on-diabetes-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#single-run-of-apes-on-diabetes-data" class="anchor"></a>Single run of APES on diabetes data</h1>
+<p>Due to the small size of this data, we will use the <code>leaps</code> estimator.</p>
+<p>Since there are some factor variables, we will need to manually create the model matrix/design matrix.</p>
+<div id="using-the-leaps-estimator" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using-the-leaps-estimator" class="anchor"></a>Using the leaps estimator</h2>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="kw">full_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="kw">low</span> <span class="op">~</span> <span class="kw">.</span>, family = <span class="kw">binomial</span>, data = <span class="kw">bwt</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">full_model</span>)<span class="op">$</span><span class="kw">coef</span>, <span class="fl">2</span>)
+</pre></div>
+<pre><code>##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)     0.82       1.24    0.66     0.51
+## age            -0.04       0.04   -0.96     0.34
+## lwt            -0.02       0.01   -2.21     0.03
+## raceblack       1.19       0.54    2.22     0.03
+## raceother       0.74       0.46    1.60     0.11
+## smokeTRUE       0.76       0.43    1.78     0.08
+## ptdTRUE         1.34       0.48    2.80     0.01
+## htTRUE          1.91       0.72    2.65     0.01
+## uiTRUE          0.68       0.46    1.46     0.14
+## ftv1           -0.44       0.48   -0.91     0.36
+## ftv2+           0.18       0.46    0.39     0.69</code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="kw">bwt</span> <span class="op">=</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_if</a></span>(<span class="kw">bwt</span>, <span class="kw">is.factor</span>, <span class="kw">as.character</span>)
+<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(<span class="op">~</span><span class="fl">0</span> <span class="op">+</span> <span class="kw">.</span> <span class="op">-</span> <span class="kw">low</span>, data = <span class="kw">bwt</span>)[,<span class="op">-</span><span class="fl">3</span>]
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">x</span>)
+</pre></div>
+<pre><code>## [1] 189  10</code></pre>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="kw">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="kw">bwt</span><span class="op">$</span><span class="kw">low</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="kw">y</span>)
+</pre></div>
+<pre><code>## [1] 189</code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="kw">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span>(model = <span class="kw">full_model</span>)
+</pre></div>
+</div>
+</div>
+<div id="bootstrapping" class="section level1">
+<h1 class="hasAnchor">
+<a href="#bootstrapping" class="anchor"></a>Bootstrapping</h1>
+<p>In most practical cases, a single run of any variable selection procedure will not produce stable results. In order to explore stability of variable selection in this case, statistical literatures have examined the stability of variable selection using the bootstrap sampling procedure on the 189 observations. The motivation of APES is to make exhaustive selection to be fast and thus ideally suited for such a procedure</p>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="kw">boot_result</span> <span class="op">=</span> <span class="kw">APES</span>::<span class="fu"><a href="../reference/apes.html">apes</a></span>(<span class="kw">full_model</span>, n_boot = <span class="fl">100</span>)
+</pre></div>
+</div>
+<div id="variable-selection-plot" class="section level1">
+<h1 class="hasAnchor">
+<a href="#variable-selection-plot" class="anchor"></a>Variable selection plot</h1>
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"vip"</span>)
+</pre></div>
+<p><img src="birthweight_logit_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<div id="tile-plot" class="section level2">
+<h2 class="hasAnchor">
+<a href="#tile-plot" class="anchor"></a>Tile plot</h2>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"vip_tile"</span>)
+</pre></div>
+<pre><code>## $apes_mle_beta_binary_plotdf
+## # A tibble: 110 x 5
+##    variables model_name    freq_selected model_size freq_selected_category
+##    &lt;fct&gt;     &lt;fct&gt;                 &lt;dbl&gt;      &lt;int&gt; &lt;fct&gt;                 
+##  1 intercept apes_model_2              1          2 (0.8,1]               
+##  2 intercept apes_model_3              1          3 (0.8,1]               
+##  3 intercept apes_model_4              1          4 (0.8,1]               
+##  4 intercept apes_model_5              1          5 (0.8,1]               
+##  5 intercept apes_model_6              1          6 (0.8,1]               
+##  6 intercept apes_model_7              1          7 (0.8,1]               
+##  7 intercept apes_model_8              1          8 (0.8,1]               
+##  8 intercept apes_model_9              1          9 (0.8,1]               
+##  9 intercept apes_model_10             1         10 (0.8,1]               
+## 10 intercept apes_model_11             1         11 (0.8,1]               
+## # … with 100 more rows
+## 
+## $var_tile_plot</code></pre>
+<p><img src="birthweight_logit_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<pre><code>## 
+## $var_tile_plot_category</code></pre>
+<p><img src="birthweight_logit_files/figure-html/unnamed-chunk-7-2.png" width="700"></p>
+</div>
+<div id="model-averaged-coefficient-plot" class="section level2">
+<h2 class="hasAnchor">
+<a href="#model-averaged-coefficient-plot" class="anchor"></a>Model averaged coefficient plot</h2>
+<div class="sourceCode" id="cb19"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"ma"</span>)
+</pre></div>
+<p><img src="birthweight_logit_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+</div>
+<div id="information-criterion-pathway-plot" class="section level2">
+<h2 class="hasAnchor">
+<a href="#information-criterion-pathway-plot" class="anchor"></a>Information criterion pathway plot</h2>
+<div class="sourceCode" id="cb20"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"path"</span>, order = <span class="st">"BIC"</span>)
+</pre></div>
+<p><img src="birthweight_logit_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+</div>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb1"><pre class="downlit">
+<div class="sourceCode" id="cb21"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
 </pre></div>
 <pre><code>## R version 4.0.2 (2020-06-22)
@@ -220,14 +276,38 @@
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
+## other attached packages:
+##  [1] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.2     purrr_0.3.4    
+##  [5] readr_1.3.1     tidyr_1.1.2     tibble_3.0.3    ggplot2_3.3.2  
+##  [9] tidyverse_1.3.0 MASS_7.3-51.6   APES_0.6.0     
+## 
 ## loaded via a namespace (and not attached):
-##  [1] digest_0.6.25      crayon_1.3.4       rprojroot_1.3-2    assertthat_0.2.1  
-##  [5] R6_2.4.1           backports_1.1.9    magrittr_1.5       evaluate_0.14     
-##  [9] stringi_1.4.6      rlang_0.4.7        fs_1.5.0           ragg_0.3.1        
-## [13] rmarkdown_2.3      pkgdown_1.6.0.9000 desc_1.2.0         tools_4.0.2       
-## [17] stringr_1.4.0      yaml_2.2.1         xfun_0.16          compiler_4.0.2    
-## [21] systemfonts_0.3.0  cpp11_0.2.1        memoise_1.1.0      htmltools_0.5.0   
-## [25] knitr_1.29</code></pre>
+##  [1] httr_1.4.2             jsonlite_1.7.1         splines_4.0.2         
+##  [4] modelr_0.1.8           gtools_3.8.2           assertthat_0.2.1      
+##  [7] blob_1.2.1             cellranger_1.1.0       yaml_2.2.1            
+## [10] globals_0.12.5         pillar_1.4.6           backports_1.1.9       
+## [13] lattice_0.20-41        glue_1.4.2             quadprog_1.5-8        
+## [16] digest_0.6.25          RColorBrewer_1.1-2     rvest_0.3.6           
+## [19] colorspace_1.4-1       htmltools_0.5.0        Matrix_1.2-18         
+## [22] plyr_1.8.6             pkgconfig_2.0.3        broom_0.7.0           
+## [25] listenv_0.8.0          haven_2.3.1            scales_1.1.1          
+## [28] cpp11_0.2.1            farver_2.0.3           generics_0.0.2        
+## [31] ellipsis_0.3.1         withr_2.2.0            furrr_0.1.0           
+## [34] cli_2.0.2              survival_3.1-12        magrittr_1.5          
+## [37] crayon_1.3.4           readxl_1.3.1           memoise_1.1.0         
+## [40] evaluate_0.14          fs_1.5.0               future_1.18.0         
+## [43] fansi_0.4.1            xml2_1.3.2             tools_4.0.2           
+## [46] directlabels_2020.6.17 hms_0.5.3              lifecycle_0.2.0       
+## [49] munsell_0.5.0          reprex_0.3.0           compiler_4.0.2        
+## [52] pkgdown_1.6.0.9000     systemfonts_0.3.1      rlang_0.4.7           
+## [55] grid_4.0.2             rstudioapi_0.11        leaps_3.1             
+## [58] labeling_0.3           rmarkdown_2.3          gtable_0.3.0          
+## [61] codetools_0.2-16       DBI_1.1.0              reshape2_1.4.4        
+## [64] R6_2.4.1               lubridate_1.7.9        knitr_1.29            
+## [67] utf8_1.1.4             rprojroot_1.3-2        ragg_0.3.1            
+## [70] desc_1.2.0             stringi_1.5.3          parallel_4.0.2        
+## [73] Rcpp_1.0.5             vctrs_0.3.4            dbplyr_1.4.4          
+## [76] tidyselect_1.1.0       xfun_0.17</code></pre>
 </div>
   </div>
 
