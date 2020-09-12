@@ -1,0 +1,130 @@
+---
+title: "Birthweight data example"
+author:
+- name: Kevin Y.X. Wang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Garth Tarr
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Jean Y.H. Yang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Samuel Mueller
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+output: 
+  rmarkdown::html_vignette
+vignette: |
+  %\VignetteIndexEntry{birthweight}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction 
+
+In this vignette, we will apply APES on the `birthweight` data from the `MASS` package. In this data, there are 189 observations and the response variable is a binary variable indicating if an infant is in the low-weight group. There are eight predictor variables in total comprising of two numeric variables (`age` and `lwt`) and six others are factor variables. 
+
+
+# Setting up the data
+
+```{r}
+library(APES)
+library(MASS)
+library(tidyverse)
+
+theme_set(theme_classic(14) +
+            theme(legend.position = "bottom"))
+```
+
+## Loading data
+```{r}
+data("birthwt", package = "MASS")
+
+bwt <- with(birthwt, {
+  race <- factor(race, labels = c("white", "black", "other"))
+  ptd <- factor(ptl > 0)
+  ftv <- factor(ftv)
+  levels(ftv)[-(1:2)] <- "2+"
+  data.frame(low = factor(low),
+             age, lwt, race,
+             smoke = (smoke > 0),
+             ptd, ht = (ht > 0),
+             ui = (ui > 0), ftv)
+})
+```
+
+
+# Single run of APES on birthweight data
+
+APES requires a full model as input. We will first fit a full model using the `glm` function. 
+
+```{r}
+full_model <- glm(low ~ ., family = binomial, data = bwt)
+round(summary(full_model)$coef, 2)
+
+apes_result = apes(model = full_model)
+
+apes_result
+```
+
+Looking at the result, we see that a single run of APES only takes a fraction of a second and the selected model by BIC and AIC are of size 2 and 7 respectively. 
+
+However, [previous studies into this data](http://garthtarr.github.io/mplot/articles/birthweight.html) suggested that this data possess several interesting characteristics, one being that the variable selection instability. One way we can confirm this instability is through bootstrapping on the observations, apply variable selection method and average the result. We will do this in the next section. 
+
+
+# Bootstrapping 
+
+In most practical cases, a single run of any variable selection procedure will not produce stable results. In order to explore stability of variable selection in this case, statistical literatures have examined the stability of variable selection using the bootstrap sampling procedure on the 189 observations. The motivation of APES is to make exhaustive selection to be fast and thus ideally suited for such a procedure
+
+```{r, results = 'hide'}
+boot_result = APES::apes(full_model, n_boot = 100)
+boot_result
+```
+
+
+# Variable importance plot
+
+The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as a probability of selection against different strength of penalty on the general information criterion. The most stable variable in selection are those which has a high probability of selection with increasingly higher levels of penalisation. 
+
+We can see that the variables in order of strength of stability are `ptd`, `ht` and `lwt`.
+
+```{r}
+plot(boot_result, type = "vip")
+```
+
+## Tile version of VIP plot
+
+This plot is identical in construction as the VIP plot above. However, the probability of selection is used as colours in a tile plot. The most stably selected variables are on the top of the y-axis.
+
+```{r}
+plot(boot_result, type = "vip_tile")
+```
+
+## Model averaged coefficient plot 
+
+During the bootstrap computation, APES records the best AIC/BIC models across all bootstrap runs. The model estimates from each of these models can be cumulatively averaged across the number of bootstrap runs to examine the stability of the selection. This plot allows us to examine the stability of the model coefficients whereas the previous VIP plots shows only the stability of variable selection. 
+
+```{r}
+plot(boot_result, type = "ma")
+```
+
+## Information criterion pathway plot
+
+During the bootstrap computation, APES records the best AIC/BIC models across all bootstrap runs. The AIC/BIC-best model do not always coincide. One way to examine the differences between these models is to look into the model size of the best selected model. Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare of a model of size 2 to be selected by the BIC, with the majority of the models are between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion. 
+
+```{r}
+plot(boot_result, type = "path", order = "BIC")
+```
+
+# Reference 
+
++ Mueller, S. and Welsh, A. H. (2010), On model selection curves. International Statistical Review, 78:240-256. doi: 10.1111/j.1751-5823.2010.00108.x
+
++ Murray, K., Heritier, S. and Mueller, S. (2013), Graphical tools for model selection in generalized linear models. Statistics in Medicine, 32:4438-4451. doi: 10.1002/sim.5855
+
++ Tarr G, Mueller S and Welsh AH (2018). mplot: An R Package for Graphical Model Stability and Variable Selection Procedures. Journal of Statistical Software, 83(9), pp. 1-28. doi: 10.18637/jss.v083.i09
+
++ Wang, K. Y., Tarr, G., Yang, J. Y., & Mueller, S. (2019). Fast and approximate exhaustive variable selection for generalised linear models with APES. Australian & New Zealand Journal of Statistics, 61(4), 445–465. https://doi.org/10.1111/anzs.12276
+
+# Session Info
+```{r}
+sessionInfo()
+```
+
