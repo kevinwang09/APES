@@ -101,10 +101,7 @@ columns if all columns are numeric. If factor/categorical variables are present 
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/birthweight_logit.html">Birthweight data example</a>
-    </li>
-    <li>
-      <a href="../articles/birthweight_poisson.html">Birthweight Poisson Regression</a>
+      <a href="../articles/birthweight.html">Birthweight data example</a>
     </li>
     <li>
       <a href="../articles/diabetes_example.html">Diabetes example</a>
@@ -222,7 +219,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"binomial"</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 0.001814369 mins
+#&gt; Time difference of 0.0006847819 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; <span style='color: #555555;'># A tibble: 10 x 7</span><span>
@@ -244,7 +241,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"poisson"</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 2.541542e-05 mins
+#&gt; Time difference of 1.496474e-05 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; </span><span style='color: #555555;'># A tibble: 10 x 7</span><span>
@@ -262,11 +259,11 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 #&gt; </span><span style='color: #555555;'>10</span><span> apes_model…         11 </span><span style='color: #555555;'>""</span><span>                        -</span><span style='color: #BB0000;'>131.</span><span>    284.    313. leaps…</div><div class='input'>
 <span class='co'>## Bootstrap examples</span>
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>)
-</div><div class='output co'>#&gt; Time taken:  0.008044418  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.002888334  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>, workers = <span class='fl'>1</span>)
-</div><div class='output co'>#&gt; Time taken:  0.004219353  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.001581617  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>2</span>, workers = <span class='fl'>2</span>)
-</div><div class='output co'>#&gt; Time taken:  0.2332235  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.08427742  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'>
 <span class='co'>## Cox regression example</span>
 <span class='kw'>hx</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='kw'>x</span> <span class='op'>%*%</span> <span class='kw'>beta</span>)
@@ -276,7 +273,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='kw'>model</span> <span class='op'>=</span> <span class='kw'>survival</span>::<span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span>(<span class='kw'>survival</span>::<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='kw'>time</span>, <span class='kw'>censor</span>) <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>)
 <span class='fu'>apes</span>(model = <span class='kw'>model</span>)
 </div><div class='output co'>#&gt; Time taken: 
-#&gt; Time difference of 2.223253e-05 mins
+#&gt; Time difference of 7.585684e-06 mins
 #&gt; 
 #&gt;  APES model selection data frame: 
 #&gt; </span><span style='color: #555555;'># A tibble: 10 x 7</span><span>
