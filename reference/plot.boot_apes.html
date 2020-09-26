@@ -86,12 +86,6 @@ This function displays the same information as plot_vi, but in a tile plot forma
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/APES.html">Get started</a>
 </li>
 <li>
@@ -150,20 +144,20 @@ The frequency of a variable selected across different penalties are then avarage
     </div>
 
     <pre class="usage"><span class='co'># S3 method for boot_apes</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(
-  <span class='kw'>x</span>,
-  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"vip_tile"</span>, <span class='st'>"vip"</span>, <span class='st'>"path"</span>, <span class='st'>"ma"</span>),
-  order = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"BIC"</span>, <span class='st'>"AIC"</span>, <span class='st'>"median"</span>),
-  <span class='kw'>...</span>
-)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"vip_tile"</span>, <span class='st'>"vip"</span>, <span class='st'>"path"</span>, <span class='st'>"ma"</span><span class='op'>)</span>,
+  order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"BIC"</span>, <span class='st'>"AIC"</span>, <span class='st'>"median"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
-<span class='fu'>plot_path_boot_apes</span>(<span class='kw'>x</span>, order = <span class='st'>"BIC"</span>)
+<span class='fu'>plot_path_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"BIC"</span><span class='op'>)</span>
 
-<span class='fu'>plot_ma_boot_apes</span>(<span class='kw'>x</span>, order = <span class='st'>"BIC"</span>)
+<span class='fu'>plot_ma_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"BIC"</span><span class='op'>)</span>
 
-<span class='fu'>plot_vip_boot_apes</span>(<span class='kw'>x</span>)
+<span class='fu'>plot_vip_boot_apes</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>plot_vip_tile_boot_apes</span>(<span class='kw'>x</span>, order = <span class='st'>"median"</span>)</pre>
+<span class='fu'>plot_vip_tile_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"median"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,11 +169,11 @@ The frequency of a variable selected across different penalties are then avarage
     <tr>
       <th>type</th>
       <td><p>Type of plot:</p><ul>
-<li><p>vi: Variable inclusion plot in Tarr et. al. 2018.
+<li><p>vip: Variable inclusion plot in Tarr et. al. 2018.
 Shows the probability of variability selection across various penalty terms.
 Either "AIC" or "BIC" can be shown using the order argument.</p></li>
 <li><p>"vi_tile" (default): Similar to "vi", but in a tile format.</p></li>
-<li><p>"ic": Information criterion vs model size.
+<li><p>"path": Information criterion vs model size.
 Either "AIC" or "BIC" can be shown using the order argument.</p></li>
 <li><p>"ma": Model averaged coefficient across bootstrap runs.
 The weighted averages can be calculated from either "AIC" or "BIC" using the order argument.</p></li>
@@ -219,20 +213,20 @@ boot_vars_plotdf is a tibble with all the necessary values to plot a variable in
 <p>Kevin Wang</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>10</span>)
-<span class='kw'>n</span> <span class='op'>=</span> <span class='fl'>100</span>
-<span class='kw'>p</span> <span class='op'>=</span> <span class='fl'>10</span>
-<span class='kw'>k</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>
-<span class='kw'>beta</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>0</span>, <span class='kw'>p</span><span class='op'>-</span><span class='fl'>2</span>))
-<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='kw'>n</span><span class='op'>*</span><span class='kw'>p</span>), ncol = <span class='kw'>p</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>x</span>) <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"X"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='kw'>p</span>)
-<span class='kw'>y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span>(n = <span class='kw'>n</span>, size = <span class='fl'>1</span>, prob = <span class='fu'><a href='logit.html'>expit</a></span>(<span class='kw'>x</span> <span class='op'>%*%</span> <span class='kw'>beta</span>))
-<span class='kw'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>y</span>, <span class='kw'>x</span>)
-<span class='kw'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='kw'>y</span> <span class='op'>~</span> <span class='kw'>.</span>, data = <span class='kw'>data</span>, family = <span class='st'>"binomial"</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>n</span> <span class='op'>=</span> <span class='fl'>100</span>
+<span class='va'>p</span> <span class='op'>=</span> <span class='fl'>10</span>
+<span class='va'>k</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>
+<span class='va'>beta</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>-</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>*</span><span class='va'>p</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='va'>p</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='va'>p</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='va'>n</span>, size <span class='op'>=</span> <span class='fl'>1</span>, prob <span class='op'>=</span> <span class='fu'><a href='logit.html'>expit</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>%*%</span> <span class='va'>beta</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>x</span><span class='op'>)</span>
+<span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"binomial"</span><span class='op'>)</span>
 
-<span class='kw'>list_result</span> <span class='op'>=</span> <span class='fu'><a href='apes.html'>apes</a></span>(model = <span class='kw'>model</span>, n_boot = <span class='fl'>20</span>)
+<span class='va'>list_result</span> <span class='op'>=</span> <span class='fu'><a href='apes.html'>apes</a></span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>list_result</span>, type = <span class='st'>"vip_tile"</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>list_result</span>, type <span class='op'>=</span> <span class='st'>"vip_tile"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $apes_mle_beta_binary_plotdf
 #&gt; <span style='color: #555555;'># A tibble: 110 x 5</span><span>
 #&gt;    variables model_name    freq_selected model_size freq_selected_category
@@ -250,9 +244,9 @@ boot_vars_plotdf is a tibble with all the necessary values to plot a variable in
 #&gt; </span><span style='color: #555555;'># … with 100 more rows</span><span>
 #&gt; 
 #&gt; $var_tile_plot</div><div class='img'><img src='plot.boot_apes-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; 
-#&gt; $var_tile_plot_category</div><div class='img'><img src='plot.boot_apes-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>list_result</span>, type = <span class='st'>"vip"</span>)
-</div><div class='img'><img src='plot.boot_apes-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>list_result</span>, type = <span class='st'>"path"</span>)
-</div><div class='img'><img src='plot.boot_apes-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='kw'>list_result</span>, type = <span class='st'>"ma"</span>)
+#&gt; $var_tile_plot_category</div><div class='img'><img src='plot.boot_apes-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>list_result</span>, type <span class='op'>=</span> <span class='st'>"vip"</span><span class='op'>)</span>
+</div><div class='img'><img src='plot.boot_apes-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>list_result</span>, type <span class='op'>=</span> <span class='st'>"path"</span><span class='op'>)</span>
+</div><div class='img'><img src='plot.boot_apes-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>list_result</span>, type <span class='op'>=</span> <span class='st'>"ma"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot.boot_apes-5.png' alt='' width='700' height='433' /></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -269,7 +263,7 @@ boot_vars_plotdf is a tibble with all the necessary values to plot a variable in
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

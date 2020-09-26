@@ -38,12 +38,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/APES.html">Get started</a>
 </li>
 <li>
@@ -114,10 +108,9 @@
 <h1 class="hasAnchor">
 <a href="#setting-up-the-data" class="anchor"></a>Setting up the data</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/kevinwang09/APES">APES</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://www.stats.ox.ac.uk/pub/MASS4">MASS</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">MASS</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></pre></div>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
 ## ✔ tibble  3.0.3     ✔ dplyr   1.0.2
@@ -128,27 +121,25 @@
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ✖ dplyr::select() masks MASS::select()</code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu">theme_set</span>(<span class="fu">theme_classic</span>(<span class="fl">14</span>) <span class="op">+</span>
-            <span class="fu">theme</span>(legend.position = <span class="st">"bottom"</span>))
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"birthwt"</span>, package <span class="op">=</span> <span class="st">"MASS"</span><span class="op">)</span>
+
+<span class="fu">theme_set</span><span class="op">(</span><span class="fu">theme_classic</span><span class="op">(</span><span class="fl">14</span><span class="op">)</span> <span class="op">+</span>
+            <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <div id="loading-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#loading-data" class="anchor"></a>Loading data</h2>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"birthwt"</span>, package = <span class="st">"MASS"</span>)
-
-<span class="kw">bwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">birthwt</span>, {
-  <span class="kw">race</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">race</span>, labels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"other"</span>))
-  <span class="kw">ptd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">ptl</span> <span class="op">&gt;</span> <span class="fl">0</span>)
-  <span class="kw">ftv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">ftv</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="kw">ftv</span>)[<span class="op">-</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>)] <span class="op">&lt;-</span> <span class="st">"2+"</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(low = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">low</span>),
-             <span class="kw">age</span>, <span class="kw">lwt</span>, <span class="kw">race</span>,
-             smoke = (<span class="kw">smoke</span> <span class="op">&gt;</span> <span class="fl">0</span>),
-             <span class="kw">ptd</span>, ht = (<span class="kw">ht</span> <span class="op">&gt;</span> <span class="fl">0</span>),
-             ui = (<span class="kw">ui</span> <span class="op">&gt;</span> <span class="fl">0</span>), <span class="kw">ftv</span>)
-})
-</pre></div>
+<span class="va">bwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">birthwt</span>, <span class="op">{</span>
+  <span class="va">race</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">race</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"other"</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">ptd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">ptl</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>
+  <span class="va">ftv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">ftv</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">ftv</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"2+"</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>low <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">low</span><span class="op">)</span>,
+             <span class="va">age</span>, <span class="va">lwt</span>, <span class="va">race</span>,
+             smoke <span class="op">=</span> <span class="op">(</span><span class="va">smoke</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,
+             <span class="va">ptd</span>, ht <span class="op">=</span> <span class="op">(</span><span class="va">ht</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>,
+             ui <span class="op">=</span> <span class="op">(</span><span class="va">ui</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>, <span class="va">ftv</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="single-run-of-apes-on-birthweight-data" class="section level1">
@@ -156,9 +147,8 @@
 <a href="#single-run-of-apes-on-birthweight-data" class="anchor"></a>Single run of APES on birthweight data</h1>
 <p>APES requires a full model as input. We will first fit a full model using the <code>glm</code> function.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">full_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="kw">low</span> <span class="op">~</span> <span class="kw">.</span>, family = <span class="kw">binomial</span>, data = <span class="kw">bwt</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw">full_model</span>)<span class="op">$</span><span class="kw">coef</span>, <span class="fl">2</span>)
-</pre></div>
+<span class="va">full_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">low</span> <span class="op">~</span> <span class="va">.</span>, family <span class="op">=</span> <span class="va">binomial</span>, data <span class="op">=</span> <span class="va">bwt</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">full_model</span><span class="op">)</span><span class="op">$</span><span class="va">coef</span>, <span class="fl">2</span><span class="op">)</span></pre></div>
 <pre><code>##             Estimate Std. Error z value Pr(&gt;|z|)
 ## (Intercept)     0.82       1.24    0.66     0.51
 ## age            -0.04       0.04   -0.96     0.34
@@ -172,27 +162,22 @@
 ## ftv1           -0.44       0.48   -0.91     0.36
 ## ftv2+           0.18       0.46    0.39     0.69</code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="kw">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span>(model = <span class="kw">full_model</span>)
+<span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span><span class="op">)</span>
 
-<span class="kw">apes_result</span>
-</pre></div>
-<pre><code>## Time taken: 
-## Time difference of 0.0001223167 mins
+<span class="va">apes_result</span></pre></div>
+<pre><code>## Time taken:  0.000125134  minutes 
 ## 
-##  APES model selection data frame: 
-## # A tibble: 10 x 7
-##    model_name  model_size ic_opt_models apes_mle_loglike mle_aic mle_bic status 
-##    &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  
-##  1 apes_model…          2 "apes_min_bi…           -111.     226.    232. leaps_…
-##  2 apes_model…          3 ""                      -109.     223.    233. leaps_…
-##  3 apes_model…          4 ""                      -107.     223.    236. leaps_…
-##  4 apes_model…          5 ""                      -106.     222.    238. leaps_…
-##  5 apes_model…          6 ""                      -102.     216.    236. leaps_…
-##  6 apes_model…          7 "apes_min_ai…           -100.     214.    237. leaps_…
-##  7 apes_model…          8 ""                       -99.4    215.    241. leaps_…
-##  8 apes_model…          9 ""                       -98.9    216.    245. leaps_…
-##  9 apes_model…         10 ""                       -97.8    216.    248. leaps_…
-## 10 apes_model…         11 ""                       -97.9    218.    253. leaps_…</code></pre>
+##  APES - AIC selected the following variables 
+## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
+##    -1.057     0.000     0.000     0.000     0.000     0.000     1.463     0.000 
+##    uiTRUE      ftv1     ftv2+ 
+##     0.000     0.000     0.000 
+## 
+##  APES - BIC selected the following variables 
+## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
+##     0.095     0.000    -0.017     1.264     0.864     0.876     1.231     1.767 
+##    uiTRUE      ftv1     ftv2+ 
+##     0.000     0.000     0.000</code></pre>
 <p>Looking at the result, we see that a single run of APES only takes a fraction of a second and the selected model by BIC and AIC are of size 2 and 7 respectively.</p>
 <p>However, <a href="http://garthtarr.github.io/mplot/articles/birthweight.html">previous studies into this data</a> suggested that this data possess several interesting characteristics, one being that the variable selection instability. One way we can confirm this instability is through bootstrapping on the observations, apply variable selection method and average the result. We will do this in the next section.</p>
 </div>
@@ -201,9 +186,8 @@
 <a href="#bootstrapping" class="anchor"></a>Bootstrapping</h1>
 <p>In most practical cases, a single run of any variable selection procedure will not produce stable results. In order to explore stability of variable selection in this case, statistical literatures have examined the stability of variable selection using the bootstrap sampling procedure on the 189 observations. The motivation of APES is to make exhaustive selection to be fast and thus ideally suited for such a procedure</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="kw">boot_result</span> <span class="op">=</span> <span class="kw">APES</span>::<span class="fu"><a href="../reference/apes.html">apes</a></span>(<span class="kw">full_model</span>, n_boot = <span class="fl">100</span>)
-<span class="kw">boot_result</span>
-</pre></div>
+<span class="va">boot_result</span> <span class="op">=</span> <span class="fu">APES</span><span class="fu">::</span><span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span><span class="va">full_model</span>, n_boot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
+<span class="va">boot_result</span></pre></div>
 </div>
 <div id="variable-importance-plot" class="section level1">
 <h1 class="hasAnchor">
@@ -211,16 +195,14 @@
 <p>The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as a probability of selection against different strength of penalty on the general information criterion. The most stable variable in selection are those which has a high probability of selection with increasingly higher levels of penalisation.</p>
 <p>We can see that the variables in order of strength of stability are <code>ptd</code>, <code>ht</code> and <code>lwt</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"vip"</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></pre></div>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <div id="tile-version-of-vip-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tile-version-of-vip-plot" class="anchor"></a>Tile version of VIP plot</h2>
 <p>This plot is identical in construction as the VIP plot above. However, the probability of selection is used as colours in a tile plot. The most stably selected variables are on the top of the y-axis.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"vip_tile"</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip_tile"</span><span class="op">)</span></pre></div>
 <pre><code>## $apes_mle_beta_binary_plotdf
 ## # A tibble: 110 x 5
 ##    variables model_name    freq_selected model_size freq_selected_category
@@ -248,8 +230,7 @@
 <a href="#model-averaged-coefficient-plot" class="anchor"></a>Model averaged coefficient plot</h2>
 <p>During the bootstrap computation, APES records the best AIC/BIC models across all bootstrap runs. The model estimates from each of these models can be cumulatively averaged across the number of bootstrap runs to examine the stability of the selection. This plot allows us to examine the stability of the model coefficients whereas the previous VIP plots shows only the stability of variable selection.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"ma"</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"ma"</span><span class="op">)</span></pre></div>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div id="information-criterion-pathway-plot" class="section level2">
@@ -257,8 +238,7 @@
 <a href="#information-criterion-pathway-plot" class="anchor"></a>Information criterion pathway plot</h2>
 <p>During the bootstrap computation, APES records the best AIC/BIC models across all bootstrap runs. The AIC/BIC-best model do not always coincide. One way to examine the differences between these models is to look into the model size of the best selected model. Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare of a model of size 2 to be selected by the BIC, with the majority of the models are between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">boot_result</span>, type = <span class="st">"path"</span>, order = <span class="st">"BIC"</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"path"</span>, order <span class="op">=</span> <span class="st">"BIC"</span><span class="op">)</span></pre></div>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
 </div>
@@ -276,8 +256,7 @@
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
 <div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Catalina 10.15.6
@@ -301,25 +280,25 @@
 ##  [1] httr_1.4.2             jsonlite_1.7.1         splines_4.0.2         
 ##  [4] modelr_0.1.8           gtools_3.8.2           assertthat_0.2.1      
 ##  [7] blob_1.2.1             cellranger_1.1.0       yaml_2.2.1            
-## [10] globals_0.12.5         pillar_1.4.6           backports_1.1.9       
+## [10] globals_0.13.0         pillar_1.4.6           backports_1.1.10      
 ## [13] lattice_0.20-41        glue_1.4.2             quadprog_1.5-8        
 ## [16] digest_0.6.25          RColorBrewer_1.1-2     rvest_0.3.6           
 ## [19] colorspace_1.4-1       htmltools_0.5.0        Matrix_1.2-18         
 ## [22] plyr_1.8.6             pkgconfig_2.0.3        broom_0.7.0           
 ## [25] listenv_0.8.0          haven_2.3.1            scales_1.1.1          
 ## [28] cpp11_0.2.1            farver_2.0.3           generics_0.0.2        
-## [31] ellipsis_0.3.1         withr_2.2.0            furrr_0.1.0           
+## [31] ellipsis_0.3.1         withr_2.3.0            furrr_0.1.0           
 ## [34] cli_2.0.2              survival_3.1-12        magrittr_1.5          
 ## [37] crayon_1.3.4           readxl_1.3.1           memoise_1.1.0         
-## [40] evaluate_0.14          fs_1.5.0               future_1.18.0         
+## [40] evaluate_0.14          fs_1.5.0               future_1.19.1         
 ## [43] fansi_0.4.1            xml2_1.3.2             tools_4.0.2           
 ## [46] directlabels_2020.6.17 hms_0.5.3              lifecycle_0.2.0       
 ## [49] munsell_0.5.0          reprex_0.3.0           compiler_4.0.2        
-## [52] pkgdown_1.6.0.9000     systemfonts_0.3.1      rlang_0.4.7           
+## [52] pkgdown_1.6.1.9000     systemfonts_0.3.1      rlang_0.4.7           
 ## [55] grid_4.0.2             rstudioapi_0.11        leaps_3.1             
 ## [58] labeling_0.3           rmarkdown_2.3          gtable_0.3.0          
 ## [61] codetools_0.2-16       DBI_1.1.0              reshape2_1.4.4        
-## [64] R6_2.4.1               lubridate_1.7.9        knitr_1.29            
+## [64] R6_2.4.1               lubridate_1.7.9        knitr_1.30            
 ## [67] utf8_1.1.4             rprojroot_1.3-2        ragg_0.3.1            
 ## [70] desc_1.2.0             stringi_1.5.3          parallel_4.0.2        
 ## [73] Rcpp_1.0.5             vctrs_0.3.4            dbplyr_1.4.4          
@@ -342,7 +321,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
