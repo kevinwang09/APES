@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 [![R build status](https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg)](https://github.com/kevinwang09/APES/actions)
 [![Coverage status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](https://codecov.io/github/kevinwang09/APES?branch=master)
 
-<img src="inst/APES_logo.png" align="right" width="200" />
+<img src="inst/APES_logo.png" align="right" width="300" />
 
 
 APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models. The accompanying paper is [Wang et. al. (2019)](https://doi.org/10.1111/anzs.12276). You can find the vignette [here](https://kevinwang09.github.io/APES/articles/APES.html). 
@@ -58,14 +58,13 @@ model = glm(y ~ ., data = data, family = "binomial")
 ## Running APES selection
 apes_result = apes(model = model)
 apes_result
-apes_result$selected_model_beta
 ```
 
 The best model of each model size are stored and the best model of all can be selected using an information criterion such as the Akaike Information Criterion (AIC) or the Bayesian Information Criterion (BIC). Notice how in the above output of APES, the true model size is identified as 3 and 2 by the AIC and BIC respectively. The selected model estimates are also shown. 
 
 The bootstrap procedure can be used to understand the variable selection stability. The APES package also comes with some plotting functions that displays the bootstrapped results. 
 
-```{r}
+```{r, fig.width=9, fig.height=6}
 boot_result = apes(model = model, n_boot = 20)
 boot_result
 plot(boot_result, type = "vip")

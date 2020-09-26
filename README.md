@@ -8,7 +8,7 @@ status](https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg)](ht
 [![Coverage
 status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](https://codecov.io/github/kevinwang09/APES?branch=master)
 
-<img src="inst/APES_logo.png" align="right" width="200" />
+<img src="inst/APES_logo.png" align="right" width="300" />
 
 APproximated Exhaustive Search (APES) is a model selection method for
 Generalised Linear Models. The accompanying paper is [Wang et.
@@ -62,7 +62,7 @@ model = glm(y ~ ., data = data, family = "binomial")
 ## Running APES selection
 apes_result = apes(model = model)
 apes_result
-#> Time taken:  0.0001035492  minutes 
+#> Time taken:  0.0001027346  minutes 
 #> 
 #>  APES - AIC selected the following variables 
 #> intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -79,29 +79,6 @@ apes_result
 #>     0.000     0.000     0.000     0.221     0.000     0.252    -0.162     0.000 
 #>       X16       X17       X18       X19       X20 
 #>     0.208     0.000     0.000     0.000     0.000
-apes_result$selected_model_beta
-#>           apes_min_aic apes_min_bic
-#> intercept   0.08157786   0.06389384
-#> X1          1.28437711   1.22646979
-#> X2         -1.13676644  -1.09257247
-#> X3          0.00000000   0.00000000
-#> X4         -0.16082625   0.00000000
-#> X5          0.00000000   0.00000000
-#> X6          0.00000000   0.00000000
-#> X7          0.00000000   0.00000000
-#> X8          0.00000000   0.00000000
-#> X9          0.00000000   0.00000000
-#> X10         0.00000000   0.00000000
-#> X11         0.22056007   0.00000000
-#> X12         0.00000000   0.00000000
-#> X13         0.25189145   0.00000000
-#> X14        -0.16229823   0.00000000
-#> X15         0.00000000   0.00000000
-#> X16         0.20846586   0.00000000
-#> X17         0.00000000   0.00000000
-#> X18         0.00000000   0.00000000
-#> X19         0.00000000   0.00000000
-#> X20         0.00000000   0.00000000
 ```
 
 The best model of each model size are stored and the best model of all
@@ -118,7 +95,7 @@ displays the bootstrapped results.
 ``` r
 boot_result = apes(model = model, n_boot = 20)
 boot_result
-#> Time taken:  0.02797757  minutes 
+#> Time taken:  0.03394218  minutes 
 #> Total number of bootstrap APES results:  20
 plot(boot_result, type = "vip")
 ```
