@@ -10,7 +10,9 @@ author:
 - name: Samuel Mueller
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
 output: 
-  rmarkdown::html_vignette
+  rmarkdown::html_vignette:
+    fig_width: 8
+    fig_height: 6
 vignette: |
   %\VignetteIndexEntry{APES}
   %\VignetteEngine{knitr::rmarkdown}
@@ -56,25 +58,31 @@ It is important to note that APES only returns the best approximation to the exh
 
 ```{r}
 apes_result = apes(model = model)
-apes_result
+class(apes_result)
 ```
 
-In `apes_result`, APES will return the best model of each model size. APES will always include the intercept term in the model selection, and thus the selected models are always of size two (one intercept and one variable) and above. In `apes_result`, we see that it only takes a fraction of second to run and that the model selected by the BIC and AIC are of model size 3 and 8. This output is only a mere summary of the computed results. 
+The `apes` function returns a `apes` class object. By default, APES prints out the model selected by the AIC and BIC and the time taken. There are extra computed results in an `apes` object which a user might be interested in further exploring. 
 
 ```{r}
+print(apes_result)
 names(apes_result)
 ```
 
-Note that the BIC is known to be model selection consistent and since we generated this data with two informative variables, thus, the selected model is of model size 3 (including the intercept term). We can examine the precise non-zero coefficients as well. 
+The most important output is `apes_model_df`, which is a `data.frame` of the best model of each model size computed by APES.
 
 ```{r}
-apes_result$selected_model_beta
+apes_result$apes_model_df
+```
+
+APES will always include the intercept term in the model selection, and thus the selected models are always of size two (one intercept and one variable) and above. You may also be interested in plotting `apes_result` using the generic function `plot`
+
+```{r}
+plot(apes_result)
 ```
 
 # More examples
 
-The example above is a mere simulation to illustrate the basic underlying theory of APES. Please see here and here for real-data examples of APES.
-
+The example above is a mere simulation to illustrate the basic underlying theory of APES and the `apes` object. Please see here and here for real-data examples of APES where bootstrap sampling can be used to explore model stability.
 
 # Session Info
 ```{r}

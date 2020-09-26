@@ -29,11 +29,11 @@ plot_vip_tile_boot_apes(x, order = "median")
 
 \item{type}{Type of plot:
 \itemize{
-\item{vi}: Variable inclusion plot in Tarr et. al. 2018.
+\item{vip}: Variable inclusion plot in Tarr et. al. 2018.
 Shows the probability of variability selection across various penalty terms.
 Either "AIC" or "BIC" can be shown using the order argument.
 \item{"vi_tile" (default)}: Similar to "vi", but in a tile format.
-\item{"ic"}: Information criterion vs model size.
+\item{"path"}: Information criterion vs model size.
 Either "AIC" or "BIC" can be shown using the order argument.
 \item{"ma"}: Model averaged coefficient across bootstrap runs.
 The weighted averages can be calculated from either "AIC" or "BIC" using the order argument.

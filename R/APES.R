@@ -45,7 +45,10 @@
 #' y = rbinom(n = n, size = 1, prob = expit(x %*% beta))
 #' data = data.frame(y, x)
 #' model = glm(y ~ ., data = data, family = "binomial")
-#' apes(model = model)
+#' apes_result = apes(model = model)
+#' apes_result
+#' class(apes_result)
+#' names(apes_result)
 #'
 #' ## Poisson regression example
 #' y = rpois(n = n, lambda = exp(x %*% beta))
@@ -151,11 +154,13 @@ apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, really_
 
 #' @export
 print.apes = function(x, ...) {
-  cat("Time taken: \n")
-  print(x$time_used)
+  cat("Time taken: ", x$time_used, " minutes \n")
 
-  cat("\n APES model selection data frame: \n")
-  print(x$apes_model_df)
+  cat("\n APES - AIC selected the following variables \n")
+  print(round(x$selected_model_beta[,"apes_min_bic"], 3))
+
+  cat("\n APES - BIC selected the following variables \n")
+  print(round(x$selected_model_beta[,"apes_min_aic"], 3))
 }
 
 #' @export

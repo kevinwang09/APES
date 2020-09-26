@@ -27,7 +27,7 @@ plot_path_boot_apes = function(x, order = "BIC"){
       ggplot2::theme_classic(18) +
       ggplot2::labs(title = "APES BIC path plot",
                     x = "Model size (including intercept)",
-                    y = "BIC for each bootstrap run") +
+                    y = "BIC") +
       ggplot2::theme(legend.position = "bottom")
   }
 
@@ -41,7 +41,7 @@ plot_path_boot_apes = function(x, order = "BIC"){
       ggplot2::theme_classic(18) +
       ggplot2::labs(title = "APES AIC path plot",
                     x = "Model size (including intercept)",
-                    y = "AIC for each bootstrap run") +
+                    y = "AIC") +
       ggplot2::theme(legend.position = "bottom")
   }
 

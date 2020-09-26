@@ -28,6 +28,7 @@ In this vignette, we will apply APES on the `birthweight` data from the `MASS` p
 library(APES)
 library(MASS)
 library(tidyverse)
+data("birthwt", package = "MASS")
 
 theme_set(theme_classic(14) +
             theme(legend.position = "bottom"))
@@ -35,8 +36,6 @@ theme_set(theme_classic(14) +
 
 ## Loading data
 ```{r}
-data("birthwt", package = "MASS")
-
 bwt <- with(birthwt, {
   race <- factor(race, labels = c("white", "black", "other"))
   ptd <- factor(ptl > 0)

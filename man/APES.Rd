@@ -66,7 +66,10 @@ colnames(x) = paste0("X", 1:p)
 y = rbinom(n = n, size = 1, prob = expit(x \%*\% beta))
 data = data.frame(y, x)
 model = glm(y ~ ., data = data, family = "binomial")
-apes(model = model)
+apes_result = apes(model = model)
+apes_result
+class(apes_result)
+names(apes_result)
 
 ## Poisson regression example
 y = rpois(n = n, lambda = exp(x \%*\% beta))

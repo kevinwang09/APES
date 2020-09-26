@@ -24,13 +24,13 @@ devtools::install_github("kevinwang09/APES")
 
 ## A quick example
 
-Suppose we have a data with 500 rows and 20 variables, and we have
-fitted a logistic regression model. We may wish to perform an exhaustive
-variable selection on such a model to determine which variables produce
-the most parsimonious model. However, performing an exhaustive variable
-selection means looking through 2^20 = 1,048,576 models\! Exhaustive
-variable selection is known to be time consuming, and this might take a
-long time.
+Suppose we have a data with 500 rows and 20 predictor variables, and we
+have fitted a logistic regression model against a binary response
+variable. We may wish to perform an exhaustive variable selection on
+such a model to determine which variables produce the most parsimonious
+model. However, performing an exhaustive variable selection means
+looking through 2^20 = 1,048,576 models\! Exhaustive variable selection
+is known to be time consuming, and this might take a long time.
 
 APES is a variable selection method that first converts the logistic
 model into a linear model and then it uses a best-subset algorithm (such
@@ -62,33 +62,23 @@ model = glm(y ~ ., data = data, family = "binomial")
 ## Running APES selection
 apes_result = apes(model = model)
 apes_result
-#> Time taken: 
-#> Time difference of 0.000280869 mins
+#> Time taken:  0.0001035492  minutes 
 #> 
-#>  APES model selection data frame: 
-#> # A tibble: 20 x 7
-#>    model_name  model_size ic_opt_models apes_mle_loglike mle_aic mle_bic status 
-#>    <chr>            <dbl> <chr>                    <dbl>   <dbl>   <dbl> <chr>  
-#>  1 apes_model…          2 ""                       -296.    597.    605. leaps_…
-#>  2 apes_model…          3 "apes_min_bi…            -251.    507.    520. leaps_…
-#>  3 apes_model…          4 ""                       -250.    508.    524. leaps_…
-#>  4 apes_model…          5 ""                       -248.    506.    527. leaps_…
-#>  5 apes_model…          6 ""                       -246.    503.    529. leaps_…
-#>  6 apes_model…          7 ""                       -245.    504.    533. leaps_…
-#>  7 apes_model…          8 "apes_min_ai…            -243.    502.    536. leaps_…
-#>  8 apes_model…          9 ""                       -243.    504.    542. leaps_…
-#>  9 apes_model…         10 ""                       -242.    504.    546. leaps_…
-#> 10 apes_model…         11 ""                       -242.    506.    552. leaps_…
-#> 11 apes_model…         12 ""                       -242.    508.    558. leaps_…
-#> 12 apes_model…         13 ""                       -242.    509.    564. leaps_…
-#> 13 apes_model…         14 ""                       -242.    511.    570. leaps_…
-#> 14 apes_model…         15 ""                       -242.    513.    576. leaps_…
-#> 15 apes_model…         16 ""                       -242.    515.    582. leaps_…
-#> 16 apes_model…         17 ""                       -241.    517.    589. leaps_…
-#> 17 apes_model…         18 ""                       -241.    519.    595. leaps_…
-#> 18 apes_model…         19 ""                       -241.    521.    601. leaps_…
-#> 19 apes_model…         20 ""                       -241.    523.    607. leaps_…
-#> 20 apes_model…         21 ""                       -240.    523.    611. leaps_…
+#>  APES - AIC selected the following variables 
+#> intercept        X1        X2        X3        X4        X5        X6        X7 
+#>     0.064     1.226    -1.093     0.000     0.000     0.000     0.000     0.000 
+#>        X8        X9       X10       X11       X12       X13       X14       X15 
+#>     0.000     0.000     0.000     0.000     0.000     0.000     0.000     0.000 
+#>       X16       X17       X18       X19       X20 
+#>     0.000     0.000     0.000     0.000     0.000 
+#> 
+#>  APES - BIC selected the following variables 
+#> intercept        X1        X2        X3        X4        X5        X6        X7 
+#>     0.082     1.284    -1.137     0.000    -0.161     0.000     0.000     0.000 
+#>        X8        X9       X10       X11       X12       X13       X14       X15 
+#>     0.000     0.000     0.000     0.221     0.000     0.252    -0.162     0.000 
+#>       X16       X17       X18       X19       X20 
+#>     0.208     0.000     0.000     0.000     0.000
 apes_result$selected_model_beta
 #>           apes_min_aic apes_min_bic
 #> intercept   0.08157786   0.06389384
@@ -128,7 +118,7 @@ displays the bootstrapped results.
 ``` r
 boot_result = apes(model = model, n_boot = 20)
 boot_result
-#> Time taken:  0.0294419  minutes 
+#> Time taken:  0.02797757  minutes 
 #> Total number of bootstrap APES results:  20
 plot(boot_result, type = "vip")
 ```
