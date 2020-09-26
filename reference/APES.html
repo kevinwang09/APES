@@ -213,7 +213,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"binomial"</span><span class='op'>)</span>
 <span class='va'>apes_result</span> <span class='op'>=</span> <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>
 <span class='va'>apes_result</span>
-</div><div class='output co'>#&gt; Time taken:  0.0006331841  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.0007057508  minutes 
 #&gt; 
 #&gt;  APES - AIC selected the following variables 
 #&gt; intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -235,7 +235,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='va'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>x</span><span class='op'>)</span>
 <span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"poisson"</span><span class='op'>)</span>
 <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  7.414818e-06  minutes 
+</div><div class='output co'>#&gt; Time taken:  7.283688e-06  minutes 
 #&gt; 
 #&gt;  APES - AIC selected the following variables 
 #&gt; intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -250,11 +250,11 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 #&gt;    -0.054     0.000     0.000 </div><div class='input'>
 <span class='co'>## Bootstrap examples</span>
 <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  0.004763933  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.005175316  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span>, workers <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  0.001513569  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.001396318  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span>, workers <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  0.09590112  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.0763143  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'>
 <span class='co'>## Cox regression example</span>
 <span class='va'>hx</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>%*%</span> <span class='va'>beta</span><span class='op'>)</span>
@@ -263,7 +263,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='va'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, time <span class='op'>=</span> <span class='va'>time</span>, censor <span class='op'>=</span> <span class='va'>censor</span><span class='op'>)</span>
 <span class='va'>model</span> <span class='op'>=</span> <span class='fu'>survival</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span><span class='op'>(</span><span class='fu'>survival</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='va'>censor</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span><span class='op'>)</span>
 <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  8.598963e-06  minutes 
+</div><div class='output co'>#&gt; Time taken:  8.666515e-06  minutes 
 #&gt; 
 #&gt;  APES - AIC selected the following variables 
 #&gt; intercept        X1        X2        X3        X4        X5        X6        X7 
