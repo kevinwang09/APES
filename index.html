@@ -83,7 +83,7 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#apes-approximated-exhaustive-search-for-glms" class="anchor"></a>APES: APproximated Exhaustive Search for GLMs</h1></div>
 
-<p><img src="inst/APES_logo.png" align="right" width="300"></p>
+<p><img src="https://github.com/kevinwang09/APES/raw/master/inst/APES_logo.png" align="right" width="300"></p>
 <p>APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models. The accompanying paper is <a href="https://doi.org/10.1111/anzs.12276">Wang et. al. (2019)</a>. You can find the vignette <a href="https://kevinwang09.github.io/APES/articles/APES.html">here</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -118,7 +118,7 @@
 <span class="co">## Running APES selection</span>
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
 <span class="va">apes_result</span>
-<span class="co">#&gt; Time taken:  0.0001027346  minutes </span>
+<span class="co">#&gt; Time taken:  0.0001620809  minutes </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  APES - AIC selected the following variables </span>
 <span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span>
@@ -140,7 +140,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="va">boot_result</span> <span class="op">=</span> <span class="fu"><a href="reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, n_boot <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
 <span class="va">boot_result</span>
-<span class="co">#&gt; Time taken:  0.03394218  minutes </span>
+<span class="co">#&gt; Time taken:  0.02859222  minutes </span>
 <span class="co">#&gt; Total number of bootstrap APES results:  20</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
