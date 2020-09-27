@@ -171,7 +171,7 @@
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span><span class="op">)</span>
 
 <span class="va">apes_result</span></pre></div>
-<pre><code>## Time taken:  0.0001127005  minutes 
+<pre><code>## Time taken:  0.0001141667  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -209,7 +209,7 @@
 ## ftv2+         -0.194      0.458  -0.423    0.672</code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span><span class="va">full_model2</span><span class="op">)</span></pre></div>
-<pre><code>## Time taken:  9.53277e-06  minutes 
+<pre><code>## Time taken:  8.567174e-06  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -251,33 +251,13 @@
 <p>This plot is identical in construction as the VIP plot above. However, the probability of selection is used as colours in a tile plot. The most stably selected variables are on the top of the y-axis.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip_tile"</span><span class="op">)</span></pre></div>
-<pre><code>## $apes_mle_beta_binary_plotdf
-## # A tibble: 110 x 5
-##    variables model_name    freq_selected model_size freq_selected_category
-##    &lt;fct&gt;     &lt;fct&gt;                 &lt;dbl&gt;      &lt;int&gt; &lt;fct&gt;                 
-##  1 intercept apes_model_2              1          2 (0.8,1]               
-##  2 intercept apes_model_3              1          3 (0.8,1]               
-##  3 intercept apes_model_4              1          4 (0.8,1]               
-##  4 intercept apes_model_5              1          5 (0.8,1]               
-##  5 intercept apes_model_6              1          6 (0.8,1]               
-##  6 intercept apes_model_7              1          7 (0.8,1]               
-##  7 intercept apes_model_8              1          8 (0.8,1]               
-##  8 intercept apes_model_9              1          9 (0.8,1]               
-##  9 intercept apes_model_10             1         10 (0.8,1]               
-## 10 intercept apes_model_11             1         11 (0.8,1]               
-## # … with 100 more rows
-## 
-## $var_tile_plot</code></pre>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<pre><code>## 
-## $var_tile_plot_category</code></pre>
-<p><img src="birthweight_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
 </div>
 <div id="model-averaged-coefficient-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-averaged-coefficient-plot" class="anchor"></a>Model averaged coefficient plot</h2>
 <p>APES stores all the coefficient estimates in each bootstrap run. We can use this information to compute cumulative averages of variable coefficients. This plot allows us to examine the stability of the model coefficient estimates whereas the previous VIP plots shows only the stability of variable selection.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit">
+<div class="sourceCode" id="cb18"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"ma"</span><span class="op">)</span></pre></div>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
@@ -285,7 +265,7 @@
 <h2 class="hasAnchor">
 <a href="#information-criterion-pathway-plot" class="anchor"></a>Information criterion pathway plot</h2>
 <p>During the bootstrap computation, APES records the best AIC/BIC models across all bootstrap runs. The AIC/BIC-best model do not always coincide. One way to examine the differences between these models is to look into the model size of the best selected model. Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare of a model of size 2 to be selected by the BIC, with the majority of the models are between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit">
+<div class="sourceCode" id="cb19"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"path"</span>, order <span class="op">=</span> <span class="st">"BIC"</span><span class="op">)</span></pre></div>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
@@ -294,7 +274,7 @@
 <h1 class="hasAnchor">
 <a href="#parallel-processing" class="anchor"></a>Parallel processing</h1>
 <p>For large number of bootstrap runs, one might consider using parallel processing to reduce the total computational time. The parallel backend support of <code>APES</code> uses the <code>furrr</code> package. To invoke parallel processing, this requires a single parameter <code>workers</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit">
+<div class="sourceCode" id="cb20"><pre class="downlit">
 <span class="va">parallel_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span>, n_boot <span class="op">=</span> <span class="fl">100</span>, workers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="va">parallel_result</span></pre></div>
 </div>
@@ -311,7 +291,7 @@
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb23"><pre class="downlit">
+<div class="sourceCode" id="cb21"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
@@ -333,32 +313,25 @@
 ##  [9] tidyverse_1.3.0 MASS_7.3-51.6   APES_0.6.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.4.2             jsonlite_1.7.1         splines_4.0.2         
-##  [4] modelr_0.1.8           gtools_3.8.2           assertthat_0.2.1      
-##  [7] blob_1.2.1             cellranger_1.1.0       yaml_2.2.1            
-## [10] globals_0.13.0         pillar_1.4.6           backports_1.1.10      
-## [13] lattice_0.20-41        glue_1.4.2             quadprog_1.5-8        
-## [16] digest_0.6.25          RColorBrewer_1.1-2     rvest_0.3.6           
-## [19] colorspace_1.4-1       htmltools_0.5.0        Matrix_1.2-18         
-## [22] plyr_1.8.6             pkgconfig_2.0.3        broom_0.7.0           
-## [25] listenv_0.8.0          haven_2.3.1            scales_1.1.1          
-## [28] cpp11_0.2.1            farver_2.0.3           generics_0.0.2        
-## [31] ellipsis_0.3.1         withr_2.3.0            furrr_0.1.0           
-## [34] cli_2.0.2              survival_3.1-12        magrittr_1.5          
-## [37] crayon_1.3.4           readxl_1.3.1           memoise_1.1.0         
-## [40] evaluate_0.14          fs_1.5.0               future_1.19.1         
-## [43] fansi_0.4.1            xml2_1.3.2             tools_4.0.2           
-## [46] directlabels_2020.6.17 hms_0.5.3              lifecycle_0.2.0       
-## [49] munsell_0.5.0          reprex_0.3.0           compiler_4.0.2        
-## [52] pkgdown_1.6.1.9000     systemfonts_0.3.1      rlang_0.4.7           
-## [55] grid_4.0.2             rstudioapi_0.11        leaps_3.1             
-## [58] labeling_0.3           rmarkdown_2.3          gtable_0.3.0          
-## [61] codetools_0.2-16       DBI_1.1.0              reshape2_1.4.4        
-## [64] R6_2.4.1               lubridate_1.7.9        knitr_1.30            
-## [67] utf8_1.1.4             rprojroot_1.3-2        ragg_0.3.1            
-## [70] desc_1.2.0             stringi_1.5.3          parallel_4.0.2        
-## [73] Rcpp_1.0.5             vctrs_0.3.4            dbplyr_1.4.4          
-## [76] tidyselect_1.1.0       xfun_0.17</code></pre>
+##  [1] httr_1.4.2         jsonlite_1.7.1     splines_4.0.2      modelr_0.1.8      
+##  [5] gtools_3.8.2       assertthat_0.2.1   blob_1.2.1         cellranger_1.1.0  
+##  [9] yaml_2.2.1         ggrepel_0.8.2      globals_0.13.0     pillar_1.4.6      
+## [13] backports_1.1.10   lattice_0.20-41    glue_1.4.2         digest_0.6.25     
+## [17] RColorBrewer_1.1-2 rvest_0.3.6        colorspace_1.4-1   htmltools_0.5.0   
+## [21] Matrix_1.2-18      plyr_1.8.6         pkgconfig_2.0.3    broom_0.7.0       
+## [25] listenv_0.8.0      haven_2.3.1        scales_1.1.1       cpp11_0.2.1       
+## [29] farver_2.0.3       generics_0.0.2     ellipsis_0.3.1     withr_2.3.0       
+## [33] furrr_0.1.0        cli_2.0.2          survival_3.1-12    magrittr_1.5      
+## [37] crayon_1.3.4       readxl_1.3.1       memoise_1.1.0      evaluate_0.14     
+## [41] fs_1.5.0           future_1.19.1      fansi_0.4.1        xml2_1.3.2        
+## [45] tools_4.0.2        hms_0.5.3          lifecycle_0.2.0    munsell_0.5.0     
+## [49] reprex_0.3.0       compiler_4.0.2     pkgdown_1.6.1.9000 systemfonts_0.3.1 
+## [53] rlang_0.4.7        grid_4.0.2         rstudioapi_0.11    leaps_3.1         
+## [57] labeling_0.3       rmarkdown_2.3      gtable_0.3.0       codetools_0.2-16  
+## [61] DBI_1.1.0          reshape2_1.4.4     R6_2.4.1           lubridate_1.7.9   
+## [65] knitr_1.30         utf8_1.1.4         rprojroot_1.3-2    ragg_0.3.1        
+## [69] desc_1.2.0         stringi_1.5.3      parallel_4.0.2     Rcpp_1.0.5        
+## [73] vctrs_0.3.4        dbplyr_1.4.4       tidyselect_1.1.0   xfun_0.17</code></pre>
 </div>
   </div>
 
