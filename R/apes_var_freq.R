@@ -2,10 +2,9 @@
 #' @param list_result a list of APES outputs
 #' @param ic Either "AIC" or "BIC"
 #' @author Kevin Wang
-#' @import dplyr
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_dfr
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>% desc
 #' @importFrom rlang .data
 #' @export
 #' @examples
@@ -24,26 +23,25 @@
 #'
 #' apes_var_freq(list_result = list_result, ic = "AIC")
 #' apes_var_freq(list_result = list_result, ic = "BIC")
-
 apes_var_freq = function(list_result, ic = "BIC"){
   list_apes_model_df = purrr::map_dfr(list_result, "apes_model_df",  .id = "boot_num") %>%
-    dplyr::mutate(boot_num_model_name = base::paste(boot_num, model_name, sep = "_"))
+    dplyr::mutate(boot_num_model_name = base::paste(.data$boot_num, .data$model_name, sep = "_"))
 
   list_apes_mle_beta_binary = purrr::map_dfr(list_result, "apes_mle_beta_binary",  .id = "boot_num") %>%
-    dplyr::mutate(boot_num_model_name = base::paste(boot_num, model_name, sep = "_"))
+    dplyr::mutate(boot_num_model_name = base::paste(.data$boot_num, .data$model_name, sep = "_"))
 
   if(ic == "AIC"){
     ic_optimal_models = list_apes_model_df %>%
-      dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_aic"))
+      dplyr::filter(stringr::str_detect(.data$ic_opt_models, "apes_min_aic"))
   }
 
   if(ic == "BIC"){
     ic_optimal_models = list_apes_model_df %>%
-      dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_bic"))
+      dplyr::filter(stringr::str_detect(.data$ic_opt_models, "apes_min_bic"))
   }
 
   ic_optimal_variables = list_apes_mle_beta_binary %>%
-    dplyr::filter(boot_num_model_name %in% ic_optimal_models$boot_num_model_name)
+    dplyr::filter(.data$boot_num_model_name %in% ic_optimal_models$boot_num_model_name)
 
   ic_optimal_variables_freq = ic_optimal_variables %>%
     dplyr::group_by(variables) %>%

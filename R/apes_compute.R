@@ -1,3 +1,4 @@
+#' @importFrom purrr map_dbl
 apes_compute = function(x, y, fitted_values, linear_predictors, variable_names, k, estimator = "leaps", model_type, time_limit = 10, verbose = FALSE){
   if(model_type == "binomial"){
     linear_y = logit(fitted_values) + (y - fitted_values)/(fitted_values * (1 - fitted_values))
@@ -146,7 +147,7 @@ apes_compute = function(x, y, fitted_values, linear_predictors, variable_names, 
 
   apes_mle_beta_binary = reshape2::melt(apes_mle_beta != 0,
                                         varnames = c("variables", "model_name"),
-                                        value.name = "fitted_beta") %>% as_tibble()
+                                        value.name = "fitted_beta") %>% tibble::as_tibble()
 
   selected_model_beta = cbind(apes_min_aic = minIcMatrix(ic = apes_mle_aic, mat = apes_mle_beta),
                               apes_min_bic = minIcMatrix(ic = apes_mle_bic, mat = apes_mle_beta))

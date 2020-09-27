@@ -24,13 +24,12 @@
 #' @param workers Number of cores used for parallel processing for the bootstrap
 #' @return Either an object of class "apes" in case "n_boot" is set to zero or
 #' an object of class "boot_apes" in case "n_boot" is set to a positive integer.
-#' @import tibble
+#' @importFrom tibble tibble
 #' @import furrr
 #' @import future
 #' @importFrom rlang .data
-#' @importFrom magrittr %>%
 #' @importFrom survival coxph Surv
-#' @import dplyr
+#' @importFrom dplyr %>%
 #' @export
 #' @examples
 #' set.seed(10)

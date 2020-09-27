@@ -14,7 +14,6 @@
 #' @importFrom purrr map map2_dfr
 #' @importFrom forcats fct_reorder
 #' @importFrom rlang .data
-#' @importFrom ggrepel geom_text_repel
 #' @return a variable inclusion plot in ggplot format. An attribute of the name
 #' plotdf is a tibble with all the necessary values to plot a variable inclusion plot
 #' @rdname plot.boot_apes

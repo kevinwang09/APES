@@ -4,7 +4,7 @@
 #' @author Kevin Wang
 #' @import ggplot2
 #' @import purrr
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @rdname plot.boot_apes
 #' @return A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.
 #' @export

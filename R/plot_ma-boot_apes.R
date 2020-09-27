@@ -2,18 +2,17 @@
 #' @param x An object of class \code{boot_apes}
 #' @param order either "BIC" (default) or "AIC"
 #' @author Kevin Wang
-#' @import dplyr
+#' @importFrom dplyr %>%
 #' @import ggplot2
-#' @import purrr
-#' @import directlabels
-#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @importFrom ggrepel geom_text_repel
 #' @return A ggplot. From each bootstrap run, APES stores coefficient values averaged across all models considered.
 #' As we have multiple bootstrapped APES output, we can cummulatively average
 #' these model averaged coefficient values across all bootstrap runs.
 #' On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
 #' @rdname plot.boot_apes
 #' @export
-plot_ma_boot_apes = function(x, order = "BIC"){
+plot_ma_boot_apes = function(x, order = "BIC", max_vars = NULL){
   model_avg_beta = purrr::map(x, "model_avg_beta")
 
   stopifnot(order %in% c("AIC", "BIC"))
@@ -35,6 +34,17 @@ plot_ma_boot_apes = function(x, order = "BIC"){
     varnames = c("cum_boot_num", "variables"),
     value.name = "ma_values")
 
+  p = length(unique(cummean_model_avg_plotdf$variables))
+  if(is.null(max_vars)){
+    max_vars = p
+  }
+
+  label_tbl = cummean_model_avg_plotdf %>%
+    dplyr::filter(cum_boot_num == max(cum_boot_num)) %>%
+    dplyr::mutate(label = variables %>%
+                    forcats::fct_reorder(abs(ma_values), .desc = TRUE),
+                  label = ifelse(label %in% levels(label)[seq_len(max_vars)], as.character(label), NA))
+
   result = cummean_model_avg_plotdf %>%
     ggplot2::ggplot(aes(
       x = .data$cum_boot_num,
@@ -43,10 +53,10 @@ plot_ma_boot_apes = function(x, order = "BIC"){
       group = .data$variables,
       label = .data$variables)) +
     ggplot2::geom_line() +
-    directlabels::geom_dl(
-      method = list("last.qp",
-                    cex = 1.2,
-                    directlabels::dl.trans(x = x + 0.5))) +
+    ggrepel::geom_text_repel(data = label_tbl,
+                             mapping = aes(label = label),
+                             direction = "y", seed = 1, segment.color = NA) +
+    ggplot2::geom_hline(yintercept = 0) +
     ggplot2::xlim(1, nrow(cummean_model_avg) + 5) +
     ggplot2::labs(
       title = paste("Cumulative MA coefficients using ", order),

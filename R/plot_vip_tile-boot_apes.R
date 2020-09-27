@@ -2,15 +2,17 @@
 #' @description This function displays the same information as plot_vi, but in a tile plot format.
 #' @param x An object of class \code{boot_apes}
 #' @param order The ordering of variables. Either "median", "AIC" or "BIC"
+#' @param categorical If categorised colour scheme should be used. Default to FALSE.
 #' @author Kevin Wang
-#' @import dplyr
 #' @import ggplot2
-#' @import purrr
-#' @import directlabels
-#' @import RColorBrewer
-#' @import forcats
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>% pull group_by summarise ungroup filter mutate bind_rows coalesce
+#' @importFrom purrr map_dfr
+#' @importFrom stringr str_detect str_replace_all
 #' @importFrom stats median
+#' @importFrom tibble as_tibble
+#' @importFrom forcats fct_shift fct_relevel fct_reorder
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom grDevices colorRampPalette
 #' @return A list. \itemize{
 #' \item \code{apes_mle_beta_binary_plotdf} a tibble with all the necessary values to plot a tile variable inclusion plot
 #' \item \code{var_tile_plot} a ggplot with continuous colouring
@@ -18,7 +20,7 @@
 #' }
 #' @rdname plot.boot_apes
 #' @export
-plot_vip_tile_boot_apes = function(x, order = "median"){
+plot_vip_tile_boot_apes = function(x, order = "median", categorical = FALSE){
   apes_mle_beta_binary_bind = purrr::map_dfr(x, "apes_mle_beta_binary", .id = "boot_num")
   apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num")
 
@@ -84,58 +86,51 @@ plot_vip_tile_boot_apes = function(x, order = "median"){
           forcats::fct_shift())
   }
 
+  if(categorical){
+    result = apes_mle_beta_binary_plotdf %>%
+      ggplot2::ggplot(aes(x = .data$model_size,
+                          y = .data$variables,
+                          fill = .data$freq_selected_category)) +
+      ggplot2::geom_tile(colour = "gray") +
+      ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
+      ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
+      ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
+      ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
+      ggplot2::scale_fill_manual(
+        values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(3, "YlGnBu"))(5)
+      ) +
+      ggplot2::labs(
+        x = "Model size (including intercept)",
+        y = "Variables",
+        fill = "Selection frequency",
+        title = "Variable inclusion tile plot") +
+      ggplot2::theme_classic(18) +
+      ggplot2::theme(legend.position = "bottom")
 
+  } else {
+    result = apes_mle_beta_binary_plotdf %>%
+      ggplot2::ggplot(aes(x = .data$model_size,
+                          y = .data$variables,
+                          fill = .data$freq_selected)) +
+      ggplot2::geom_tile(colour = "gray") +
+      ggplot2::scale_x_continuous(breaks = seq(min(apes_mle_beta_binary_plotdf$model_size),
+                                               max(apes_mle_beta_binary_plotdf$model_size), by = 1L)) +
+      ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
+      ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
+      ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
+      ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
+      ggplot2::scale_fill_distiller(palette = "Spectral", direction = -1, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = c(0, 1)) +
+      ggplot2::labs(
+        x = "Model size (including intercept)",
+        y = "Variables",
+        fill = "Selection frequency",
+        title = "Variable inclusion tile plot, continuous colouring") +
+      ggplot2::theme_classic(18) +
+      ggplot2::theme(legend.text = element_text(angle = 90, vjust = 0.5),
+                     legend.position = "bottom")
+  }
 
-  var_tile_plot = apes_mle_beta_binary_plotdf %>%
-    ggplot2::ggplot(aes(x = .data$model_size,
-               y = .data$variables,
-               fill = .data$freq_selected)) +
-    ggplot2::geom_tile(colour = "gray") +
-    ggplot2::scale_x_continuous(breaks = seq(min(apes_mle_beta_binary_plotdf$model_size),
-                                             max(apes_mle_beta_binary_plotdf$model_size), by = 1L)) +
-    ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
-    ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
-    ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
-    ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
-    ggplot2::scale_fill_distiller(palette = "Spectral", direction = -1, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = c(0, 1)) +
-    ggplot2::labs(
-      x = "Model size (including intercept)",
-      y = "Variables",
-      fill = "Selection frequency",
-      title = "Variable inclusion tile plot, continuous colouring") +
-    ggplot2::theme_classic(18) +
-    ggplot2::theme(legend.text = element_text(angle = 90, vjust = 0.5),
-                   legend.position = "bottom")
-
-
-  var_tile_plot_category = apes_mle_beta_binary_plotdf %>%
-    ggplot2::ggplot(aes(x = .data$model_size,
-               y = .data$variables,
-               fill = .data$freq_selected_category)) +
-    ggplot2::geom_tile(colour = "gray") +
-    ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
-    ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
-    ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
-    ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
-    ggplot2::scale_fill_manual(
-      values = grDevices::colorRampPalette(RColorBrewer::brewer.pal(3, "YlGnBu"))(5)
-    ) +
-    ggplot2::labs(
-      x = "Model size (including intercept)",
-      y = "Variables",
-      fill = "Selection frequency",
-      title = "Variable inclusion tile plot") +
-    ggplot2::theme_classic(18) +
-    ggplot2::theme(legend.position = "bottom")
-
-  # variableTilePlot_category
-
-  result = list(
-    apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf,
-    var_tile_plot = var_tile_plot,
-    var_tile_plot_category = var_tile_plot_category
-  )
-
+  attr(result, "plotdf") = apes_mle_beta_binary_plotdf
 
   return(result)
 }

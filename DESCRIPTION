@@ -14,7 +14,6 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: false
 Imports:
-    directlabels,
     dplyr,
     forcats,
     furrr,
@@ -22,7 +21,6 @@ Imports:
     ggplot2,
     gtools,
     leaps,
-    magrittr,
     purrr,
     RColorBrewer,
     reshape2,
@@ -31,7 +29,8 @@ Imports:
     tibble,
     rlang,
     tidyr,
-    mplot
+    mplot,
+    ggrepel
 Suggests:
     bestsubset (>= 1.0.10),
     covr,

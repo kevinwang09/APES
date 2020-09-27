@@ -11,8 +11,11 @@
 #' \item{"ma"}: Model averaged coefficient across bootstrap runs.
 #' The weighted averages can be calculated from either "AIC" or "BIC" using the order argument.
 #' }
-#' @param order Either "AIC", "BIC". If type is selected to be "vi_tile", then also takes the value "median".
-#' @param ... additional parameters (not currently used)
+#' @param max_vars Maximum number of variables to label. Default to NULL which plots all variables.
+#' @param ... Additional parameters. Some options are:
+#' \itemize{
+#' \item{"order"}: Either "AIC", "BIC". If type is selected to be "vi_tile", then also takes the value "median".
+#' }
 #' @rdname plot.boot_apes
 #' @return A ggplot output corresponding to the select plotting type.
 #' @export
@@ -28,23 +31,21 @@
 #' data = data.frame(y, x)
 #' model = glm(y ~ ., data = data, family = "binomial")
 #'
-#' list_result = apes(model = model, n_boot = 20)
+#' boot_result = apes(model = model, n_boot = 20)
 #'
-#' plot(list_result, type = "vip_tile")
-#' plot(list_result, type = "vip")
-#' plot(list_result, type = "path")
-#' plot(list_result, type = "ma")
-plot.boot_apes = function(x, type = c("vip_tile", "vip", "path", "ma"), order = c("BIC", "AIC", "median"), ...){
+#' plot(boot_result, type = "vip_tile")
+#' plot(boot_result, type = "vip")
+#' plot(boot_result, type = "path")
+#' plot(boot_result, type = "ma")
+plot.boot_apes = function(x,
+                          type = c("vip_tile", "vip", "path", "ma"),
+                          max_vars = NULL, ...){
   type = match.arg(type)
-  order = match.arg(order)
 
-  if(order == "median" & type == "path") {
-    stop("Path plot does not accept 'median' as order input")
-  }
 
   switch(type,
-         vip_tile = plot_vip_tile_boot_apes(x = x, order = order),
-         vip = plot_vip_boot_apes(x = x),
-         path = plot_path_boot_apes(x = x, order = order),
-         ma = plot_ma_boot_apes(x = x, order = order))
+         vip_tile = plot_vip_tile_boot_apes(x = x, ...),
+         vip = plot_vip_boot_apes(x = x, ...),
+         path = plot_path_boot_apes(x = x, ...),
+         ma = plot_ma_boot_apes(x = x, ...))
 }
