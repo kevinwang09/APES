@@ -44,9 +44,9 @@ apes_var_freq = function(list_result, ic = "BIC"){
     dplyr::filter(.data$boot_num_model_name %in% ic_optimal_models$boot_num_model_name)
 
   ic_optimal_variables_freq = ic_optimal_variables %>%
-    dplyr::group_by(variables) %>%
-    dplyr::summarise(freq = mean(fitted_beta), .groups = "drop") %>%
-    dplyr::arrange(dplyr::desc(freq)) %>%
+    dplyr::group_by(.data$variables) %>%
+    dplyr::summarise(freq = mean(.data$fitted_beta), .groups = "drop") %>%
+    dplyr::arrange(dplyr::desc(.data$freq)) %>%
     dplyr::ungroup()
 
   return(ic_optimal_variables_freq)

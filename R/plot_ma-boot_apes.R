@@ -40,10 +40,10 @@ plot_ma_boot_apes = function(x, order = "BIC", max_vars = NULL){
   }
 
   label_tbl = cummean_model_avg_plotdf %>%
-    dplyr::filter(cum_boot_num == max(cum_boot_num)) %>%
-    dplyr::mutate(label = variables %>%
-                    forcats::fct_reorder(abs(ma_values), .desc = TRUE),
-                  label = ifelse(label %in% levels(label)[seq_len(max_vars)], as.character(label), NA))
+    dplyr::filter(.data$cum_boot_num == max(.data$cum_boot_num)) %>%
+    dplyr::mutate(label = .data$variables %>%
+                    forcats::fct_reorder(abs(.data$ma_values), .desc = TRUE),
+                  label = ifelse(.data$label %in% levels(.data$label)[seq_len(max_vars)], as.character(.data$label), NA))
 
   result = cummean_model_avg_plotdf %>%
     ggplot2::ggplot(aes(
@@ -54,7 +54,7 @@ plot_ma_boot_apes = function(x, order = "BIC", max_vars = NULL){
       label = .data$variables)) +
     ggplot2::geom_line() +
     ggrepel::geom_text_repel(data = label_tbl,
-                             mapping = aes(label = label),
+                             mapping = aes(label = .data$label),
                              direction = "y", seed = 1, segment.color = NA) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::xlim(1, nrow(cummean_model_avg) + 5) +

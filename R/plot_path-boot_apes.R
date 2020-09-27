@@ -3,17 +3,18 @@
 #' @param order Either "BIC" (default) or "AIC"
 #' @author Kevin Wang
 #' @import ggplot2
-#' @import purrr
+#' @importFrom purrr map_dfr
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #' @rdname plot.boot_apes
 #' @return A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.
 #' @export
 plot_path_boot_apes = function(x, order = "BIC"){
   apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num") %>%
-    group_by(boot_num) %>%
+    group_by(.data$boot_num) %>%
     dplyr::mutate(
-      mle_bic_min = (mle_bic == min(mle_bic)),
-      mle_aic_min = (mle_aic == min(mle_aic))
+      mle_bic_min = (.data$mle_bic == min(.data$mle_bic)),
+      mle_aic_min = (.data$mle_aic == min(.data$mle_aic))
     )
 
 

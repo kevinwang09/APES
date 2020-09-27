@@ -13,6 +13,7 @@
 #' @importFrom forcats fct_shift fct_relevel fct_reorder
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom grDevices colorRampPalette
+#' @importFrom rlang .data
 #' @return A list. \itemize{
 #' \item \code{apes_mle_beta_binary_plotdf} a tibble with all the necessary values to plot a tile variable inclusion plot
 #' \item \code{var_tile_plot} a ggplot with continuous colouring
@@ -25,19 +26,19 @@ plot_vip_tile_boot_apes = function(x, order = "median", categorical = FALSE){
   apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num")
 
   aic_opt_median_size = apes_model_df_bind %>%
-    dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_aic")) %>%
-    dplyr::pull(model_size) %>% stats::median(na.rm = TRUE)
+    dplyr::filter(stringr::str_detect(.data$ic_opt_models, "apes_min_aic")) %>%
+    dplyr::pull(.data$model_size) %>% stats::median(na.rm = TRUE)
   bic_opt_median_size = apes_model_df_bind %>%
-    dplyr::filter(stringr::str_detect(ic_opt_models, "apes_min_bic")) %>%
-    dplyr::pull(model_size) %>% stats::median(na.rm = TRUE)
+    dplyr::filter(stringr::str_detect(.data$ic_opt_models, "apes_min_bic")) %>%
+    dplyr::pull(.data$model_size) %>% stats::median(na.rm = TRUE)
 
   apes_mle_beta_binary_plotdf = apes_mle_beta_binary_bind %>%
-    dplyr::group_by(variables, model_name) %>%
-    dplyr::summarise(freq_selected = mean(fitted_beta), .groups = "drop") %>%
+    dplyr::group_by(.data$variables, .data$model_name) %>%
+    dplyr::summarise(freq_selected = mean(.data$fitted_beta), .groups = "drop") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      model_size = stringr::str_replace_all(model_name, "apes_model_", "") %>% as.integer,
-      freq_selected_category = base::cut(freq_selected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE)) %>%
+      model_size = stringr::str_replace_all(.data$model_name, "apes_model_", "") %>% as.integer,
+      freq_selected_category = base::cut(.data$freq_selected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE)) %>%
     tibble::as_tibble()
 
   all_model_size = apes_mle_beta_binary_plotdf$model_size %>% unique
@@ -46,24 +47,24 @@ plot_vip_tile_boot_apes = function(x, order = "median", categorical = FALSE){
     apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf %>%
       dplyr::mutate(
         variables = forcats::fct_reorder(
-          variables, freq_selected, stats::quantile, 0.5) %>%
+          .data$variables, .data$freq_selected, stats::quantile, 0.5) %>%
           forcats::fct_relevel("intercept") %>%
           forcats::fct_shift())
   }
 
   if(order == "AIC"){
     by_aic = apes_mle_beta_binary_plotdf %>%
-      dplyr::filter(model_size == all_model_size[which.min(abs(all_model_size - aic_opt_median_size))]) %>%
+      dplyr::filter(.data$model_size == all_model_size[which.min(abs(all_model_size - aic_opt_median_size))]) %>%
       dplyr::mutate(
-        freq_selected = dplyr::coalesce(freq_selected, 0),
+        freq_selected = dplyr::coalesce(.data$freq_selected, 0),
         variables = forcats::fct_reorder(
-          variables, freq_selected) %>%
+          .data$variables, .data$freq_selected) %>%
           forcats::fct_relevel("intercept") %>%
           forcats::fct_shift())
 
     apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf %>%
       dplyr::mutate(
-        variables = forcats::fct_relevel(variables, levels(by_aic$variables)) %>%
+        variables = forcats::fct_relevel(.data$variables, levels(by_aic$variables)) %>%
           forcats::fct_relevel("intercept") %>%
           forcats::fct_shift())
   }
@@ -71,17 +72,17 @@ plot_vip_tile_boot_apes = function(x, order = "median", categorical = FALSE){
 
   if(order == "BIC"){
     by_bic = apes_mle_beta_binary_plotdf %>%
-      dplyr::filter(model_size == all_model_size[which.min(abs(all_model_size - bic_opt_median_size))]) %>%
+      dplyr::filter(.data$model_size == all_model_size[which.min(abs(all_model_size - bic_opt_median_size))]) %>%
       dplyr::mutate(
-        freq_selected = dplyr::coalesce(freq_selected, 0),
+        freq_selected = dplyr::coalesce(.data$freq_selected, 0),
         variables = forcats::fct_reorder(
-          variables, freq_selected) %>%
+          .data$variables, .data$freq_selected) %>%
           forcats::fct_relevel("intercept") %>%
           forcats::fct_shift())
 
     apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf %>%
       dplyr::mutate(
-        variables = forcats::fct_relevel(variables, levels(by_bic$variables)) %>%
+        variables = forcats::fct_relevel(.data$variables, levels(by_bic$variables)) %>%
           forcats::fct_relevel("intercept") %>%
           forcats::fct_shift())
   }

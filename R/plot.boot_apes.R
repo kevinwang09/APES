@@ -18,6 +18,7 @@
 #' }
 #' @rdname plot.boot_apes
 #' @return A ggplot output corresponding to the select plotting type.
+#' @importFrom graphics plot
 #' @export
 #' @examples
 #' set.seed(10)

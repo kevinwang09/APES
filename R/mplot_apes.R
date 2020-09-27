@@ -4,7 +4,8 @@
 #' @param interactive Default to FALSE.
 #' If TRUE, then googleVis will be used to make an interactive plot.
 #' @importFrom tidyr pivot_wider
-#' @importFrom dplyr select
+#' @importFrom dplyr select %>%
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' set.seed(10)
@@ -45,10 +46,10 @@ convert_to_mplot_vis = function(boot_apes, model){
   list_apes_model_df = purrr::map(.x = boot_apes, "apes_model_df")
   list_apes_mle_beta_binary = purrr::map(
     .x = boot_apes,
-    .f = function(x){x[["apes_mle_beta_binary"]]%>%
-        tidyr::pivot_wider(names_from = variables,
-                           values_from = fitted_beta) %>%
-        dplyr::select(-model_name)})
+    .f = function(x){x[["apes_mle_beta_binary"]] %>%
+        tidyr::pivot_wider(names_from = .data$variables,
+                           values_from = .data$fitted_beta) %>%
+        dplyr::select(-.data$model_name)})
   rownames(var.in) = lambdas
 
   for (i in 1:length(lambdas)) {
