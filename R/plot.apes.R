@@ -5,7 +5,6 @@
 #' \item{"path"}: Information criterion vs model size.
 #' Either "AIC" or "BIC" can be shown using the order argument.
 #' }
-#' @param order Either "AIC", "BIC". If type is selected to be "vi_tile", then also takes the value "median".
 #' @param ... additional parameters (not currently used)
 #' @rdname plot.apes
 #' @return A ggplot output corresponding to the select plotting type.
@@ -24,14 +23,9 @@
 #'
 #' apes_result = apes(model = model)
 #' plot(apes_result)
-plot.apes = function(x, type = "path", order = c("BIC", "AIC", "median"), ...){
+plot.apes = function(x, type = "path", ...){
   type = match.arg(type)
-  order = match.arg(order)
-
-  if(order == "median" & type == "path") {
-    stop("Path plot does not accept 'median' as order input")
-  }
 
   switch(type,
-         path = plot_path_boot_apes(x = list(x), order = order))
+         path = plot_path_boot_apes(x = list(x), ...))
 }

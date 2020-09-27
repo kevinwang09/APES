@@ -49,19 +49,19 @@ plot_vip_boot_apes = function(x, max_vars = NULL){
   }
 
   label_tbl = boot_vars_plotdf %>%
-    dplyr::filter(penalty == max(penalty)) %>%
-    dplyr::mutate(label = variables %>%
-                    forcats::fct_reorder(boot_select_prob, .desc = TRUE),
-                  label = ifelse(label %in% levels(label)[seq_len(max_vars)], as.character(label), NA))
+    dplyr::filter(.data$penalty == max(.data$penalty)) %>%
+    dplyr::mutate(label = .data$variables %>%
+                    forcats::fct_reorder(.data$boot_select_prob, .desc = TRUE),
+                  label = ifelse(.data$label %in% levels(.data$label)[seq_len(max_vars)], as.character(.data$label), NA))
 
   vip = boot_vars_plotdf %>%
     ggplot2::ggplot(
-      mapping = aes(x = penalty,
-                    y = boot_select_prob,
-                    colour = variables,
-                    group = variables)) +
+      mapping = aes(x = .data$penalty,
+                    y = .data$boot_select_prob,
+                    colour = .data$variables,
+                    group = .data$variables)) +
     ggrepel::geom_text_repel(data = label_tbl,
-                             mapping = aes(x = penalty + 0.5,
+                             mapping = aes(x = .data$penalty + 0.5,
                                            label = label),
                              direction = "y", seed = 1, segment.color = NA) +
     ggplot2::geom_step(alpha = 0.7) +

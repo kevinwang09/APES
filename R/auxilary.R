@@ -144,6 +144,7 @@ refittingMle_poisson = function(indicator, X, yPois){
 #####################################
 ## Given an indicators of variables, design matrix and the yBinom, we refit the Cox. X should not have an Intercept term
 refitting_cox = function(indicator, x, y){
-  xtmp = x[,indicator, drop = FALSE]
-  return(survival::coxph(y ~ xtmp))
+
+  temp = data.frame(x[,indicator, drop = FALSE], y)
+  return(survival::coxph(y ~ ., data = temp))
 }

@@ -68,7 +68,7 @@
 #' model = survival::coxph(survival::Surv(time, censor) ~ ., data = data)
 #' apes(model = model)
 apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, really_big = FALSE, verbose = FALSE,
-                 n_boot = 0L, workers = 1L){
+                 n_boot = 0, workers = 1L){
 
   extracts = mextract(model = model)
   x = extracts$x
@@ -170,8 +170,14 @@ print.boot_apes = function(x, ...) {
 
 #' @export
 summary.boot_apes = function(object, ...){
-  cat("Summary of top variables selected by BIC: \n")
-  print(apes_var_freq(list_result = object, ic = "BIC"))
+  cat("Summary of top variables selected by AIC and BIC: \n")
+  print(
+    dplyr::inner_join(
+      dplyr::select(apes_var_freq(list_result = object, ic = "BIC"),
+                    .data$variables, bic_freq = .data$freq),
+      dplyr::select(apes_var_freq(list_result = object, ic = "AIC"),
+                    .data$variables, aic_freq = .data$freq),
+      by = "variables"))
 }
 
 

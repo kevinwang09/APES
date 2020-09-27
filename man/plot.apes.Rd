@@ -4,7 +4,7 @@
 \alias{plot.apes}
 \title{Generic plotting function for class \code{apes}}
 \usage{
-\method{plot}{apes}(x, type = "path", order = c("BIC", "AIC", "median"), ...)
+\method{plot}{apes}(x, type = "path", ...)
 }
 \arguments{
 \item{x}{An object of class \code{apes}}
@@ -14,8 +14,6 @@
 \item{"path"}: Information criterion vs model size.
 Either "AIC" or "BIC" can be shown using the order argument.
 }}
-
-\item{order}{Either "AIC", "BIC". If type is selected to be "vi_tile", then also takes the value "median".}
 
 \item{...}{additional parameters (not currently used)}
 }

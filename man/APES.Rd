@@ -11,7 +11,7 @@ apes(
   time_limit = 10L,
   really_big = FALSE,
   verbose = FALSE,
-  n_boot = 0L,
+  n_boot = 0,
   workers = 1L
 )
 }
