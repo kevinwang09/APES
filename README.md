@@ -8,7 +8,7 @@ status](https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg)](ht
 [![Coverage
 status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](https://codecov.io/github/kevinwang09/APES?branch=master)
 
-<img src="inst/APES_logo.png" align="right" width="300" />
+<img src="https://github.com/kevinwang09/APES/raw/master/inst/APES_logo.png" align="right" width="300" />
 
 APproximated Exhaustive Search (APES) is a model selection method for
 Generalised Linear Models. The accompanying paper is [Wang et.
@@ -62,7 +62,7 @@ model = glm(y ~ ., data = data, family = "binomial")
 ## Running APES selection
 apes_result = apes(model = model)
 apes_result
-#> Time taken:  0.0001027346  minutes 
+#> Time taken:  0.0001620809  minutes 
 #> 
 #>  APES - AIC selected the following variables 
 #> intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -95,7 +95,7 @@ displays the bootstrapped results.
 ``` r
 boot_result = apes(model = model, n_boot = 20)
 boot_result
-#> Time taken:  0.03394218  minutes 
+#> Time taken:  0.02859222  minutes 
 #> Total number of bootstrap APES results:  20
 plot(boot_result, type = "vip")
 ```

@@ -80,7 +80,7 @@ apes(model = model)
 ## Bootstrap examples
 apes(model = model, n_boot = 2)
 apes(model = model, n_boot = 2, workers = 1)
-apes(model = model, n_boot = 2, workers = 2)
+## apes(model = model, n_boot = 2, workers = 2)
 
 ## Cox regression example
 hx = exp(x \%*\% beta)

@@ -19,8 +19,7 @@ vignette: |
 
 # Introduction 
 
-In this vignette, we will apply APES on the `birthweight` data from the `MASS` package. In this data, there are 189 observations and the response variable is a binary variable indicating if an infant is in the low-weight group. There are eight predictor variables in total comprising of two numeric variables (`age` and `lwt`) and six others are factor variables. 
-
+In this vignette, we will demonstrate a real application of APES on a logistic regression model. The data we have chosen is the `birthwt` data from the `MASS` package. In this data, there are 189 observations and the binary response variable is `low`, indicating if an infant is in the low-weight group. There are eight predictor variables in total comprising of two numeric variables (`age` and `lwt`) and six others are factor variables. 
 
 # Setting up the data
 
@@ -41,46 +40,72 @@ bwt <- with(birthwt, {
   ptd <- factor(ptl > 0)
   ftv <- factor(ftv)
   levels(ftv)[-(1:2)] <- "2+"
-  data.frame(low = factor(low),
-             age, lwt, race,
-             smoke = (smoke > 0),
-             ptd, ht = (ht > 0),
-             ui = (ui > 0), ftv)
+  data.frame(low = factor(low), ## indicator for low-weight group
+             age, ## mother's age in years
+             lwt, ## mother's weight in pounds at last menstrual period
+             race, ## mother's race (white, black, other)
+             smoke = (smoke > 0), ## smoking status during pregnancy
+             ptd, ## indicator for previous premature labours
+             ht = (ht > 0), ## indicator for history of hypertension
+             ui = (ui > 0), ## indicator for uterine irritability
+             ftv ## number of physician visits during the first trimester
+             )
 })
 ```
 
 
 # Single run of APES on birthweight data
 
-APES requires a full model as input. We will first fit a full model using the `glm` function. 
+We will first fit a "full" logistic regression model utilising all available variables to get a preliminary understanding of the data and the model. 
 
 ```{r}
-full_model <- glm(low ~ ., family = binomial, data = bwt)
-round(summary(full_model)$coef, 2)
+full_model = glm(low ~ ., family = binomial, data = bwt)
+round(summary(full_model)$coef, 3)
+```
 
+Looking at the p-values of the coefficients, we might suspect there are some redundant variables in the full model. So we may perform APES on this data by feeding the `full_model` to the `apes` function. 
+
+```{r}
 apes_result = apes(model = full_model)
 
 apes_result
 ```
 
-Looking at the result, we see that a single run of APES only takes a fraction of a second and the selected model by BIC and AIC are of size 2 and 7 respectively. 
+The `apes_result` gives us an indiaction as to which variables are considered to be the most important by the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC) under an approximated exhaustive search. Note that APES handles a factor variable in similar style as other `R` packages by (alphabetically) selecting a level in the factor as the reference level and compare all other levels against this reference. 
 
-However, [previous studies into this data](http://garthtarr.github.io/mplot/articles/birthweight.html) suggested that this data possess several interesting characteristics, one being that the variable selection instability. One way we can confirm this instability is through bootstrapping on the observations, apply variable selection method and average the result. We will do this in the next section. 
+# Variable selection stability
 
+Suppose we are using the BIC as the main selection criterion, a single application of APES suggests that we should only select the `ptd` variable. However, [previous studies into this data](http://garthtarr.github.io/mplot/articles/birthweight.html) suggested that this data possess several interesting characteristics, one being variable selection instability. Which means that the variables we select based on a single application of any model selection method cannot always be reproduced if the data is slightly perturbed. One way we can confirm the existence of this instability is performing bootstrap sampling on the observations, this introduces perturbations on the data which affects model selection. 
 
-# Bootstrapping 
+```{r}
+set.seed(2020)
+boot_bwt = bwt[sample(1:nrow(bwt), nrow(bwt), replace = TRUE), ]
+full_model2 = glm(low ~ ., family = binomial, data = boot_bwt)
+round(summary(full_model2)$coef, 3)
+apes(full_model2)
+```
 
-In most practical cases, a single run of any variable selection procedure will not produce stable results. In order to explore stability of variable selection in this case, statistical literatures have examined the stability of variable selection using the bootstrap sampling procedure on the 189 observations. The motivation of APES is to make exhaustive selection to be fast and thus ideally suited for such a procedure
+We can see that when we apply some perturbation on the data, the p-value for the `ht` variable increased from 0.008 to 0.054, which could cause some confusions if we have taken a naive approach to only select variables with p-values < 0.05. Similarly, this perturbation also affects APES, as we have now selected three extra vairables under the BIC. Variable selection stability is not a criticism of any specific methods, but rather, it is an issue for data with ambiguous signals. We will describe how the `APES` package uses bootstrap sampling to improve variable selection stability in the next section. 
+
+# Bootstrapping with APES
+
+One way that we can improve variable selection stability is to apply `APES` on many bootstrapped versions of the data and then average the computed results. The motivation of our `APES` package is to make exhaustive selection fast and thus APES ideally suited for such a procedure that requires such large amount of computation. 
+
+Running the `apes` function with an extra argument `n_boot` automatically invokes bootstrapping sampling on the rows of the data. The returned object is a `boot_apes` class object which stores all bootstrapped `apes` objects. This class `print`, `summary` and `plot` generic methods built for it, which makes the interaction with such an object much easier. The `summary` method summarises the averaged selection (empirical) probability of each variable for a given information criterion. In the next section, we will explore the `plot` generic methods for this object class. 
 
 ```{r, results = 'hide'}
-boot_result = APES::apes(full_model, n_boot = 100)
-boot_result
+boot_result = apes(full_model, n_boot = 100)
+class(boot_result)
+print(boot_result)
+head(names(boot_result))
+summary(boot_result, ic = "BIC")
+summary(boot_result, ic = "AIC")
 ```
 
 
 # Variable importance plot
 
-The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as a probability of selection against different strength of penalty on the general information criterion. The most stable variable in selection are those which has a high probability of selection with increasingly higher levels of penalisation. 
+The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as empirical probability of selection against different strength of penalty on the general information criterion. The most important difference between this method and the `summary` output is that we are no longer fixated on a single information criterion like the AIC and the BIC, but rather, we can visualise the selection with ever increasing penalty term. Variables with stronger selection stability are those with high probabilities of selection with increasingly higher levels of penalisation. 
 
 We can see that the variables in order of strength of stability are `ptd`, `ht` and `lwt`.
 
@@ -98,7 +123,7 @@ plot(boot_result, type = "vip_tile")
 
 ## Model averaged coefficient plot 
 
-During the bootstrap computation, APES records the best AIC/BIC models across all bootstrap runs. The model estimates from each of these models can be cumulatively averaged across the number of bootstrap runs to examine the stability of the selection. This plot allows us to examine the stability of the model coefficients whereas the previous VIP plots shows only the stability of variable selection. 
+APES stores all the coefficient estimates in each bootstrap run. We can use this information to compute cumulative averages of variable coefficients. This plot allows us to examine the stability of the model coefficient estimates whereas the previous VIP plots shows only the stability of variable selection. 
 
 ```{r}
 plot(boot_result, type = "ma")
@@ -111,6 +136,16 @@ During the bootstrap computation, APES records the best AIC/BIC models across al
 ```{r}
 plot(boot_result, type = "path", order = "BIC")
 ```
+
+# Parallel processing
+
+For large number of bootstrap runs, one might consider using parallel processing to reduce the total computational time. The parallel backend support of `APES` uses the `furrr` package. To invoke parallel processing, this requires a single parameter `workers`. 
+
+```{r, eval = FALSE}
+parallel_result = apes(model = full_model, n_boot = 100, workers = 2)
+parallel_result
+```
+
 
 # Reference 
 

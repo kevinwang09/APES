@@ -3,7 +3,7 @@
 \name{logit}
 \alias{logit}
 \alias{expit}
-\title{The logit function}
+\title{The logit/expit tranformation}
 \usage{
 logit(x)
 
@@ -13,9 +13,7 @@ expit(x)
 \item{x}{numeric}
 }
 \description{
-The logit function
-
-The expit function
+The logit/expit tranformation
 }
 \examples{
 curve(logit, from = 0.1, to = 0.9)

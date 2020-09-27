@@ -59,7 +59,7 @@
 #' ## Bootstrap examples
 #' apes(model = model, n_boot = 2)
 #' apes(model = model, n_boot = 2, workers = 1)
-#' apes(model = model, n_boot = 2, workers = 2)
+#' ## apes(model = model, n_boot = 2, workers = 2)
 #'
 #' ## Cox regression example
 #' hx = exp(x %*% beta)
@@ -157,10 +157,10 @@ print.apes = function(x, ...) {
   cat("Time taken: ", x$time_used, " minutes \n")
 
   cat("\n APES - AIC selected the following variables \n")
-  print(round(x$selected_model_beta[,"apes_min_bic"], 3))
+  print(round(x$selected_model_beta[,"apes_min_aic"], 3))
 
   cat("\n APES - BIC selected the following variables \n")
-  print(round(x$selected_model_beta[,"apes_min_aic"], 3))
+  print(round(x$selected_model_beta[,"apes_min_bic"], 3))
 }
 
 #' @export
@@ -172,7 +172,7 @@ print.boot_apes = function(x, ...) {
 #' @export
 summary.boot_apes = function(object, ...){
   cat("Summary of top variables selected by BIC: \n")
-  print(apes_var_freq(list_result = x, ic = "BIC"))
+  print(apes_var_freq(list_result = object, ic = "BIC"))
 }
 
 

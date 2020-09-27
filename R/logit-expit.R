@@ -1,4 +1,4 @@
-#' @title The logit function
+#' @title The logit/expit tranformation
 #' @param x numeric
 #' @export
 #' @rdname transforms
@@ -10,8 +10,6 @@ logit = function(x){
   return(log(x) - log(1-x))
 }
 
-
-#' @title The expit function
 #' @param x numeric
 #' @export
 #' @rdname transforms
