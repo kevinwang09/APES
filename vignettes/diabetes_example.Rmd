@@ -1,162 +1,112 @@
 ---
-title: "Diabetes example"
-author: "Kevin Wang"
-date: "22/08/2018"
-output:
-  html_document:
-    self_contained: no
-vignette: >
-  %\VignetteIndexEntry{Diabetes}
+title: "APES: diabetes data example"
+author:
+- name: Kevin Y.X. Wang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Garth Tarr
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Jean Y.H. Yang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Samuel Mueller
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+output: 
+  rmarkdown::html_vignette
+vignette: |
+%\VignetteIndexEntry{diabetes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
+  ---
+  
+  
+  # Introduction
+  
+  ```{r}
+suppressPackageStartupMessages({
+library(APES)
+library(mplot)
+library(tidyverse)
+})
+```
+
+## Loading data
+
+We will illustrate the speed of the APES method on the `diabetes` data from the `mplot` package. As the main motivation of the APES package is to make computational improvements on the exhaustive search done by `mplot` while maintaining a sensible approximation to the genuine exhaustive search, it is necessary for us to check this is indeed the case. 
+
+The `diabetes` data from the `mplot` package has a continuous response variable measuing  disease progression one year after baseline. In order to illustrate APES, we will dichromise this response variable by spliting it at the median to create two equally weighted classes and fit a logistic regression model.
+
+```{r}
+diabetes = mplot::diabetes
+x = diabetes %>% dplyr::select(-y) %>% as.matrix()
+y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L)
+diabetes_binarised = data.frame(x, y)
+glimpse(diabetes_binarised)
+```
 
 
-<!-- # Introduction  -->
+# Performing variable selection on the diabetes data
 
-<!-- ```{r} -->
-<!-- suppressPackageStartupMessages({ -->
-<!--   library(APES) -->
-<!--   library(glmnet) -->
-<!--   library(mplot) -->
-<!--   library(tidyverse) -->
-<!--   library(directlabels) -->
-<!--   library(plotly) -->
-<!-- }) -->
-<!-- ``` -->
+## Fitting the full model
 
-<!-- ## Loading data -->
+Both `APES` and `mplot` were designed to have an easy-to-use user interface where an user can simply supply a `glm` object and get the analysis results rapidly. We will fit the full model here. 
 
-<!-- We will illustrate the utility of the APES method on the diabetes data from the `mplot` package.  -->
+```{r}
+full_model = glm(y ~ ., family = "binomial", data = diabetes_binarised)
+summary(full_model)
+```
 
-<!-- As the original data has a continuous response variable, named as `y`. We will dichromise this response variable by spliting it at the median to create two classes and fit a logistic regression.  -->
+## Variable selection under 20 bootstrap using `APES`
 
-<!-- ```{r} -->
-<!-- diabetes = mplot::diabetes -->
-<!-- x = diabetes %>% dplyr::select(age:glu) %>% as.matrix() %>% cbind(RV = rnorm(nrow(diabetes))) %>% scale -->
-<!-- y = ifelse(diabetes$y > median(diabetes$y), 1L, 0L) -->
-<!-- dim(x) -->
-<!-- length(y) -->
-<!-- ``` -->
+```{r}
+apes_result = APES::apes(model = full_model, n_boot = 50)
+apes_result
+```
 
+## Variable selection under 20 bootstrap using `mplot`
 
-<!-- # Running APES on diabetes data -->
+```{r}
+t1 = Sys.time()
 
-<!-- We will illustrate the APES methodology using the `leaps` estimator here, since there are only 11 variables, the leaps estimator will be faster than the `mio` estimator.  -->
+mplot_esult = mplot::vis(
+  mf = full_model,
+  B = 50,
+  redundant = FALSE ## mplot adds a redundant variable by default, we will suppress this
+)
 
+t2 = Sys.time()
+cat("Time taken: ", as.numeric(difftime(t2, t1, units = "mins")), "minutes")
+```
 
-<!-- ## Using the leaps estimator on the full data -->
-<!-- ```{r} -->
-<!-- # fullModel = glm.fit(x = x, y = y, family = binomial(link = "logit")) -->
-<!-- fullModel = glm(y ~ x, family = "binomial") -->
+Looking at the time differences, it is clear that APES is the winner. However, it should be noted that APES only computed the best linear model within each model size while `mplot` performed a genuine exhaustive search across all GLM. These results are not intuitively comparable. However, the results presented in [Wang et. al](https://doi.org/10.1111/anzs.12276) provide some assurance that the results of APES are good approximations to a genuine exhaustive search. 
 
-<!-- apes_logit_leaps = apes_logit( -->
-<!--   x = x, -->
-<!--   y = y, -->
-<!--   Pi = fullModel$fitted.values, -->
-<!--   k = 1:ncol(x),  -->
-<!--   estimator = "leaps") -->
+## Comparing variable importance plot
 
-<!-- apes_logit_leaps$selectedModelBeta -->
-<!-- ``` -->
+One plot that both packages have implemented is the variable importance plot from Murray et. al. (2013). We will make a visual comparison between the two below to check if the final interpretations of these plots fit with our expectations. 
 
+The variable importance plot shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 \ell + \lambda (p + 1) $, where $\ell$ is the log-likelihood of a model, `\lambda` is the penalty term and $p$ is the number of predictors (excluding the intercept term). 
 
-<!-- <!-- # Running Lasso on diabetes data --> -->
-<!-- <!-- ```{r} --> -->
-<!-- <!-- lasso_logit = glmnet::cv.glmnet(x = x, --> -->
-<!-- <!--                                 y = y) --> -->
-<!-- <!-- lasso_logit_coef = coef(lasso_logit, s = "lambda.min") --> -->
-<!-- <!-- rownames(lasso_logit_coef)[as.matrix(lasso_logit_coef != 0)] --> -->
-<!-- <!-- ``` --> -->
+From APES:
+```{r}
+plot(apes_result, type = "vip")
+```
 
+From mplot:
+```{r}
+plot(mplot_result, which = "vip")
+```
 
-<!-- ## Bootstrapping using leaps version  -->
+Based on the plots above, we see that both methods showed similar ordering of the variables as we should expect. As pointed out [by the `mplot` vignette](http://garthtarr.github.io/mplot/articles/diabetes.html), one of the most interesting feature of this data is the cross-over between some selected variables (especially the `hdl` and the `tc` variables which crosses over after after the BIC threshold) which is preserved by the `APES` package. 
 
-<!-- If we want to explore the variable selection stability, then we could perform bootstrapping to obtain averaged variable selection results.  -->
+# Reference 
 
-<!-- ```{r, results = 'hide'} -->
-<!-- t1 = Sys.time() -->
-<!-- listResult = APES::boot_apes_logit( -->
-<!--   x = x, -->
-<!--   y = y, -->
-<!--   Pi = fullModel$fitted.values, -->
-<!--   k = 1:ncol(x),  -->
-<!--   estimator = "leaps", -->
-<!--   nBoot = 100) -->
-<!-- t2 = Sys.time() -->
-<!-- ``` -->
++ Mueller, S. and Welsh, A. H. (2010), On model selection curves. International Statistical Review, 78:240-256. doi: 10.1111/j.1751-5823.2010.00108.x
 
++ Murray, K., Heritier, S. and Mueller, S. (2013), Graphical tools for model selection in generalized linear models. Statistics in Medicine, 32:4438-4451. doi: 10.1002/sim.5855
 
-<!-- The time taken for bootstrapping in APES:  -->
++ Tarr G, Mueller S and Welsh AH (2018). mplot: An R Package for Graphical Model Stability and Variable Selection Procedures. Journal of Statistical Software, 83(9), pp. 1-28. doi: 10.18637/jss.v083.i09
 
-<!-- ```{r} -->
-<!-- t2 - t1 -->
-<!-- ``` -->
-
-
-
-<!-- ## Basic plotting for APES  -->
-
-
-<!-- ### Variable selection plot  -->
-
-<!-- ```{r} -->
-<!-- viPlotResult = APES::plot_vi(listResult) -->
-<!-- viPlotResult$viPlot -->
-<!-- viTilePlotResult = APES::plot_vi_tile(listResult) -->
-<!-- viTilePlotResult -->
-<!-- ``` -->
-
-
-<!-- ```{r, warning = FALSE} -->
-<!-- plotly::ggplotly( -->
-<!--   viPlotResult$viPlot +  -->
-<!--     theme_classic(18)  -->
-<!-- ) -->
-<!-- ``` -->
-
-
-<!-- ### Model averaging coefficient plot -->
-<!-- ```{r} -->
-<!-- APES::plot_ma_coef(listResult, type = "AIC") +  -->
-<!--   labs(title = "AIC weighted coefficients") -->
-
-<!-- APES::plot_ma_coef(listResult, type = "BIC") + -->
-<!--   labs(title = "BIC weighted coefficients") -->
-<!-- ``` -->
-
-
-<!-- ### Model averaging weights plot -->
-<!-- ```{r} -->
-<!-- APES::plot_ma_weight(listResult, type = "AIC") +  -->
-<!--   labs(title = "AIC Weights") -->
-
-<!-- APES::plot_ma_weight(listResult, type = "BIC") +  -->
-<!--   labs(title = "BIC Weights") -->
-<!-- ``` -->
-
-
-<!-- # Compare against mplot -->
-
-<!-- Some visualisations we implement in APES are originally from the `mplot` package. We will compare our APES method against the `mplot` results, which implements a genuine exhaustive search method. -->
-
-<!-- ```{r, results = "asis", message=FALSE} -->
-<!-- t3 = Sys.time() -->
-
-<!-- mplotResult = mplot::vis( -->
-<!--   mf = fullModel, -->
-<!--   B = 100, -->
-<!--   redundant = FALSE) -->
-
-<!-- t4 = Sys.time() -->
-<!-- t4 - t3 -->
-
-<!-- plot(mplotResult, which = "vip", interactive = TRUE, tag = "chart") -->
-<!-- ``` -->
-
++ Wang, K. Y., Tarr, G., Yang, J. Y., & Mueller, S. (2019). Fast and approximate exhaustive variable selection for generalised linear models with APES. Australian & New Zealand Journal of Statistics, 61(4), 445–465. https://doi.org/10.1111/anzs.12276
 
 # Session Info
 ```{r}
 sessionInfo()
 ```
-

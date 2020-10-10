@@ -1,5 +1,5 @@
 ---
-title: "An introduction to the APES package"
+title: "Getting started with the APES package"
 author:
 - name: Kevin Y.X. Wang
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
@@ -28,9 +28,9 @@ knitr::opts_chunk$set(
 
 # Introduction 
 
-APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models (GLMs). The main motivation for this work is to improve the speed of exhaustive variable selection for GLMs. The accompanying paper is [Wang et. al. (2019)](https://doi.org/10.1111/anzs.12276). 
+APproximated Exhaustive Search (APES) is a variable selection method for Generalised Linear Models (GLMs). The main motivation behind this work is to improve the speed of exhaustive variable selection for GLMs. The accompanying paper is [Wang et. al. (2019)](https://doi.org/10.1111/anzs.12276). 
 
-Suppose we have a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable, `y`. This is what we termed as a "full" model, i.e. a model with all available predictor variables. Some variables are the true data generating variables and looking at the model summary, we see these variables has very small p-values. However, we can also expect to see some variables with p-values that are below the p = 0.05 cut-off by chance. Should we also include these variables in our final model? 
+Suppose we have simulated a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable, `y`. This is what we termed as a "full" model, i.e. a model with all available predictor variables. We know that some of these variables are the true data generating variables and looking at the model summary, we see that these variables with p-values less than 0.05. So far, so good! However, we can also expect to see some variables with p-values also below the 0.05 cut-off by chance. In this case, is it still reasonable to also include these variables in our final selected model? 
 
 ```{r}
 library(APES)
@@ -50,31 +50,37 @@ model = glm(y ~ ., data = data, family = "binomial")
 summary(model)
 ```
 
-This is the classic problem of variable selection. One of the most intuitive variable selection method is to look at every combination of variables, obtain the fit of these variables and pick the best one. This is known as exhaustive variable selection and in total, there are $2^p$ possibilities to explore, with $p$ being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through 2^20 = 1,048,576 models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run --- seems too long!
+The question of which variable(s) a practitioner should select is very common in the area of variable selection. One of the most intuitive variable selection method is to enumerate all possible combination of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are $2^p$ possibilities to explore, with $p$ being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through 2^20 = 1,048,576 models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run --- seems too long!
 
-At its core, APES is designed to speed up this variable selection procedure. APES will first converts the full logistic model into a linear model. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space. In addition, linear models can benefit from best-subset algorithms which can search for the best linear model without searching through all $2^p$ candidate models. By default, APES uses the leaps-and-bound algorithm (from the `leaps` package) and mixed integer optimisation (from the `bestsubset` package) algorithm as the best-subset algorithms of choice. After obtaining a set of best-fit models, APES will convert the results back to into logistic models and show the best model of each size. While the word "best" can be subjective depending on the data context, in our example, we define this word as the model with the smallest information criterion value with the most common choices being the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC). 
+# Understanding APES
 
-It is important to note that APES only returns the best approximation to the exhaustive search, however, through extensive simulations in our paper, we have demonstrated that APES tends to always return informative models that are close to a genuine exhaustive search. 
+At its core, APES is designed to speed up this variable selection procedure. APES will first convert the full logistic model into a linear model. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space. In addition, linear models can benefit from best-subset algorithms which can search for the best linear model without searching through all $2^p$ candidate models. By default, APES uses the leaps-and-bound algorithm (from the `leaps` package) and mixed integer optimisation (from the `bestsubset` package) algorithm as the best-subset algorithms of choice. After obtaining a set of best-fit models, APES will convert the results back to into logistic models and show the best model of each size. While the word "best" can be subjective depending on the data context, in our example, we define this word as the model with the smallest information criterion value with the most common choices being the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC). 
+
+It is important to note that APES only returns the best approximation to the exhaustive search, however, through extensive simulations in [our paper](https://doi.org/10.1111/anzs.12276), we have demonstrated that APES tends to always return informative model that is close to a genuine exhaustive search. 
+
+## APES package
+
+The `APES` package is designed to provide an user-friendly interface to perform APES variable selection. The main function in the `APES` package is the `apes` function which accepts a `glm` object in `R`. This is typically the "full model" with all available predictors fitted. 
 
 ```{r}
 apes_result = apes(model = model)
 class(apes_result)
 ```
 
-The `apes` function returns a `apes` class object. By default, APES prints out the model selected by the AIC and BIC and the time taken. There are extra computed results in an `apes` object which a user might be interested in further exploring. 
+The `apes` function returns a `apes` class object. By default, APES prints the model selected by the AIC and BIC and the time taken. There are extra computed results in the `apes` object which a user might be interested in further exploring. 
 
 ```{r}
 print(apes_result)
 names(apes_result)
 ```
 
-The most important output is `apes_model_df`, which is a `data.frame` of the best model of each model size computed by APES.
+The most important output is `apes_model_df`, which is a `data.frame`/`tibble` of the best model of each model size computed by APES.
 
 ```{r}
 apes_result$apes_model_df
 ```
 
-APES will always include the intercept term in the model selection, and thus the selected models are always of size two (one intercept and one variable) and above. You may also be interested in plotting `apes_result` using the generic function `plot`
+By default, `aoes` will always include the intercept term in the variable selection, and thus the selected models are always of size two (one intercept and one variable) and above. You may also be interested in plotting `apes_result` using the generic function `plot`
 
 ```{r}
 plot(apes_result)
@@ -82,10 +88,9 @@ plot(apes_result)
 
 # More examples
 
-The example above is a mere simulation to illustrate the basic underlying theory of APES and the `apes` object. Please see here and here for real-data examples of APES where bootstrap sampling can be used to explore model stability.
+The example above is a simple simulation to illustrate the basic underlying theory of APES and the `apes` object. Please see a [birth weight data example](https://kevinwang09.github.io/APES/articles/birthweight.html) and a [diabetes data example](https://kevinwang09.github.io/APES/articles/diabetes_example.html) where we will demonstrate the performance of `APES` using bootstrap sampling to assess model stability.
 
 # Session Info
 ```{r}
 sessionInfo()
 ```
-
