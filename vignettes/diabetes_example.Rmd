@@ -10,17 +10,18 @@ author:
 - name: Samuel Mueller
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
 output: 
-  rmarkdown::html_vignette
+  rmarkdown::html_vignette:
+    fig_width: 8
+    fig_height: 6
 vignette: |
-%\VignetteIndexEntry{diabetes}
+  %\VignetteIndexEntry{APES: diabetes data example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
+---
   
+# Introduction
   
-  # Introduction
-  
-  ```{r}
+```{r}
 suppressPackageStartupMessages({
 library(APES)
 library(mplot)
@@ -66,10 +67,11 @@ apes_result
 ```{r}
 t1 = Sys.time()
 
-mplot_esult = mplot::vis(
+mplot_result = mplot::vis(
   mf = full_model,
   B = 50,
-  redundant = FALSE ## mplot adds a redundant variable by default, we will suppress this
+  redundant = FALSE, 
+  cores = 1 ## mplot adds a redundant variable by default, we will suppress this
 )
 
 t2 = Sys.time()

@@ -10,9 +10,11 @@ author:
 - name: Samuel Mueller
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
 output: 
-  rmarkdown::html_vignette
+  rmarkdown::html_vignette:
+    fig_width: 8
+    fig_height: 6
 vignette: |
-  %\VignetteIndexEntry{birthweight}
+  %\VignetteIndexEntry{APES: birth weight data example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

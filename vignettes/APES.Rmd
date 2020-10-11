@@ -1,5 +1,5 @@
 ---
-title: "Getting started with the APES package"
+title: "Introduction to APES"
 author:
 - name: Kevin Y.X. Wang
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
@@ -14,7 +14,7 @@ output:
     fig_width: 8
     fig_height: 6
 vignette: |
-  %\VignetteIndexEntry{APES}
+  %\VignetteIndexEntry{Introduction to APES}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
