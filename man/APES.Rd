@@ -48,10 +48,13 @@ Either an object of class "apes" in case "n_boot" is set to zero or
 an object of class "boot_apes" in case "n_boot" is set to a positive integer.
 }
 \description{
-This is the main function of the APES package. Approximated exhaustive selection
-will be performed on the input GLM model. Note that the feature dimensions equals to the number of
-columns if all columns are numeric. If factor/categorical variables are present in the input
-"glm" object, then the feature dimension also includes all the levels of factors. See vignette.
+Approximated exhaustive selection will be performed on the input GLM model.
+}
+\details{
+This is the main function of the APES package. Note that the feature dimensions
+equals to the number of columns if all columns are numeric.
+If factor/categorical variables are present in the input "glm" object,
+then the feature dimension also includes all the levels of factors. See vignette on birth weight.
 }
 \examples{
 set.seed(10)

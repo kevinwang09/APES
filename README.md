@@ -24,13 +24,14 @@ devtools::install_github("kevinwang09/APES")
 
 ## A quick example
 
-Suppose we have a data with 500 rows and 20 predictor variables, and we
-have fitted a logistic regression model against a binary response
-variable. We may wish to perform an exhaustive variable selection on
-such a model to determine which variables produce the most parsimonious
-model. However, performing an exhaustive variable selection means
-looking through 2^20 = 1,048,576 models\! Exhaustive variable selection
-is known to be time consuming, and this might take a long time.
+Suppose we have simulated a data with 500 rows and 20 predictor
+variables, and we have fitted a logistic regression model against a
+binary response variable. We may wish to perform an exhaustive variable
+selection on such a model to determine which variables produce the most
+parsimonious model. However, performing an exhaustive variable selection
+means looking through \(2^{20} = 1,048,576\) models\! Exhaustive
+variable selection is known to be time consuming, and this might take a
+long time.
 
 APES is a variable selection method that first converts the logistic
 model into a linear model and then it uses a best-subset algorithm (such
@@ -62,7 +63,7 @@ model = glm(y ~ ., data = data, family = "binomial")
 ## Running APES selection
 apes_result = apes(model = model)
 apes_result
-#> Time taken:  0.0001620809  minutes 
+#> Time taken:  0.000188001  minutes 
 #> 
 #>  APES - AIC selected the following variables 
 #> intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -81,7 +82,7 @@ apes_result
 #>     0.208     0.000     0.000     0.000     0.000
 ```
 
-The best model of each model size are stored and the best model of all
+The best model of each model size are stored and the “best” model of all
 can be selected using an information criterion such as the Akaike
 Information Criterion (AIC) or the Bayesian Information Criterion (BIC).
 Notice how in the above output of APES, the true model size is
@@ -95,7 +96,7 @@ displays the bootstrapped results.
 ``` r
 boot_result = apes(model = model, n_boot = 20)
 boot_result
-#> Time taken:  0.02859222  minutes 
+#> Time taken:  0.03013748  minutes 
 #> Total number of bootstrap APES results:  20
 plot(boot_result, type = "vip")
 ```
@@ -108,4 +109,3 @@ plot(boot_result, type = "vip")
     approximate exhaustive variable selection for generalised linear
     models with APES. Australian & New Zealand Journal of Statistics,
     61(4), 445–465. <https://doi.org/10.1111/anzs.12276>
-  - Icon made by Freepik from www.flaticon.com

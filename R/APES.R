@@ -1,8 +1,9 @@
 #' @title Perform APES model selection
-#' @description This is the main function of the APES package. Approximated exhaustive selection
-#' will be performed on the input GLM model. Note that the feature dimensions equals to the number of
-#' columns if all columns are numeric. If factor/categorical variables are present in the input
-#' "glm" object, then the feature dimension also includes all the levels of factors. See vignette.
+#' @description Approximated exhaustive selection will be performed on the input GLM model.
+#' @details This is the main function of the APES package. Note that the feature dimensions
+#' equals to the number of columns if all columns are numeric.
+#' If factor/categorical variables are present in the input "glm" object,
+#' then the feature dimension also includes all the levels of factors. See vignette on birth weight.
 #' @param model A "full" model with all variables of interest fitted to it.
 #' Accepts either a "glm" class or "coxph" class object.
 #' @param estimator Either "leaps" (default) or "mio", which correspond to

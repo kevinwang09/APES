@@ -50,7 +50,7 @@ model = glm(y ~ ., data = data, family = "binomial")
 summary(model)
 ```
 
-The question of which variable(s) a practitioner should select is very common in the area of variable selection. One of the most intuitive variable selection method is to enumerate all possible combination of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are $2^p$ possibilities to explore, with $p$ being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through 2^20 = 1,048,576 models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run --- seems too long!
+The question of which variable(s) a practitioner should select is very common in the area of variable selection. One of the most intuitive variable selection method is to enumerate all possible combination of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are $2^p$ possibilities to explore, with $p$ being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through $2^{20} = 1,048,576$ models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run --- seems too long!
 
 # Understanding APES
 

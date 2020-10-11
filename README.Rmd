@@ -32,7 +32,7 @@ devtools::install_github("kevinwang09/APES")
 
 ## A quick example
 
-Suppose we have a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable. We may wish to perform an exhaustive variable selection on such a model to determine which variables produce the most parsimonious model. However, performing an exhaustive variable selection means looking through 2^20 = 1,048,576 models! Exhaustive variable selection is known to be time consuming, and this might take a long time. 
+Suppose we have simulated a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable. We may wish to perform an exhaustive variable selection on such a model to determine which variables produce the most parsimonious model. However, performing an exhaustive variable selection means looking through $2^{20} = 1,048,576$ models! Exhaustive variable selection is known to be time consuming, and this might take a long time. 
 
 APES is a variable selection method that first converts the logistic model into a linear model and then it uses a best-subset algorithm (such as leaps or mixed integer optimisation) to search for the best linear model. The selected linear models are then converted into logistic models. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space.
 
@@ -60,7 +60,7 @@ apes_result = apes(model = model)
 apes_result
 ```
 
-The best model of each model size are stored and the best model of all can be selected using an information criterion such as the Akaike Information Criterion (AIC) or the Bayesian Information Criterion (BIC). Notice how in the above output of APES, the true model size is identified as 3 and 2 by the AIC and BIC respectively. The selected model estimates are also shown. 
+The best model of each model size are stored and the "best" model of all can be selected using an information criterion such as the Akaike Information Criterion (AIC) or the Bayesian Information Criterion (BIC). Notice how in the above output of APES, the true model size is identified as 3 and 2 by the AIC and BIC respectively. The selected model estimates are also shown. 
 
 The bootstrap procedure can be used to understand the variable selection stability. The APES package also comes with some plotting functions that displays the bootstrapped results. 
 
@@ -73,5 +73,3 @@ plot(boot_result, type = "vip")
 
 # References
 + Wang, K. Y., Tarr, G., Yang, J. Y., & Mueller, S. (2019). Fast and approximate exhaustive variable selection for generalised linear models with APES. Australian & New Zealand Journal of Statistics, 61(4), 445–465. https://doi.org/10.1111/anzs.12276
-+ Icon made by Freepik from www.flaticon.com
-
