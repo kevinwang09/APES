@@ -47,13 +47,6 @@ In this function, we then consider general information criterion (GIC) of the fo
 For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
 look at which variables are selected in that model.
 The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
-This function is suitable for a list of bootstrap APES outputs.
-From each bootstrap run, APES stores log-likelihood for every model it considered.
-In this function, we then consider general information criterion (GIC) of the form
--2*logLike + penalty * modeSize.
-For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
-look at which variables are selected in that model.
-The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
 This function displays the same information as plot_vi, but in a tile plot format." />
 
 
@@ -106,10 +99,10 @@ This function displays the same information as plot_vi, but in a tile plot forma
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/birthweight.html">Birthweight data example</a>
+      <a href="../articles/birthweight.html">APES: birth weight data example</a>
     </li>
     <li>
-      <a href="../articles/diabetes_example.html">Diabetes example</a>
+      <a href="../articles/diabetes_example.html">APES: diabetes data example</a>
     </li>
   </ul>
 </li>
@@ -135,19 +128,12 @@ This function displays the same information as plot_vi, but in a tile plot forma
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generic plotting function for class <code>boot_apes</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/plot.boot_apes.R'><code>R/plot.boot_apes.R</code></a>, <a href='https://github.com/kevinwang09/APES/blob/master/R/plot_ma-boot_apes.R'><code>R/plot_ma-boot_apes.R</code></a>, <a href='https://github.com/kevinwang09/APES/blob/master/R/plot_path-boot_apes.R'><code>R/plot_path-boot_apes.R</code></a>, and 3 more</small>
+    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/plot.boot_apes.R'><code>R/plot.boot_apes.R</code></a>, <a href='https://github.com/kevinwang09/APES/blob/master/R/plot_ma-boot_apes.R'><code>R/plot_ma-boot_apes.R</code></a>, <a href='https://github.com/kevinwang09/APES/blob/master/R/plot_path-boot_apes.R'><code>R/plot_path-boot_apes.R</code></a>, and 2 more</small>
     <div class="hidden name"><code>plot.boot_apes.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>This function is suitable for a list of bootstrap APES outputs.
-From each bootstrap run, APES stores log-likelihood for every model it considered.
-In this function, we then consider general information criterion (GIC) of the form
--2*logLike + penalty * modeSize.
-For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
-look at which variables are selected in that model.
-The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.</p>
-<p>This function is suitable for a list of bootstrap APES outputs.
 From each bootstrap run, APES stores log-likelihood for every model it considered.
 In this function, we then consider general information criterion (GIC) of the form
 -2*logLike + penalty * modeSize.
@@ -163,8 +149,6 @@ The frequency of a variable selected across different penalties are then avarage
 <span class='fu'>plot_ma_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"BIC"</span>, max_vars <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='fu'>plot_path_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"BIC"</span><span class='op'>)</span>
-
-<span class='fu'>plot_vip_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, max_vars <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='fu'>plot_vip_boot_apes</span><span class='op'>(</span><span class='va'>x</span>, max_vars <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
@@ -220,8 +204,6 @@ On the final plot, we should be able to see variables of non-zero coefficients s
 <p>A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.</p>
 <p>a variable inclusion plot in ggplot format. An attribute of the name
 plotdf is a tibble with all the necessary values to plot a variable inclusion plot</p>
-<p>a variable inclusion plot in ggplot format. An attribute of the name
-plotdf is a tibble with all the necessary values to plot a variable inclusion plot</p>
 <p>A list.</p><ul>
 <li><p><code>apes_mle_beta_binary_plotdf</code> a tibble with all the necessary values to plot a tile variable inclusion plot</p></li>
 <li><p><code>var_tile_plot</code> a ggplot with continuous colouring</p></li>
@@ -231,7 +213,6 @@ plotdf is a tibble with all the necessary values to plot a variable inclusion pl
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Kevin Wang</p>
-<p>Kevin Wang</p>
 <p>Kevin Wang</p>
 <p>Kevin Wang</p>
 <p>Kevin Wang</p>
