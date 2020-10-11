@@ -161,7 +161,7 @@
 <span class="co">#&gt; AIC: 522.7</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Number of Fisher Scoring iterations: 5</span></pre></div>
-<p>The question of which variable(s) a practitioner should select is very common in the area of variable selection. One of the most intuitive variable selection method is to enumerate all possible combination of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are <span class="math inline">\(2^p\)</span> possibilities to explore, with <span class="math inline">\(p\)</span> being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through 2^20 = 1,048,576 models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run — seems too long!</p>
+<p>The question of which variable(s) a practitioner should select is very common in the area of variable selection. One of the most intuitive variable selection method is to enumerate all possible combination of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are <span class="math inline">\(2^p\)</span> possibilities to explore, with <span class="math inline">\(p\)</span> being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through <span class="math inline">\(2^{20} = 1,048,576\)</span> models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run — seems too long!</p>
 </div>
 <div id="understanding-apes" class="section level1">
 <h1 class="hasAnchor">
@@ -179,7 +179,7 @@
 <p>The <code>apes</code> function returns a <code>apes</code> class object. By default, APES prints the model selected by the AIC and BIC and the time taken. There are extra computed results in the <code>apes</code> object which a user might be interested in further exploring.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">apes_result</span><span class="op">)</span>
-<span class="co">#&gt; Time taken:  0.0001365503  minutes </span>
+<span class="co">#&gt; Time taken:  0.0001400828  minutes </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  APES - AIC selected the following variables </span>
 <span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span>

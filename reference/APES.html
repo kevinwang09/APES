@@ -40,10 +40,7 @@
 
 
 <meta property="og:title" content="Perform APES model selection — apes" />
-<meta property="og:description" content="This is the main function of the APES package. Approximated exhaustive selection
-will be performed on the input GLM model. Note that the feature dimensions equals to the number of
-columns if all columns are numeric. If factor/categorical variables are present in the input
-&quot;glm&quot; object, then the feature dimension also includes all the levels of factors. See vignette." />
+<meta property="og:description" content="Approximated exhaustive selection will be performed on the input GLM model." />
 
 
 
@@ -129,10 +126,7 @@ columns if all columns are numeric. If factor/categorical variables are present 
     </div>
 
     <div class="ref-description">
-    <p>This is the main function of the APES package. Approximated exhaustive selection
-will be performed on the input GLM model. Note that the feature dimensions equals to the number of
-columns if all columns are numeric. If factor/categorical variables are present in the input
-"glm" object, then the feature dimension also includes all the levels of factors. See vignette.</p>
+    <p>Approximated exhaustive selection will be performed on the input GLM model.</p>
     </div>
 
     <pre class="usage"><span class='fu'>apes</span><span class='op'>(</span>
@@ -197,6 +191,12 @@ We recommend only setting this argument to TRUE if the number of variables excee
 
     <p>Either an object of class "apes" in case "n_boot" is set to zero or
 an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This is the main function of the APES package. Note that the feature dimensions
+equals to the number of columns if all columns are numeric.
+If factor/categorical variables are present in the input "glm" object,
+then the feature dimension also includes all the levels of factors. See vignette on birth weight.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
@@ -213,7 +213,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"binomial"</span><span class='op'>)</span>
 <span class='va'>apes_result</span> <span class='op'>=</span> <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>
 <span class='va'>apes_result</span>
-</div><div class='output co'>#&gt; Time taken:  0.0008007328  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.0006421328  minutes 
 #&gt; 
 #&gt;  APES - AIC selected the following variables 
 #&gt; intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -235,7 +235,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='va'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>x</span><span class='op'>)</span>
 <span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"poisson"</span><span class='op'>)</span>
 <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  8.16981e-06  minutes 
+</div><div class='output co'>#&gt; Time taken:  8.165836e-06  minutes 
 #&gt; 
 #&gt;  APES - AIC selected the following variables 
 #&gt; intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -250,9 +250,9 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 #&gt;    -0.054     0.000     0.000 </div><div class='input'>
 <span class='co'>## Bootstrap examples</span>
 <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  0.002986936  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.00290583  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span>, workers <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  0.003527582  minutes 
+</div><div class='output co'>#&gt; Time taken:  0.003372832  minutes 
 #&gt; Total number of bootstrap APES results:  2</div><div class='input'><span class='co'>## apes(model = model, n_boot = 2, workers = 2)</span>
 
 <span class='co'>## Cox regression example</span>
@@ -262,7 +262,7 @@ an object of class "boot_apes" in case "n_boot" is set to a positive integer.</p
 <span class='va'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, time <span class='op'>=</span> <span class='va'>time</span>, censor <span class='op'>=</span> <span class='va'>censor</span><span class='op'>)</span>
 <span class='va'>model</span> <span class='op'>=</span> <span class='fu'>survival</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span><span class='op'>(</span><span class='fu'>survival</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='va'>censor</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span><span class='op'>)</span>
 <span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Time taken:  6.965796e-06  minutes 
+</div><div class='output co'>#&gt; Time taken:  6.699562e-06  minutes 
 #&gt; 
 #&gt;  APES - AIC selected the following variables 
 #&gt; intercept        X1        X2        X3        X4        X5        X6        X7 

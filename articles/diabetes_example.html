@@ -183,7 +183,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu">APES</span><span class="fu">::</span><span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span>, n_boot <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
 <span class="va">apes_result</span></pre></div>
-<pre><code>## Time taken:  0.03169327  minutes 
+<pre><code>## Time taken:  0.03235559  minutes 
 ## Total number of bootstrap APES results:  50</code></pre>
 </div>
 <div id="variable-selection-under-20-bootstrap-using-mplot" class="section level2">
@@ -205,7 +205,7 @@
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="va">t2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Time taken: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html">difftime</a></span><span class="op">(</span><span class="va">t2</span>, <span class="va">t1</span>, units <span class="op">=</span> <span class="st">"mins"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"minutes"</span><span class="op">)</span></pre></div>
-<pre><code>## Time taken:  3.250844 minutes</code></pre>
+<pre><code>## Time taken:  3.219761 minutes</code></pre>
 <p>Looking at the time differences, it is clear that APES is the winner. However, it should be noted that APES only computed the best linear model within each model size while <code>mplot</code> performed a genuine exhaustive search across all GLM. These results are not intuitively comparable. However, the results presented in <a href="https://doi.org/10.1111/anzs.12276">Wang et. al</a> provide some assurance that the results of APES are good approximations to a genuine exhaustive search.</p>
 </div>
 <div id="comparing-variable-importance-plot" class="section level2">
