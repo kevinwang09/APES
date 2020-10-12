@@ -8,7 +8,7 @@ author:
 - name: Jean Y.H. Yang
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
 - name: Samuel Mueller
-  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+  affiliation: Department of Mathematics and Statistics, Macquarie University, Australia
 output: 
   rmarkdown::html_vignette:
     fig_width: 8
@@ -31,9 +31,9 @@ library(tidyverse)
 
 ## Loading data
 
-We will illustrate the speed of the APES method on the `diabetes` data from the `mplot` package. As the main motivation of the APES package is to make computational improvements on the exhaustive search done by `mplot` while maintaining a sensible approximation to the genuine exhaustive search, it is necessary for us to check this is indeed the case. 
+We will illustrate the speed of the APES method on the `diabetes` data from the `mplot` package. As the main motivation of the APES package is to make computational improvements on the exhaustive search done by the `mplot` package while maintaining a sensible approximation to the genuine exhaustive search, it is necessary for us to check this is indeed the case. 
 
-The `diabetes` data from the `mplot` package has a continuous response variable measuing  disease progression one year after baseline. In order to illustrate APES, we will dichromise this response variable by spliting it at the median to create two equally weighted classes and fit a logistic regression model.
+The `diabetes` data from the `mplot` package has a continuous response variable measuring  disease progression one year after baseline. In order to illustrate APES, we will dichotomise this response variable by spliting it at the median to create two equally weighted classes and fit a logistic regression model.
 
 ```{r}
 diabetes = mplot::diabetes
@@ -48,21 +48,21 @@ glimpse(diabetes_binarised)
 
 ## Fitting the full model
 
-Both `APES` and `mplot` were designed to have an easy-to-use user interface where an user can simply supply a `glm` object and get the analysis results rapidly. We will fit the full model here. 
+Both `APES` and `mplot` were designed to have an easy-to-use user interface where a user can simply supply a `glm` object and get the analysis results rapidly. We will fit the full model here. 
 
 ```{r}
 full_model = glm(y ~ ., family = "binomial", data = diabetes_binarised)
 summary(full_model)
 ```
 
-## Variable selection under 20 bootstrap using `APES`
+## Variable selection under 50 bootstrap using `APES`
 
 ```{r}
 apes_result = APES::apes(model = full_model, n_boot = 50)
 apes_result
 ```
 
-## Variable selection under 20 bootstrap using `mplot`
+## Variable selection under 50 bootstrap using `mplot`
 
 ```{r}
 t1 = Sys.time()
@@ -78,13 +78,13 @@ t2 = Sys.time()
 cat("Time taken: ", as.numeric(difftime(t2, t1, units = "mins")), "minutes")
 ```
 
-Looking at the time differences, it is clear that APES is the winner. However, it should be noted that APES only computed the best linear model within each model size while `mplot` performed a genuine exhaustive search across all GLM. These results are not intuitively comparable. However, the results presented in [Wang et. al](https://doi.org/10.1111/anzs.12276) provide some assurance that the results of APES are good approximations to a genuine exhaustive search. 
+Looking at the time differences, it is clear that APES is faster. However, it should be noted that APES only computed the best linear model within each model size while `mplot` performed a genuine exhaustive search across all GLM. These results are thus not intuitively comparable. However, the results presented in [Wang et. al](https://doi.org/10.1111/anzs.12276) provide some assurance that the results of APES are good approximations to a genuine exhaustive search. 
 
-## Comparing variable importance plot
+## Comparing variable importance plots
 
-One plot that both packages have implemented is the variable importance plot from Murray et. al. (2013). We will make a visual comparison between the two below to check if the final interpretations of these plots fit with our expectations. 
+One plot that both packages have implemented is the variable importance plot from Murray et. al. (2013). We will make a visual comparison between the two versions below to check if the final interpretations of these plots fit with our expectations. 
 
-The variable importance plot shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 \ell + \lambda (p + 1) $, where $\ell$ is the log-likelihood of a model, `\lambda` is the penalty term and $p$ is the number of predictors (excluding the intercept term). 
+The variable importance plot shows the stability of each variable as empirical probability of selection against different penalty terms, assuming a general information criterion formulation $-2 \ell + \lambda (p + 1) $, where $\ell$ is the log-likelihood of a model, `\lambda` is the penalty term and $p$ is the number of predictors (excluding the intercept term). 
 
 From APES:
 ```{r}
@@ -96,7 +96,7 @@ From mplot:
 plot(mplot_result, which = "vip")
 ```
 
-Based on the plots above, we see that both methods showed similar ordering of the variables as we should expect. As pointed out [by the `mplot` vignette](http://garthtarr.github.io/mplot/articles/diabetes.html), one of the most interesting feature of this data is the cross-over between some selected variables (especially the `hdl` and the `tc` variables which crosses over after after the BIC threshold) which is preserved by the `APES` package. 
+Based on the plots above, we see that both methods show similar ordering of the variables as we should expect. As pointed out [by the `mplot` vignette](http://garthtarr.github.io/mplot/articles/diabetes.html), one of the most interesting feature of this data is the cross-over between some selected variables (variables `hdl` and `tc` which cross over after the BIC threshold) which is preserved by the `APES` package. 
 
 # Reference 
 

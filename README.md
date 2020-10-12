@@ -30,8 +30,8 @@ binary response variable. We may wish to perform an exhaustive variable
 selection on such a model to determine which variables produce the most
 parsimonious model. However, performing an exhaustive variable selection
 means looking through \(2^{20} = 1,048,576\) models\! Exhaustive
-variable selection is known to be time consuming, and this might take a
-long time.
+variable selection is known to be time consuming, and looking at so many
+models might take a long time.
 
 APES is a variable selection method that first converts the logistic
 model into a linear model and then it uses a best-subset algorithm (such
@@ -40,7 +40,7 @@ model. The selected linear models are then converted into logistic
 models. The reason for doing this is that the exhaustive variable
 selection can be performed much faster in the linear model space.
 
-The current implementation of APES supports logistic, poisson and Cox
+The current implementation of APES supports logistic, Poisson and Cox
 regression models.
 
 ``` r
@@ -63,7 +63,7 @@ model = glm(y ~ ., data = data, family = "binomial")
 ## Running APES selection
 apes_result = apes(model = model)
 apes_result
-#> Time taken:  0.000188001  minutes 
+#> Time taken:  0.0002061009  minutes 
 #> 
 #>  APES - AIC selected the following variables 
 #> intercept        X1        X2        X3        X4        X5        X6        X7 
@@ -86,7 +86,7 @@ The best model of each model size are stored and the “best” model of all
 can be selected using an information criterion such as the Akaike
 Information Criterion (AIC) or the Bayesian Information Criterion (BIC).
 Notice how in the above output of APES, the true model size is
-identified as 3 and 2 by the AIC and BIC respectively. The selected
+identified as 3 and 2 by the AIC and BIC, respectively. The selected
 model estimates are also shown.
 
 The bootstrap procedure can be used to understand the variable selection
@@ -96,7 +96,7 @@ displays the bootstrapped results.
 ``` r
 boot_result = apes(model = model, n_boot = 20)
 boot_result
-#> Time taken:  0.03013748  minutes 
+#> Time taken:  0.02650997  minutes 
 #> Total number of bootstrap APES results:  20
 plot(boot_result, type = "vip")
 ```

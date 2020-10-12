@@ -8,7 +8,7 @@ author:
 - name: Jean Y.H. Yang
   affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
 - name: Samuel Mueller
-  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+  affiliation: Department of Mathematics and Statistics, Macquarie University, Australia
 output: 
   rmarkdown::html_vignette:
     fig_width: 8
@@ -67,7 +67,7 @@ full_model = glm(low ~ ., family = binomial, data = bwt)
 round(summary(full_model)$coef, 3)
 ```
 
-While on the outset, many of these variables would have seem to have an impact on the birth weight of an infant, the summary of the logistic model (in particular, the p-values) imply that some variables are redundant. So we may wish to perform variable selection on this data using `APES`. The main function of `APES` is `apes`.
+While on the outset, many of these variables would have seem to have an impact on the birth weight of an infant, the summary of the logistic model (in particular the p-values) imply that some variables are redundant. So we may wish to perform variable selection on this data using the `APES` package with the main function being `apes`.
 
 ```{r}
 apes_result = apes(model = full_model)
@@ -78,7 +78,7 @@ The `apes_result` gives us an indiaction as to which variables are considered to
 
 # Variable selection stability
 
-Suppose we are using the BIC as the main selection criterion, a single application of APES suggests that we should only select the `ptd` variable. However, [previous studies into this data](http://garthtarr.github.io/mplot/articles/birthweight.html) suggested that this data possess several interesting characteristics, one being variable selection instability. This means that the variables we select based on a single application of any model selection method cannot always be reproduced if the data is slightly perturbed. One way we can confirm the existence of this instability is to perform a bootstrap sampling on the observations, this introduces a perturbation on the data which affects model selection. 
+Suppose we are using the BIC as the main selection criterion, a single application of APES suggests that we should only select the `ptd` variable. However, [previous studies into this data](http://garthtarr.github.io/mplot/articles/birthweight.html) suggested that this data possess several interesting characteristics, one being variable selection instability. This means that the variables we select based on a single application of any model selection method cannot always be reproduced if the data is slightly perturbed. One way we can confirm the existence of this instability is to perform a bootstrap resampling of the observations, this introduces a perturbation on the data which affects model selection. 
 
 ```{r}
 set.seed(2020)
@@ -88,13 +88,13 @@ round(summary(full_model2)$coef, 3)
 apes(full_model2)
 ```
 
-We can see that when we apply perturbation on the data, the p-value for the `ht` variable increased from 0.008 to 0.054, which could cause confusion if we have taken a naive approach to only select variables with p-values < 0.05. Similarly, this perturbation also affects APES, as we have now selected three extra vairables under the BIC. Variable selection stability is not a criticism of any specific methods, but rather, it is an issue for data with ambiguous signals. We will describe how the `APES` package uses bootstrap sampling to improve variable selection stability in the next section. 
+We can see that when we perturb on the data, the p-value for the `ht` variable increases from 0.008 to 0.054, which could cause confusion if we take a naive approach to only select variables with p-values < 0.05. Similarly, this perturbation also affects APES, as we have now selected three extra variables under the BIC. Variable selection stability is not a criticism of any specific methods, but rather, it is an issue for data with ambiguous signals. We will describe how the `APES` package uses bootstrap resampling to improve variable selection stability in the next section. 
 
 # Bootstrapping with the `APES` package
 
-One way that we can improve variable selection stability is to apply `APES` on many bootstrap sampling on the data and then average the computed results. As the main motivation of APES is to make exhaustive selection fast and it is therefore also ideally suited for such a procedure which requires a large amount of computation. 
+One way that we can improve variable selection stability is to apply `APES` on many bootstrap resampling of the data and then average the computed results. As the main motivation of APES is to make exhaustive selection fast and it is therefore also ideally suited for such a procedure which requires a large amount of computation. 
 
-Running the `apes` function with an extra argument `n_boot` automatically invokes bootstrapping sampling on the rows of the data. The returned object is a `boot_apes` class object which stores all bootstrapped `apes` objects. This class comes with generic `print`, `summary` and `plot` methods, which makes the interaction with such an object much easier. 
+Running the `apes` function with an extra argument `n_boot` automatically invokes bootstrapping sampling on the rows of the data. The returned object is a `boot_apes` class object which stores all bootstrapped `apes` objects. This class comes with generic `print`, `summary` and `plot` methods, which make the interaction with such an object much easier. 
 
 The `summary` method summarises the averaged selection (empirical) probability of each variable for a given information criterion. In the next section, we will explore the `plot` generic methods for this object class. 
 
@@ -110,7 +110,7 @@ summary(boot_result, ic = "AIC")
 
 # Variable importance plot
 
-The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 \ell + \lambda (p + 1) $, where $\ell$ is the log-likelihood of a model, `\lambda` is the penalty term and $p$ is the number of predictors (excluding the intercept term). The most important difference between this `plot` method and the `summary` `method` is that we are no longer fixated on a single information criterion like the AIC (where $\lambda = 2$) and the BIC (where $\lambda = \log(p)$). Instead, we can visualise the selection with ever increasing penalty term $\lambda$. Variables with stronger selection stability are those with high probabilities of selection with increasingly higher levels of penalisation. 
+The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 \ell + \lambda (p + 1) $, where $\ell$ is the log-likelihood of a model, `\lambda` is the penalty term and $p$ is the number of predictors (excluding the intercept term). The most important difference between this `plot` method and the `summary`/`method` methods is that we are no longer fixated on a single information criterion such as the AIC (where $\lambda = 2$) and the BIC (where $\lambda = \log(p)$). Instead, we can visualise the selection with ever increasing penalty term $\lambda$. Variables with stronger selection stability are those with high probabilities of selection with increasingly higher levels of penalisation. 
 
 We can see that the variables in order of strength of stability are `ptd`, `ht` and `lwt`.
 
@@ -138,7 +138,7 @@ plot(boot_result, type = "ma")
 
 During the bootstrap computations, APES records the best AIC/BIC models across all bootstrap runs. Due to the induced perturbation, the AIC/BIC-best model in each bootstrapped data do not always coincide. One way to examine the differences between these models is to look into the model size of the best selected model.
 
-Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare of a model of size 2 to be selected by the BIC, with the majority of the models are between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion. 
+Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare for a model of size 2 to be selected when using the BIC, with the majority of the models being between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion. 
 
 ```{r}
 plot(boot_result, type = "path", order = "BIC")
