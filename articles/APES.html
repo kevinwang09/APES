@@ -88,7 +88,7 @@
             <address class="author_afil">
       School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Samuel Mueller</h4>
             <address class="author_afil">
-      School of Mathematics and Statistics, The University of Sydney, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/APES.Rmd"><code>vignettes/APES.Rmd</code></a></small>
+      Department of Mathematics and Statistics, Macquarie University, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/APES.Rmd"><code>vignettes/APES.Rmd</code></a></small>
       <div class="hidden name"><code>APES.Rmd</code></div>
 
     </address>
@@ -103,7 +103,7 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>APproximated Exhaustive Search (APES) is a variable selection method for Generalised Linear Models (GLMs). The main motivation behind this work is to improve the speed of exhaustive variable selection for GLMs. The accompanying paper is <a href="https://doi.org/10.1111/anzs.12276">Wang et. al. (2019)</a>.</p>
-<p>Suppose we have simulated a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable, <code>y</code>. This is what we termed as a “full” model, i.e. a model with all available predictor variables. We know that some of these variables are the true data generating variables and looking at the model summary, we see that these variables with p-values less than 0.05. So far, so good! However, we can also expect to see some variables with p-values also below the 0.05 cut-off by chance. In this case, is it still reasonable to also include these variables in our final selected model?</p>
+<p>Suppose we have simulated a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable, <code>y</code>. This is what we term a “full” model, i.e. a GLM that uses all available predictor variables in the linear part of the model. We know, because we have generated the data ourselves, that some of these variables are the true data generating variables and looking at the model summary in this example, we see that these variables happen to have p-values less than 0.05. So far, so good! However, we can also expect to see some variables with p-values also below the 0.05 cut-off by chance. In this case, is it still reasonable to also include these variables in our final selected model?</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span>
 
@@ -161,25 +161,25 @@
 <span class="co">#&gt; AIC: 522.7</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Number of Fisher Scoring iterations: 5</span></pre></div>
-<p>The question of which variable(s) a practitioner should select is very common in the area of variable selection. One of the most intuitive variable selection method is to enumerate all possible combination of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are <span class="math inline">\(2^p\)</span> possibilities to explore, with <span class="math inline">\(p\)</span> being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through <span class="math inline">\(2^{20} = 1,048,576\)</span> models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run — seems too long!</p>
+<p>The question of which variable(s) a practitioner should select is very common. One of the most intuitive variable selection methods is to enumerate all possible combinations of variables and select the best corresponding model using a fit statistic. This is known as exhaustive variable selection. In total, there are <span class="math inline">\(2^p\)</span> possibilities to explore, with <span class="math inline">\(p\)</span> being the number of predictors. However, in performing an exhaustive variable selection for this data, we will be looking through <span class="math inline">\(2^{20} = 1,048,576\)</span> models! If each model takes one thousandth of a second to compute, then this exhaustive variable selection will take about 15 minutes to run — seems too long!</p>
 </div>
 <div id="understanding-apes" class="section level1">
 <h1 class="hasAnchor">
 <a href="#understanding-apes" class="anchor"></a>Understanding APES</h1>
-<p>At its core, APES is designed to speed up this variable selection procedure. APES will first convert the full logistic model into a linear model. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space. In addition, linear models can benefit from best-subset algorithms which can search for the best linear model without searching through all <span class="math inline">\(2^p\)</span> candidate models. By default, APES uses the leaps-and-bound algorithm (from the <code>leaps</code> package) and mixed integer optimisation (from the <code>bestsubset</code> package) algorithm as the best-subset algorithms of choice. After obtaining a set of best-fit models, APES will convert the results back to into logistic models and show the best model of each size. While the word “best” can be subjective depending on the data context, in our example, we define this word as the model with the smallest information criterion value with the most common choices being the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC).</p>
-<p>It is important to note that APES only returns the best approximation to the exhaustive search, however, through extensive simulations in <a href="https://doi.org/10.1111/anzs.12276">our paper</a>, we have demonstrated that APES tends to always return informative model that is close to a genuine exhaustive search.</p>
+<p>At its core, APES is designed to speed up this variable selection procedure. APES will first convert the full logistic model into a linear model. The reason for doing this is that the exhaustive variable selection can be performed computationally much faster in the linear model space. In addition, linear models can benefit from best-subset algorithms which can search for the best linear model without searching through all <span class="math inline">\(2^p\)</span> candidate models. By default, APES uses the leaps-and-bound algorithm (from the <code>leaps</code> package) and mixed integer optimisation (from the <code>bestsubset</code> package) algorithm as the best-subset algorithms of choice. After obtaining a set of best-fit models, APES will convert the results back to into logistic models and show the best model of each size. While the word “best” can be subjective depending on the data context, in our example, we define this word as the model with the smallest information criterion value with the most common choices being the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC).</p>
+<p>It is important to note that APES only returns the best approximation to the exhaustive search, however, through extensive simulations in <a href="https://doi.org/10.1111/anzs.12276">our paper</a>, we have demonstrated that APES tends to always return an informative model that is close to a genuine exhaustive search.</p>
 <div id="apes-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#apes-package" class="anchor"></a>APES package</h2>
-<p>The <code>APES</code> package is designed to provide an user-friendly interface to perform APES variable selection. The main function in the <code>APES</code> package is the <code>apes</code> function which accepts a <code>glm</code> object in <code>R</code>. This is typically the “full model” with all available predictors fitted.</p>
+<p>The <code>APES</code> package is designed to provide a user-friendly interface to perform APES variable selection. The main function in the <code>APES</code> package is the <code>apes</code> function which accepts a <code>glm</code> object in <code>R</code>. This is typically the “full model” with all available predictors fitted.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">apes_result</span><span class="op">)</span>
 <span class="co">#&gt; [1] "apes"</span></pre></div>
-<p>The <code>apes</code> function returns a <code>apes</code> class object. By default, APES prints the model selected by the AIC and BIC and the time taken. There are extra computed results in the <code>apes</code> object which a user might be interested in further exploring.</p>
+<p>The <code>apes</code> function returns an <code>apes</code> class object. By default, APES prints the model selected by the AIC and BIC and the time taken. There are extra computed results in the <code>apes</code> object which a user might be interested in further exploring.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">apes_result</span><span class="op">)</span>
-<span class="co">#&gt; Time taken:  0.0001400828  minutes </span>
+<span class="co">#&gt; Time taken:  0.0001323819  minutes </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  APES - AIC selected the following variables </span>
 <span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span>
@@ -226,7 +226,7 @@
 <span class="co">#&gt; 18 apes_model…         19 ""                       -241.    521.    601. leaps_…</span>
 <span class="co">#&gt; 19 apes_model…         20 ""                       -241.    523.    607. leaps_…</span>
 <span class="co">#&gt; 20 apes_model…         21 ""                       -240.    523.    611. leaps_…</span></pre></div>
-<p>By default, <code>aoes</code> will always include the intercept term in the variable selection, and thus the selected models are always of size two (one intercept and one variable) and above. You may also be interested in plotting <code>apes_result</code> using the generic function <code>plot</code></p>
+<p>By default, <code>apes</code> will always include the intercept term in the variable selection, and thus the selected models are always of size two (one intercept and one variable) and above. You may also be interested in plotting <code>apes_result</code> using the generic function <code>plot</code></p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">apes_result</span><span class="op">)</span></pre></div>
 <p><img src="APES_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
@@ -276,7 +276,7 @@
 <span class="co">#&gt; [53] cli_2.0.2          tools_4.0.2        magrittr_1.5       tibble_3.0.3      </span>
 <span class="co">#&gt; [57] crayon_1.3.4       tidyr_1.1.2        pkgconfig_2.0.3    ellipsis_0.3.1    </span>
 <span class="co">#&gt; [61] Matrix_1.2-18      assertthat_0.2.1   rmarkdown_2.4      R6_2.4.1          </span>
-<span class="co">#&gt; [65] globals_0.13.0     compiler_4.0.2</span></pre></div>
+<span class="co">#&gt; [65] globals_0.13.1     compiler_4.0.2</span></pre></div>
 </div>
   </div>
 

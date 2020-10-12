@@ -88,7 +88,7 @@
             <address class="author_afil">
       School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Samuel Mueller</h4>
             <address class="author_afil">
-      School of Mathematics and Statistics, The University of Sydney, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/diabetes_example.Rmd"><code>vignettes/diabetes_example.Rmd</code></a></small>
+      Department of Mathematics and Statistics, Macquarie University, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/diabetes_example.Rmd"><code>vignettes/diabetes_example.Rmd</code></a></small>
       <div class="hidden name"><code>diabetes_example.Rmd</code></div>
 
     </address>
@@ -111,8 +111,8 @@
 <div id="loading-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#loading-data" class="anchor"></a>Loading data</h2>
-<p>We will illustrate the speed of the APES method on the <code>diabetes</code> data from the <code>mplot</code> package. As the main motivation of the APES package is to make computational improvements on the exhaustive search done by <code>mplot</code> while maintaining a sensible approximation to the genuine exhaustive search, it is necessary for us to check this is indeed the case.</p>
-<p>The <code>diabetes</code> data from the <code>mplot</code> package has a continuous response variable measuing disease progression one year after baseline. In order to illustrate APES, we will dichromise this response variable by spliting it at the median to create two equally weighted classes and fit a logistic regression model.</p>
+<p>We will illustrate the speed of the APES method on the <code>diabetes</code> data from the <code>mplot</code> package. As the main motivation of the APES package is to make computational improvements on the exhaustive search done by the <code>mplot</code> package while maintaining a sensible approximation to the genuine exhaustive search, it is necessary for us to check this is indeed the case.</p>
+<p>The <code>diabetes</code> data from the <code>mplot</code> package has a continuous response variable measuring disease progression one year after baseline. In order to illustrate APES, we will dichotomise this response variable by spliting it at the median to create two equally weighted classes and fit a logistic regression model.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="va">diabetes</span> <span class="op">=</span> <span class="fu">mplot</span><span class="fu">::</span><span class="va"><a href="http://garthtarr.github.io/mplot/reference/diabetes.html">diabetes</a></span>
 <span class="va">x</span> <span class="op">=</span> <span class="va">diabetes</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">y</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>
@@ -140,7 +140,7 @@
 <div id="fitting-the-full-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fitting-the-full-model" class="anchor"></a>Fitting the full model</h2>
-<p>Both <code>APES</code> and <code>mplot</code> were designed to have an easy-to-use user interface where an user can simply supply a <code>glm</code> object and get the analysis results rapidly. We will fit the full model here.</p>
+<p>Both <code>APES</code> and <code>mplot</code> were designed to have an easy-to-use user interface where a user can simply supply a <code>glm</code> object and get the analysis results rapidly. We will fit the full model here.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="va">full_model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, data <span class="op">=</span> <span class="va">diabetes_binarised</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">full_model</span><span class="op">)</span></pre></div>
@@ -176,19 +176,19 @@
 ## 
 ## Number of Fisher Scoring iterations: 5</code></pre>
 </div>
-<div id="variable-selection-under-20-bootstrap-using-apes" class="section level2">
+<div id="variable-selection-under-50-bootstrap-using-apes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#variable-selection-under-20-bootstrap-using-apes" class="anchor"></a>Variable selection under 20 bootstrap using <code>APES</code>
+<a href="#variable-selection-under-50-bootstrap-using-apes" class="anchor"></a>Variable selection under 50 bootstrap using <code>APES</code>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu">APES</span><span class="fu">::</span><span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span>, n_boot <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>
 <span class="va">apes_result</span></pre></div>
-<pre><code>## Time taken:  0.03235559  minutes 
+<pre><code>## Time taken:  0.0308217  minutes 
 ## Total number of bootstrap APES results:  50</code></pre>
 </div>
-<div id="variable-selection-under-20-bootstrap-using-mplot" class="section level2">
+<div id="variable-selection-under-50-bootstrap-using-mplot" class="section level2">
 <h2 class="hasAnchor">
-<a href="#variable-selection-under-20-bootstrap-using-mplot" class="anchor"></a>Variable selection under 20 bootstrap using <code>mplot</code>
+<a href="#variable-selection-under-50-bootstrap-using-mplot" class="anchor"></a>Variable selection under 50 bootstrap using <code>mplot</code>
 </h2>
 <div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="va">t1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
@@ -205,14 +205,14 @@
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="va">t2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Time taken: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html">difftime</a></span><span class="op">(</span><span class="va">t2</span>, <span class="va">t1</span>, units <span class="op">=</span> <span class="st">"mins"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"minutes"</span><span class="op">)</span></pre></div>
-<pre><code>## Time taken:  3.219761 minutes</code></pre>
-<p>Looking at the time differences, it is clear that APES is the winner. However, it should be noted that APES only computed the best linear model within each model size while <code>mplot</code> performed a genuine exhaustive search across all GLM. These results are not intuitively comparable. However, the results presented in <a href="https://doi.org/10.1111/anzs.12276">Wang et. al</a> provide some assurance that the results of APES are good approximations to a genuine exhaustive search.</p>
+<pre><code>## Time taken:  3.088482 minutes</code></pre>
+<p>Looking at the time differences, it is clear that APES is faster. However, it should be noted that APES only computed the best linear model within each model size while <code>mplot</code> performed a genuine exhaustive search across all GLM. These results are thus not intuitively comparable. However, the results presented in <a href="https://doi.org/10.1111/anzs.12276">Wang et. al</a> provide some assurance that the results of APES are good approximations to a genuine exhaustive search.</p>
 </div>
-<div id="comparing-variable-importance-plot" class="section level2">
+<div id="comparing-variable-importance-plots" class="section level2">
 <h2 class="hasAnchor">
-<a href="#comparing-variable-importance-plot" class="anchor"></a>Comparing variable importance plot</h2>
-<p>One plot that both packages have implemented is the variable importance plot from Murray et. al. (2013). We will make a visual comparison between the two below to check if the final interpretations of these plots fit with our expectations.</p>
-<p>The variable importance plot shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 + (p + 1) $, where <span class="math inline">\(\ell\)</span> is the log-likelihood of a model, <code>\lambda</code> is the penalty term and <span class="math inline">\(p\)</span> is the number of predictors (excluding the intercept term).</p>
+<a href="#comparing-variable-importance-plots" class="anchor"></a>Comparing variable importance plots</h2>
+<p>One plot that both packages have implemented is the variable importance plot from Murray et. al. (2013). We will make a visual comparison between the two versions below to check if the final interpretations of these plots fit with our expectations.</p>
+<p>The variable importance plot shows the stability of each variable as empirical probability of selection against different penalty terms, assuming a general information criterion formulation $-2 + (p + 1) $, where <span class="math inline">\(\ell\)</span> is the log-likelihood of a model, <code>\lambda</code> is the penalty term and <span class="math inline">\(p\)</span> is the number of predictors (excluding the intercept term).</p>
 <p>From APES:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">apes_result</span>, type <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></pre></div>
@@ -221,7 +221,7 @@
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mplot_result</span>, which <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></pre></div>
 <p><img src="diabetes_example_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>Based on the plots above, we see that both methods showed similar ordering of the variables as we should expect. As pointed out <a href="http://garthtarr.github.io/mplot/articles/diabetes.html">by the <code>mplot</code> vignette</a>, one of the most interesting feature of this data is the cross-over between some selected variables (especially the <code>hdl</code> and the <code>tc</code> variables which crosses over after after the BIC threshold) which is preserved by the <code>APES</code> package.</p>
+<p>Based on the plots above, we see that both methods show similar ordering of the variables as we should expect. As pointed out <a href="http://garthtarr.github.io/mplot/articles/diabetes.html">by the <code>mplot</code> vignette</a>, one of the most interesting feature of this data is the cross-over between some selected variables (variables <code>hdl</code> and <code>tc</code> which cross over after the BIC threshold) which is preserved by the <code>APES</code> package.</p>
 </div>
 </div>
 <div id="reference" class="section level1">
@@ -289,7 +289,7 @@
 ## [82] assertthat_0.2.1     xfun_0.18            mime_0.9            
 ## [85] xtable_1.8-4         broom_0.7.1          later_1.1.0.1       
 ## [88] ragg_0.4.0           survival_3.1-12      iterators_1.0.12    
-## [91] memoise_1.1.0        bestglm_0.37.3       globals_0.13.0      
+## [91] memoise_1.1.0        bestglm_0.37.3       globals_0.13.1      
 ## [94] ellipsis_0.3.1</code></pre>
 </div>
   </div>

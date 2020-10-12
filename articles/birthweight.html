@@ -88,7 +88,7 @@
             <address class="author_afil">
       School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 class="author">Samuel Mueller</h4>
             <address class="author_afil">
-      School of Mathematics and Statistics, The University of Sydney, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/birthweight.Rmd"><code>vignettes/birthweight.Rmd</code></a></small>
+      Department of Mathematics and Statistics, Macquarie University, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/birthweight.Rmd"><code>vignettes/birthweight.Rmd</code></a></small>
       <div class="hidden name"><code>birthweight.Rmd</code></div>
 
     </address>
@@ -176,11 +176,11 @@
 ## uiTRUE         0.680      0.464   1.465    0.143
 ## ftv1          -0.436      0.479  -0.910    0.363
 ## ftv2+          0.179      0.456   0.392    0.695</code></pre>
-<p>While on the outset, many of these variables would have seem to have an impact on the birth weight of an infant, the summary of the logistic model (in particular, the p-values) imply that some variables are redundant. So we may wish to perform variable selection on this data using <code>APES</code>. The main function of <code>APES</code> is <code>apes</code>.</p>
+<p>While on the outset, many of these variables would have seem to have an impact on the birth weight of an infant, the summary of the logistic model (in particular the p-values) imply that some variables are redundant. So we may wish to perform variable selection on this data using the <code>APES</code> package with the main function being <code>apes</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span><span class="op">)</span>
 <span class="va">apes_result</span></pre></div>
-<pre><code>## Time taken:  0.0001043479  minutes 
+<pre><code>## Time taken:  0.0001344482  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -198,7 +198,7 @@
 <div id="variable-selection-stability" class="section level1">
 <h1 class="hasAnchor">
 <a href="#variable-selection-stability" class="anchor"></a>Variable selection stability</h1>
-<p>Suppose we are using the BIC as the main selection criterion, a single application of APES suggests that we should only select the <code>ptd</code> variable. However, <a href="http://garthtarr.github.io/mplot/articles/birthweight.html">previous studies into this data</a> suggested that this data possess several interesting characteristics, one being variable selection instability. This means that the variables we select based on a single application of any model selection method cannot always be reproduced if the data is slightly perturbed. One way we can confirm the existence of this instability is to perform a bootstrap sampling on the observations, this introduces a perturbation on the data which affects model selection.</p>
+<p>Suppose we are using the BIC as the main selection criterion, a single application of APES suggests that we should only select the <code>ptd</code> variable. However, <a href="http://garthtarr.github.io/mplot/articles/birthweight.html">previous studies into this data</a> suggested that this data possess several interesting characteristics, one being variable selection instability. This means that the variables we select based on a single application of any model selection method cannot always be reproduced if the data is slightly perturbed. One way we can confirm the existence of this instability is to perform a bootstrap resampling of the observations, this introduces a perturbation on the data which affects model selection.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">)</span>
 <span class="va">boot_bwt</span> <span class="op">=</span> <span class="va">bwt</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">bwt</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">bwt</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span>
@@ -218,7 +218,7 @@
 ## ftv2+         -0.194      0.458  -0.423    0.672</code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span><span class="va">full_model2</span><span class="op">)</span></pre></div>
-<pre><code>## Time taken:  7.534027e-06  minutes 
+<pre><code>## Time taken:  1.514753e-05  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -231,13 +231,13 @@
 ##     0.897     0.000    -0.016     1.054     0.000     0.000     1.423     0.000 
 ##    uiTRUE      ftv1     ftv2+ 
 ##     0.000    -1.315     0.000</code></pre>
-<p>We can see that when we apply perturbation on the data, the p-value for the <code>ht</code> variable increased from 0.008 to 0.054, which could cause confusion if we have taken a naive approach to only select variables with p-values &lt; 0.05. Similarly, this perturbation also affects APES, as we have now selected three extra vairables under the BIC. Variable selection stability is not a criticism of any specific methods, but rather, it is an issue for data with ambiguous signals. We will describe how the <code>APES</code> package uses bootstrap sampling to improve variable selection stability in the next section.</p>
+<p>We can see that when we perturb on the data, the p-value for the <code>ht</code> variable increases from 0.008 to 0.054, which could cause confusion if we take a naive approach to only select variables with p-values &lt; 0.05. Similarly, this perturbation also affects APES, as we have now selected three extra variables under the BIC. Variable selection stability is not a criticism of any specific methods, but rather, it is an issue for data with ambiguous signals. We will describe how the <code>APES</code> package uses bootstrap resampling to improve variable selection stability in the next section.</p>
 </div>
 <div id="bootstrapping-with-the-apes-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#bootstrapping-with-the-apes-package" class="anchor"></a>Bootstrapping with the <code>APES</code> package</h1>
-<p>One way that we can improve variable selection stability is to apply <code>APES</code> on many bootstrap sampling on the data and then average the computed results. As the main motivation of APES is to make exhaustive selection fast and it is therefore also ideally suited for such a procedure which requires a large amount of computation.</p>
-<p>Running the <code>apes</code> function with an extra argument <code>n_boot</code> automatically invokes bootstrapping sampling on the rows of the data. The returned object is a <code>boot_apes</code> class object which stores all bootstrapped <code>apes</code> objects. This class comes with generic <code>print</code>, <code>summary</code> and <code>plot</code> methods, which makes the interaction with such an object much easier.</p>
+<p>One way that we can improve variable selection stability is to apply <code>APES</code> on many bootstrap resampling of the data and then average the computed results. As the main motivation of APES is to make exhaustive selection fast and it is therefore also ideally suited for such a procedure which requires a large amount of computation.</p>
+<p>Running the <code>apes</code> function with an extra argument <code>n_boot</code> automatically invokes bootstrapping sampling on the rows of the data. The returned object is a <code>boot_apes</code> class object which stores all bootstrapped <code>apes</code> objects. This class comes with generic <code>print</code>, <code>summary</code> and <code>plot</code> methods, which make the interaction with such an object much easier.</p>
 <p>The <code>summary</code> method summarises the averaged selection (empirical) probability of each variable for a given information criterion. In the next section, we will explore the <code>plot</code> generic methods for this object class.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
 <span class="va">boot_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span><span class="va">full_model</span>, n_boot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
@@ -250,7 +250,7 @@
 <div id="variable-importance-plot" class="section level1">
 <h1 class="hasAnchor">
 <a href="#variable-importance-plot" class="anchor"></a>Variable importance plot</h1>
-<p>The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 + (p + 1) $, where <span class="math inline">\(\ell\)</span> is the log-likelihood of a model, <code>\lambda</code> is the penalty term and <span class="math inline">\(p\)</span> is the number of predictors (excluding the intercept term). The most important difference between this <code>plot</code> method and the <code>summary</code> <code>method</code> is that we are no longer fixated on a single information criterion like the AIC (where <span class="math inline">\(\lambda = 2\)</span>) and the BIC (where <span class="math inline">\(\lambda = \log(p)\)</span>). Instead, we can visualise the selection with ever increasing penalty term <span class="math inline">\(\lambda\)</span>. Variables with stronger selection stability are those with high probabilities of selection with increasingly higher levels of penalisation.</p>
+<p>The variable importance plot is a technique explored in Murray et. al. (2013) and it shows the stability of each variable as empirical probability of selection against different penalty terms, assuming the a general information criterion formulation $-2 + (p + 1) $, where <span class="math inline">\(\ell\)</span> is the log-likelihood of a model, <code>\lambda</code> is the penalty term and <span class="math inline">\(p\)</span> is the number of predictors (excluding the intercept term). The most important difference between this <code>plot</code> method and the <code>summary</code>/<code>method</code> methods is that we are no longer fixated on a single information criterion such as the AIC (where <span class="math inline">\(\lambda = 2\)</span>) and the BIC (where <span class="math inline">\(\lambda = \log(p)\)</span>). Instead, we can visualise the selection with ever increasing penalty term <span class="math inline">\(\lambda\)</span>. Variables with stronger selection stability are those with high probabilities of selection with increasingly higher levels of penalisation.</p>
 <p>We can see that the variables in order of strength of stability are <code>ptd</code>, <code>ht</code> and <code>lwt</code>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></pre></div>
@@ -275,7 +275,7 @@
 <h2 class="hasAnchor">
 <a href="#information-criterion-pathway-plot" class="anchor"></a>Information criterion pathway plot</h2>
 <p>During the bootstrap computations, APES records the best AIC/BIC models across all bootstrap runs. Due to the induced perturbation, the AIC/BIC-best model in each bootstrapped data do not always coincide. One way to examine the differences between these models is to look into the model size of the best selected model.</p>
-<p>Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare of a model of size 2 to be selected by the BIC, with the majority of the models are between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion.</p>
+<p>Here, each bootstrap run is represented by a black curve with the BIC-selected model of each run coloured as red. We can see that it is rare for a model of size 2 to be selected when using the BIC, with the majority of the models being between 3 and 6 in model size. This is a reason why we should perform such a bootstrap procedure to examine the model selection stability as a single run of APES only identifies a model of size two under the BIC selection criterion.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"path"</span>, order <span class="op">=</span> <span class="st">"BIC"</span><span class="op">)</span></pre></div>
 <p><img src="birthweight_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
@@ -326,7 +326,7 @@
 ## loaded via a namespace (and not attached):
 ##  [1] httr_1.4.2         jsonlite_1.7.1     splines_4.0.2      modelr_0.1.8      
 ##  [5] gtools_3.8.2       assertthat_0.2.1   blob_1.2.1         cellranger_1.1.0  
-##  [9] yaml_2.2.1         ggrepel_0.8.2      globals_0.13.0     pillar_1.4.6      
+##  [9] yaml_2.2.1         ggrepel_0.8.2      globals_0.13.1     pillar_1.4.6      
 ## [13] backports_1.1.10   lattice_0.20-41    glue_1.4.2         digest_0.6.25     
 ## [17] RColorBrewer_1.1-2 rvest_0.3.6        colorspace_1.4-1   htmltools_0.5.0   
 ## [21] Matrix_1.2-18      plyr_1.8.6         pkgconfig_2.0.3    broom_0.7.1       
