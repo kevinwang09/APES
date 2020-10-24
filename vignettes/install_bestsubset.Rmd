@@ -1,0 +1,47 @@
+---
+title: "Install `bestsubset`"
+author:
+- name: Kevin Y.X. Wang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Garth Tarr
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Jean Y.H. Yang
+  affiliation: School of Mathematics and Statistics, The University of Sydney, Australia
+- name: Samuel Mueller
+  affiliation: Department of Mathematics and Statistics, Macquarie University, Australia
+output: 
+  rmarkdown::html_vignette:
+    fig_width: 8
+    fig_height: 6
+vignette: |
+  %\VignetteIndexEntry{Install `bestsubset`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+# Introduction
+
+The APES method rely on a best subset algorithm for linear regression model. In cases where the number of regressors is less than 30, the `leaps` algorithm is sufficiently fast to provide a result. For cases where the number of regressors becomes larger, we recommend using the `bestsubset` package as the backend. However, the installation of this package is not quite straight forward. The purpose of this vignette is to detail some key steps to install this package. 
+
+
+# Installing `gurobi` 
+
+The `bestsubset` package that `APES` depends on can be installed from GitHub via the `R` command `devtools::install_github("ryantibs/best-subset/bestsubset")`. While this step is relatively straight forward, the real hurdle is the installation of the `gurobi` `R` package which the commercial company Gurobi has copyright over.
+
+Follow the steps in [this article](https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html). Specifically, you should:
+
+1. Register an account with Gurobi at https://www.gurobi.com/login/.
+
+2. Review the licensing options at http://www.gurobi.com/products/licensing-pricing/licensing-overview. Academic affiliates can obtain a free license from https://www.gurobi.com/downloads/end-user-license-agreement-academic/. 
+
+3. Open up your system terminal and enter `grbgetkey <license-id>`, where your `<license-id>` is in the form of `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX` from step 2. 
+
+4. Download the Gurobi software from https://www.gurobi.com/downloads/ and select the software version and operating system. Documentations specific to your operating system can be found [here](http://www.gurobi.com/documentation/). 
+
+5. Once the software is downloaded, install it at your desired path. The `R` package will be in a subfolder under the installation path. For example, on MacOS, the default installation path for Gurobi 9.0.1 is `/Library/gurobi901` and the `R` command for installing `gurobi` is `install.packages('/Library/gurobi901/mac64/R/gurobi_9.0-1_R_3.6.1.tgz', repos=NULL)`. You will also need install the `slam` package via `install.packages("slam", repos = "https://cloud.r-project.org")`.
+
+6. Test if `gurobi` is installed by running `library(gurobi)` in `R`. 
+
+# Install `bestsubset`
+
+The `bestsubset` package can be installed from GitHub via the `R` command `devtools::install_github("ryantibs/best-subset/bestsubset")`.
