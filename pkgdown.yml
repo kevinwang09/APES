@@ -4,6 +4,8 @@ pkgdown_sha: e1e46f2e13c7efdb17bc4eae40bc3779c2b0b517
 articles:
   APES: APES.html
   birthweight: birthweight.html
-  diabetes_example: diabetes_example.html
-last_built: 2020-10-12T11:30Z
+  diabetes: diabetes.html
+  install_bestsubset: install_bestsubset.html
+  speed: speed.html
+last_built: 2020-10-24T09:54Z
 

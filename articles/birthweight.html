@@ -54,7 +54,13 @@
       <a href="../articles/birthweight.html">APES: birth weight data example</a>
     </li>
     <li>
-      <a href="../articles/diabetes_example.html">APES: diabetes data example</a>
+      <a href="../articles/diabetes.html">APES: diabetes data example</a>
+    </li>
+    <li>
+      <a href="../articles/install_bestsubset.html">Install `bestsubset`</a>
+    </li>
+    <li>
+      <a href="../articles/speed.html">Speeding up APES</a>
     </li>
   </ul>
 </li>
@@ -76,7 +82,8 @@
 
       
 
-      </header><script src="birthweight_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="birthweight_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="birthweight_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="birthweight_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>APES: birth weight data example</h1>
@@ -113,7 +120,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></pre></div>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.3.2     ✔ purrr   0.3.4
-## ✔ tibble  3.0.3     ✔ dplyr   1.0.2
+## ✔ tibble  3.0.4     ✔ dplyr   1.0.2
 ## ✔ tidyr   1.1.2     ✔ stringr 1.4.0
 ## ✔ readr   1.4.0     ✔ forcats 0.5.0</code></pre>
 <pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -180,7 +187,7 @@
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">full_model</span><span class="op">)</span>
 <span class="va">apes_result</span></pre></div>
-<pre><code>## Time taken:  0.0001344482  minutes 
+<pre><code>## Time taken:  0.0002449671  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -218,7 +225,7 @@
 ## ftv2+         -0.194      0.458  -0.423    0.672</code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span><span class="va">full_model2</span><span class="op">)</span></pre></div>
-<pre><code>## Time taken:  1.514753e-05  minutes 
+<pre><code>## Time taken:  7.998943e-06  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -304,7 +311,7 @@
 <a href="#session-info" class="anchor"></a>Session Info</h1>
 <div class="sourceCode" id="cb22"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
-<pre><code>## R version 4.0.2 (2020-06-22)
+<pre><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Catalina 10.15.7
 ## 
@@ -320,29 +327,30 @@
 ## 
 ## other attached packages:
 ##  [1] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.2     purrr_0.3.4    
-##  [5] readr_1.4.0     tidyr_1.1.2     tibble_3.0.3    ggplot2_3.3.2  
-##  [9] tidyverse_1.3.0 MASS_7.3-51.6   APES_0.6.0     
+##  [5] readr_1.4.0     tidyr_1.1.2     tibble_3.0.4    ggplot2_3.3.2  
+##  [9] tidyverse_1.3.0 MASS_7.3-53     APES_0.6.0     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.4.2         jsonlite_1.7.1     splines_4.0.2      modelr_0.1.8      
+##  [1] httr_1.4.2         jsonlite_1.7.1     splines_4.0.3      modelr_0.1.8      
 ##  [5] gtools_3.8.2       assertthat_0.2.1   blob_1.2.1         cellranger_1.1.0  
 ##  [9] yaml_2.2.1         ggrepel_0.8.2      globals_0.13.1     pillar_1.4.6      
-## [13] backports_1.1.10   lattice_0.20-41    glue_1.4.2         digest_0.6.25     
-## [17] RColorBrewer_1.1-2 rvest_0.3.6        colorspace_1.4-1   htmltools_0.5.0   
-## [21] Matrix_1.2-18      plyr_1.8.6         pkgconfig_2.0.3    broom_0.7.1       
+## [13] backports_1.1.10   lattice_0.20-41    glue_1.4.2         digest_0.6.26     
+## [17] RColorBrewer_1.1-2 rvest_0.3.6        colorspace_1.4-1   plyr_1.8.6        
+## [21] htmltools_0.5.0    Matrix_1.2-18      pkgconfig_2.0.3    broom_0.7.2       
 ## [25] listenv_0.8.0      haven_2.3.1        scales_1.1.1       farver_2.0.3      
-## [29] generics_0.0.2     ellipsis_0.3.1     withr_2.3.0        furrr_0.1.0       
-## [33] cli_2.0.2          survival_3.1-12    magrittr_1.5       crayon_1.3.4      
-## [37] readxl_1.3.1       memoise_1.1.0      evaluate_0.14      fs_1.5.0          
-## [41] future_1.19.1      fansi_0.4.1        xml2_1.3.2         textshaping_0.1.2 
-## [45] tools_4.0.2        hms_0.5.3          lifecycle_0.2.0    munsell_0.5.0     
-## [49] reprex_0.3.0       compiler_4.0.2     pkgdown_1.6.1.9000 systemfonts_0.3.2 
-## [53] rlang_0.4.8        grid_4.0.2         rstudioapi_0.11    leaps_3.1         
-## [57] labeling_0.3       rmarkdown_2.4      gtable_0.3.0       codetools_0.2-16  
-## [61] DBI_1.1.0          reshape2_1.4.4     R6_2.4.1           lubridate_1.7.9   
-## [65] knitr_1.30         utf8_1.1.4         rprojroot_1.3-2    ragg_0.4.0        
-## [69] desc_1.2.0         stringi_1.5.3      parallel_4.0.2     Rcpp_1.0.5        
-## [73] vctrs_0.3.4        dbplyr_1.4.4       tidyselect_1.1.0   xfun_0.18</code></pre>
+## [29] generics_0.0.2     ellipsis_0.3.1     withr_2.3.0        furrr_0.2.1       
+## [33] cli_2.1.0          survival_3.2-7     magrittr_1.5       crayon_1.3.4      
+## [37] readxl_1.3.1       memoise_1.1.0      evaluate_0.14      ps_1.4.0          
+## [41] fs_1.5.0           future_1.19.1      fansi_0.4.1        xml2_1.3.2        
+## [45] textshaping_0.1.2  tools_4.0.3        hms_0.5.3          lifecycle_0.2.0   
+## [49] munsell_0.5.0      reprex_0.3.0       compiler_4.0.3     pkgdown_1.6.1.9000
+## [53] systemfonts_0.3.2  rlang_0.4.8        grid_4.0.3         rstudioapi_0.11   
+## [57] leaps_3.1          labeling_0.4.2     rmarkdown_2.5      gtable_0.3.0      
+## [61] codetools_0.2-16   DBI_1.1.0          reshape2_1.4.4     R6_2.4.1          
+## [65] lubridate_1.7.9    knitr_1.30         utf8_1.1.4         rprojroot_1.3-2   
+## [69] ragg_0.4.0         desc_1.2.0         stringi_1.5.3      parallel_4.0.3    
+## [73] Rcpp_1.0.5         vctrs_0.3.4        dbplyr_1.4.4       tidyselect_1.1.0  
+## [77] xfun_0.18</code></pre>
 </div>
   </div>
 
