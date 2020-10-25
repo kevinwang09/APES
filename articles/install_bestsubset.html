@@ -110,28 +110,23 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The APES method rely on a best subset algorithm for linear regression model. In cases where the number of regressors is less than 30, the <code>leaps</code> algorithm is sufficiently fast to provide a result. For cases where the number of regressors becomes larger, we recommend using the <code>bestsubset</code> package as the backend. However, the installation of this package is not quite straight forward. The purpose of this vignette is to detail some key steps to install this package.</p>
+<p>The APES method relies on a best subset algorithm for linear regression model. In cases where the number of regressors is less than 30, the <a href="https://cran.r-project.org/web/packages/leaps/index.html"><code>leaps</code> package</a> is sufficiently fast to provide a result in a reasonable time. For cases where the number of regressors becomes larger, we recommend using the <a href="https://github.com/ryantibs/best-subset"><code>bestsubset</code> package</a> as the backend. However, the installation of this package is not quite straight forward. The purpose of this vignette is to detail some key steps to install this package.</p>
 </div>
-<div id="installing-gurobi" class="section level1">
+<div id="installing-bestsubset" class="section level1">
 <h1 class="hasAnchor">
-<a href="#installing-gurobi" class="anchor"></a>Installing <code>gurobi</code>
+<a href="#installing-bestsubset" class="anchor"></a>Installing <code>bestsubset</code>
 </h1>
 <p>The <code>bestsubset</code> package that <code>APES</code> depends on can be installed from GitHub via the <code>R</code> command <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("ryantibs/best-subset/bestsubset")</a></code>. While this step is relatively straight forward, the real hurdle is the installation of the <code>gurobi</code> <code>R</code> package which the commercial company Gurobi has copyright over.</p>
-<p>Follow the steps in <a href="https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html">this article</a>. Specifically, you should:</p>
+<p>To install <code>gurobi</code>, follow the steps in <a href="https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html">this article</a>. Specifically, you should:</p>
 <ol style="list-style-type: decimal">
 <li><p>Register an account with Gurobi at <a href="https://www.gurobi.com/login/" class="uri">https://www.gurobi.com/login/</a>.</p></li>
 <li><p>Review the licensing options at <a href="http://www.gurobi.com/products/licensing-pricing/licensing-overview" class="uri">http://www.gurobi.com/products/licensing-pricing/licensing-overview</a>. Academic affiliates can obtain a free license from <a href="https://www.gurobi.com/downloads/end-user-license-agreement-academic/" class="uri">https://www.gurobi.com/downloads/end-user-license-agreement-academic/</a>.</p></li>
 <li><p>Open up your system terminal and enter <code>grbgetkey &lt;license-id&gt;</code>, where your <code>&lt;license-id&gt;</code> is in the form of <code>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</code> from step 2.</p></li>
-<li><p>Download the Gurobi software from <a href="https://www.gurobi.com/downloads/" class="uri">https://www.gurobi.com/downloads/</a> and select the software version and operating system. Documentations specific to your operating system can be found <a href="http://www.gurobi.com/documentation/">here</a>.</p></li>
+<li><p>Download the Gurobi software from <a href="https://www.gurobi.com/downloads/" class="uri">https://www.gurobi.com/downloads/</a> and select the software version and operating system. Documentations specific to your operating system can be found at <a href="http://www.gurobi.com/documentation/" class="uri">http://www.gurobi.com/documentation/</a>.</p></li>
 <li><p>Once the software is downloaded, install it at your desired path. The <code>R</code> package will be in a subfolder under the installation path. For example, on MacOS, the default installation path for Gurobi 9.0.1 is <code>/Library/gurobi901</code> and the <code>R</code> command for installing <code>gurobi</code> is <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages('/Library/gurobi901/mac64/R/gurobi_9.0-1_R_3.6.1.tgz', repos=NULL)</a></code>. You will also need install the <code>slam</code> package via <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("slam", repos = "https://cloud.r-project.org")</a></code>.</p></li>
 <li><p>Test if <code>gurobi</code> is installed by running <code>library(gurobi)</code> in <code>R</code>.</p></li>
+<li><p>Finally, the <code>bestsubset</code> package can be installed from GitHub via the <code>R</code> command <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("ryantibs/best-subset/bestsubset")</a></code>.</p></li>
 </ol>
-</div>
-<div id="install-bestsubset" class="section level1">
-<h1 class="hasAnchor">
-<a href="#install-bestsubset" class="anchor"></a>Install <code>bestsubset</code>
-</h1>
-<p>The <code>bestsubset</code> package can be installed from GitHub via the <code>R</code> command <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("ryantibs/best-subset/bestsubset")</a></code>.</p>
 </div>
   </div>
 

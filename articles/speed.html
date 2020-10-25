@@ -109,7 +109,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The APES method rely on a best subset algorithm for linear regression model. In the current implementation of the <code>APES</code> package, we allow for two options. One is the leaps-and-bound algorithm from the <code>leaps</code> package and Mixed Integer Optimisation from the <code>bestsubset</code> package with a backend connect to the Gurobi commercial software.</p>
+<p>The APES method relies on a best subset algorithm for linear regression model. In the current implementation of the <code>APES</code> package, we allow for two backend options. One is the leaps-and-bound algorithm from the <code>leaps</code> package and Mixed Integer Optimisation from the <code>bestsubset</code> package with a backend connect to the Gurobi commercial software.</p>
 <p>You can learn about how to install Gurobi and the <code>bestsubset</code> package from <a href="https://kevinwang09.github.io/APES/articles/install_bestsubset.html">here</a></p>
 </div>
 <div id="running-apes-with-bestsubset" class="section level1">
@@ -119,24 +119,6 @@
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co">## Simulating data</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">=</span> <span class="fl">100</span>
-<span class="va">p</span> <span class="op">=</span> <span class="fl">10</span>
-<span class="va">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">p</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fu"><a href="../reference/logit.html">expit</a></span><span class="op">(</span><span class="va">x</span> <span class="op">%*%</span> <span class="va">beta</span><span class="op">)</span><span class="op">)</span>
-<span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">x</span><span class="op">)</span>
-<span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span>
-
-<span class="co">## Running APES</span>
-<span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"mio"</span><span class="op">)</span>
-<span class="va">apes_result</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">apes_result</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">apes_result</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="co">## Simulating data</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
@@ -214,32 +196,9 @@
 <div id="solving-for-k-directly" class="section level2">
 <h2 class="hasAnchor">
 <a href="#solving-for-k-directly" class="anchor"></a>Solving for <code>k</code> directly</h2>
-<p>Imagine that we have a data with <span class="math inline">\(p = 10\)</span> regressors and we are interested in getting the best model of size <span class="math inline">\(k = 5\)</span>, where <span class="math inline">\(k\)</span> refers to the number of regressors with non-zero coefficient estimate. The <code>leaps</code> package is designed in such a way that all models of size <span class="math inline">\(1, \dots, k\)</span> are all computed and returned. This is a behaviour that is rooted in the leaps-and-bound algorithm and the intermediate computed models cannot be skipped. For large values of <code>p</code>, this could be very computationally heavy and unnecessary. On the other hand, the MIO algorithm is able to optimise for <code>k</code> directly.</p>
-<p>Continuing with the example above, if we specify an additional <code>k</code> parameter, then we can get the result for only one model using MIO but five models if we solve using <code>leaps</code>. Additionally, MIO is able to solve for model sizes in a range, e.g. by setting <code>k = 5:9</code>. The sequential behaviour of <code>leaps</code> means that it will be slower than MIO for large values of <code>p</code> but will be faster than MIO for small values of <code>p</code> due to the design of API.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co">## Simulating data</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">=</span> <span class="fl">100</span>
-<span class="va">p</span> <span class="op">=</span> <span class="fl">10</span>
-<span class="va">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">p</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fu"><a href="../reference/logit.html">expit</a></span><span class="op">(</span><span class="va">x</span> <span class="op">%*%</span> <span class="va">beta</span><span class="op">)</span><span class="op">)</span>
-<span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">x</span><span class="op">)</span>
-<span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span>
-
-<span class="co">## leaps</span>
-<span class="va">leaps_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"leaps"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
-<span class="va">leaps_result</span><span class="op">$</span><span class="va">apes_model_df</span>
-
-<span class="co">## mio</span>
-<span class="va">mio_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"mio"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
-<span class="va">mio_result</span><span class="op">$</span><span class="va">apes_model_df</span>
-
-<span class="va">mio_result2</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"mio"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span>
-<span class="va">mio_result2</span><span class="op">$</span><span class="va">apes_model_df</span></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit">
+<p>Imagine that we have a data with <span class="math inline">\(p = 10\)</span> regressors and we are interested in getting the best model of size <span class="math inline">\(k = 5\)</span>, where <span class="math inline">\(k\)</span> is the number of regressors with non-zero coefficient estimate. The <code>leaps</code> package is designed in such a way that all models of size <span class="math inline">\(1, \dots, k\)</span> are computed and returned. This is a behaviour that is rooted in the leaps-and-bound algorithm and the intermediate computed models cannot be skipped. For large values of <code>p</code>, this could be very computationally heavy and unnecessary if we only desire model of a particular size. On the other hand, the MIO algorithm is able to optimise for a model of size <code>k</code> directly and performs well for large vales of <code>p</code>.</p>
+<p>Continuing with the example above, if we specify an additional <code>k</code> parameter in our call of the <code>apes</code> function, then we can get the result for only one model using MIO but five models if we solve using <code>leaps</code>. Additionally, MIO is able to solve for model sizes in a range, e.g. by setting <code>k = 5:9</code>. The sequential behaviour of <code>leaps</code> means that it will be slower than MIO for large values of <code>p</code> but will be faster than MIO for small values of <code>p</code> due to the design of API.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="co">## leaps</span>
 <span class="va">leaps_result</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"leaps"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="va">leaps_result</span><span class="op">$</span><span class="va">apes_model_df</span>
@@ -298,72 +257,22 @@
 <h2 class="hasAnchor">
 <a href="#time-limit" class="anchor"></a>Time limit</h2>
 <p>Another advantage of MIO over the leaps-and-bound algorithm is that MIO can stop the computation before a full convergence in the optimisation and yet still return the model that is considered to be optimal at that point in time. This is a very attractive property as we can specify a time limit when searching for a model instead of waiting for an unknown amount of time.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co">## Simulating data</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES">APES</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">=</span> <span class="fl">100</span>
-<span class="va">p</span> <span class="op">=</span> <span class="fl">10</span>
-<span class="va">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">p</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fu"><a href="../reference/logit.html">expit</a></span><span class="op">(</span><span class="va">x</span> <span class="op">%*%</span> <span class="va">beta</span><span class="op">)</span><span class="op">)</span>
-<span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">x</span><span class="op">)</span>
-<span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span>
-
-<span class="va">mio_result3</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"mio"</span>, k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, time_limit <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="va">mio_result3</span><span class="op">$</span><span class="va">apes_model_df</span></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co">## Simulating data</span>
-<span class="va">mio_result3</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"mio"</span>, k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, time_limit <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co">#&gt; Registered S3 method overwritten by 'bestsubset':</span>
-<span class="co">#&gt;   method     from   </span>
-<span class="co">#&gt;   predict.bs splines</span>
+<p>In <code>APES</code>, this can be specified with the <code>time_limit</code> parameter. Note that the unit is in seconds. In the result below, we specified <code>time_limit = 0.001</code> which is small enough to trigger a time limit. In such a case, MIO will return a result (<code>mio_result3</code>) with a status of <code>TIME_LIMIT</code>. However, notice how the computed result is identical to the computed result where the computed is global optimal (<code>mio_result</code>), except the time taken. This is known as the sub-optimal property of the MIO algorithm.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="va">mio_result3</span> <span class="op">=</span> <span class="fu"><a href="../reference/apes.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, estimator <span class="op">=</span> <span class="st">"mio"</span>, k <span class="op">=</span> <span class="fl">5</span>, time_limit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span>
 <span class="co">#&gt; 0. Computing max eigenvalue of X^T X, for the step size in projected gradient descent.</span>
-<span class="co">#&gt; 1. Solving best subset selection with k=1.</span>
+<span class="co">#&gt; 1. Solving best subset selection with k=5.</span>
 <span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 2. Solving best subset selection with k=2.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 3. Solving best subset selection with k=3.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 4. Solving best subset selection with k=4.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 5. Solving best subset selection with k=5.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 6. Solving best subset selection with k=6.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 7. Solving best subset selection with k=7.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 8. Solving best subset selection with k=8.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 9. Solving best subset selection with k=9.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
-<span class="co">#&gt; 10. Solving best subset selection with k=10.</span>
-<span class="co">#&gt;   a. Performing projected gradient runs: 1 ... 10 ... 20 ... 30 ... 40 ... 50 ... </span>
-<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: OPTIMAL.</span>
+<span class="co">#&gt;   b. Running Gurobi's mixed integer program solver ... Return status: TIME_LIMIT.</span>
 <span class="va">mio_result3</span><span class="op">$</span><span class="va">apes_model_df</span>
-<span class="co">#&gt; # A tibble: 10 x 7</span>
-<span class="co">#&gt;    model_name   model_size ic_opt_models apes_mle_loglike mle_aic mle_bic status</span>
-<span class="co">#&gt;    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; </span>
-<span class="co">#&gt;  1 apes_model_2          2 ""                       -59.4    123.    128. OPTIM…</span>
-<span class="co">#&gt;  2 apes_model_3          3 "apes_min_bi…            -53.3    113.    120. OPTIM…</span>
-<span class="co">#&gt;  3 apes_model_4          4 "apes_min_ai…            -51.8    112.    122. OPTIM…</span>
-<span class="co">#&gt;  4 apes_model_5          5 ""                       -51.2    112.    125. OPTIM…</span>
-<span class="co">#&gt;  5 apes_model_6          6 ""                       -50.6    113.    129. OPTIM…</span>
-<span class="co">#&gt;  6 apes_model_7          7 ""                       -50.1    114.    132. OPTIM…</span>
-<span class="co">#&gt;  7 apes_model_8          8 ""                       -50.1    116.    137. OPTIM…</span>
-<span class="co">#&gt;  8 apes_model_9          9 ""                       -50.1    118.    142. OPTIM…</span>
-<span class="co">#&gt;  9 apes_model_…         10 ""                       -50.0    120.    146. OPTIM…</span>
-<span class="co">#&gt; 10 apes_model_…         11 ""                       -49.9    122.    151. OPTIM…</span></pre></div>
+<span class="co">#&gt; # A tibble: 1 x 7</span>
+<span class="co">#&gt;   model_name  model_size ic_opt_models   apes_mle_loglike mle_aic mle_bic status</span>
+<span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; </span>
+<span class="co">#&gt; 1 apes_model…          6 apes_min_aicap…            -50.6    113.    129. TIME_…</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">mio_result</span>, <span class="va">mio_result3</span><span class="op">)</span>
+<span class="co">#&gt; [1] "Component \"apes_model_df\": Component \"status\": 1 string mismatch"</span>
+<span class="co">#&gt; [2] "Component \"time_used\": Mean relative difference: 0.599496"</span></pre></div>
 </div>
 <div id="computational-speed" class="section level2">
 <h2 class="hasAnchor">
@@ -371,10 +280,10 @@
 <p>We will conclude this vignette with a figure that shows the different computation options and the time cost associated with each option. We hope this can help the end-users to select the best combination of input parameters for their data problems.</p>
 <p>In the plot below, we fix <code>k = 15</code> and <code>n = 500</code>, where <code>n</code> is the number of observations. We grdually increase number of regressors (<code>p</code>) in simulated data and plot it on the x-axis. There are four options that we explored:</p>
 <ol style="list-style-type: decimal">
-<li><p>APES-leaps, which uses <code>leaps</code> to sequentially search for the optimal model of size <code>k</code>.</p></li>
-<li><p>APES-MIO-sequential, which uses MIO to sequentially search for the optimal models up to size <code>k</code>. We do not impose a time limit in this case.</p></li>
-<li><p>APES-MIO-sequential-threshold, which uses MIO to sequentially search for the optimal models up to size <code>k</code>. We impose a time limit of 5 seconds in this case.</p></li>
-<li><p>APES-MIO-direct, which uses MIO to directly search for the optimal model of size <code>k</code>.</p></li>
+<li><p>APES-leaps, which uses <code>leaps</code> to sequentially search for the optimal model of size up to <code>k</code>. This can be invoked using the command <code><a href="../reference/apes.html">apes(model = model, estimator = "leaps", k = k)</a></code> or <code><a href="../reference/apes.html">apes(model = model)</a></code> which is the default.</p></li>
+<li><p>APES-MIO-sequential, which uses MIO to sequentially search for the optimal models up to size <code>k</code>. We do not impose a time limit in this case. This can be invoked using the command <code><a href="../reference/apes.html">apes(model = model, estimator = "mio", k = 1:k)</a></code>.</p></li>
+<li><p>APES-MIO-sequential-threshold, which uses MIO to sequentially search for the optimal models up to size <code>k</code>. We impose a time limit of 5 seconds in this case. This can be invoked using the command <code><a href="../reference/apes.html">apes(model = model, estimator = "mio", k = 1:k, time_limit = 5)</a></code>.</p></li>
+<li><p>APES-MIO-direct, which uses MIO to directly search for the optimal model of size <code>k</code>. This can be invoked using the command <code><a href="../reference/apes.html">apes(model = model, estimator = "mio", k = k)</a></code>.</p></li>
 </ol>
 <p><img src="figures/APES_timing.png" style="width:100.0%"></p>
 <p>It can be seen that the leaps implementation can be orders of magnitudes faster than the MIO implementations when <span class="math inline">\(p &lt; 35\)</span>. When p increases from 40 to 50, leaps overtook all MIO implementations with a much steeper increase in time taken. This simple demonstration shows that leaps is preferred in cases where p is small or moderate and MIO is virtually the only viable option for <span class="math inline">\(p &gt; 50\)</span>.</p>
@@ -383,7 +292,7 @@
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb8"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></pre></div>
 <pre><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
@@ -404,7 +313,7 @@
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.5         RColorBrewer_1.1-2 compiler_4.0.3     pillar_1.4.6      
-##  [5] forcats_0.5.0      tools_4.0.3        digest_0.6.26      lattice_0.20-41   
+##  [5] forcats_0.5.0      tools_4.0.3        digest_0.6.27      lattice_0.20-41   
 ##  [9] evaluate_0.14      memoise_1.1.0      lifecycle_0.2.0    tibble_3.0.4      
 ## [13] gtable_0.3.0       pkgconfig_2.0.3    rlang_0.4.8        Matrix_1.2-18     
 ## [17] ggrepel_0.8.2      yaml_2.2.1         parallel_4.0.3     pkgdown_1.6.1.9000
