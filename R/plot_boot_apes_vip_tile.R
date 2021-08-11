@@ -100,7 +100,6 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
         title = "Variable inclusion tile plot") +
       ggplot2::theme_classic(18) +
       ggplot2::theme(legend.position = "bottom")
-
   } else {
     result = apes_mle_beta_binary_plotdf %>%
       ggplot2::ggplot(aes(x = .data$model_size,

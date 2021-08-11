@@ -29,7 +29,6 @@ Imports:
     tibble,
     rlang,
     tidyr,
-    mplot,
     ggrepel
 Suggests:
     bestsubset (>= 1.0.10),
@@ -37,10 +36,7 @@ Suggests:
     knitr,
     testthat,
     vdiffr,
-    tidyverse,
-    plotly,
-    rmarkdown,
-    MASS
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1.9001
 URL: https://github.com/kevinwang09/APES

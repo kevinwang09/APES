@@ -27,6 +27,4 @@ plot(apes_result, type = "ma")
 top_vars_AIC = head(apes_var_freq(list_result = apes_result, ic = "AIC")$variables, 3)
 top_vars_BIC = head(apes_var_freq(list_result = apes_result, ic = "BIC")$variables, 3)
 
-library(mplot)
-## mplot a boot_apes object
-mplot_boot(boot_apes = apes_result, model = model)
+expect_warning(as_vis(boot_apes = apes_result, model = model))

@@ -1,7 +1,6 @@
-#' @title Plotting APES models uing mplot (experimental)
+#' @title Converting APES object into mplot-vis object (experimental)
 #' @param boot_apes Bootstrapped APES result
 #' @param model The full model
-#' @param interactive Default to FALSE.
 #' If TRUE, then googleVis will be used to make an interactive plot.
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr select %>%
@@ -19,14 +18,12 @@
 #' data = data.frame(y, x)
 #' model = glm(y ~ ., data = data, family = "binomial")
 #' boot_apes = apes(model = model, n_boot = 20)
+#' \dontrun{
 #' library(mplot)
-#' mplot_boot(boot_apes = boot_apes, model = model)
-#' mplot_boot(boot_apes = boot_apes, model = model, interactive = TRUE)
-mplot_boot = function(boot_apes, model, interactive = FALSE){
-  fake_vis = convert_to_mplot_vis(boot_apes = boot_apes, model = model)
-  plot(x = fake_vis, which = "vip", interactive = interactive)
-}
-convert_to_mplot_vis = function(boot_apes, model){
+#' plot(x = as_vis(boot_apes = boot_apes, model = model), which = "vip")
+#' plot(x = as_vis(boot_apes = boot_apes, model = model), which = "vip", interactive = TRUE)
+#' }
+as_vis = function(boot_apes, model){
   result = list()
   result$B = length(boot_apes)
 
