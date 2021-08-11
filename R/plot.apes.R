@@ -26,5 +26,5 @@ plot.apes = function(x, type = "path", ...){
   type = match.arg(type)
 
   switch(type,
-         path = plot_path_boot_apes(x = list(x), ...))
+         path = plot_boot_apes_path(x = list(x), ...))
 }

@@ -126,8 +126,8 @@ apes <- function(model, k = NULL, estimator = "leaps",
       simplify = FALSE)
 
     t1 = Sys.time()
-    if(workers >= 1) {
-      plan(multisession, workers = workers)
+    if(workers > 1L) {
+      future::plan(multisession, workers = workers)
       result = furrr::future_map(
         .x = list_boot_index,
         .f = ~ apes_compute(x = x[.x,],
@@ -141,7 +141,7 @@ apes <- function(model, k = NULL, estimator = "leaps",
                             model_type = model_type,
                             verbose = verbose),
         .progress = FALSE)
-      plan(sequential)
+      future::plan(sequential)
     } else {
       result = purrr::map(
         .x = list_boot_index,

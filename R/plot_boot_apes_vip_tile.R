@@ -36,9 +36,11 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
     dplyr::group_by(.data$variables, .data$model_name) %>%
     dplyr::summarise(freq_selected = mean(.data$fitted_beta), .groups = "drop") %>%
     dplyr::ungroup() %>%
+    dplyr::filter(.data$variables != "intercept") %>%
     dplyr::mutate(
       model_size = stringr::str_replace_all(.data$model_name, "apes_model_", "") %>% as.integer,
-      freq_selected_category = base::cut(.data$freq_selected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE)) %>%
+      freq_selected_category = base::cut(.data$freq_selected, breaks = seq(0, 1, by = 0.2), include.lowest = TRUE),
+      variables = .data$variables %>% forcats::fct_drop("intercept")) %>%
     tibble::as_tibble()
 
   all_model_size = apes_mle_beta_binary_plotdf$model_size %>% unique
@@ -47,9 +49,7 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
     apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf %>%
       dplyr::mutate(
         variables = forcats::fct_reorder(
-          .data$variables, .data$freq_selected, stats::quantile, 0.5) %>%
-          forcats::fct_relevel("intercept") %>%
-          forcats::fct_shift())
+          .data$variables, .data$freq_selected, stats::quantile, 0.5))
   }
 
   if(order == "AIC"){
@@ -58,15 +58,11 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
       dplyr::mutate(
         freq_selected = dplyr::coalesce(.data$freq_selected, 0),
         variables = forcats::fct_reorder(
-          .data$variables, .data$freq_selected) %>%
-          forcats::fct_relevel("intercept") %>%
-          forcats::fct_shift())
+          .data$variables, .data$freq_selected))
 
     apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf %>%
       dplyr::mutate(
-        variables = forcats::fct_relevel(.data$variables, levels(by_aic$variables)) %>%
-          forcats::fct_relevel("intercept") %>%
-          forcats::fct_shift())
+        variables = forcats::fct_relevel(.data$variables, levels(by_aic$variables)))
   }
 
 
@@ -76,15 +72,12 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
       dplyr::mutate(
         freq_selected = dplyr::coalesce(.data$freq_selected, 0),
         variables = forcats::fct_reorder(
-          .data$variables, .data$freq_selected) %>%
-          forcats::fct_relevel("intercept") %>%
-          forcats::fct_shift())
+          .data$variables, .data$freq_selected))
 
     apes_mle_beta_binary_plotdf = apes_mle_beta_binary_plotdf %>%
       dplyr::mutate(
-        variables = forcats::fct_relevel(.data$variables, levels(by_bic$variables)) %>%
-          forcats::fct_relevel("intercept") %>%
-          forcats::fct_shift())
+        variables = forcats::fct_relevel(.data$variables, levels(by_bic$variables))
+        )
   }
 
   if(categorical){
@@ -93,8 +86,8 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
                           y = .data$variables,
                           fill = .data$freq_selected_category)) +
       ggplot2::geom_tile(colour = "gray") +
-      ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
-      ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
+      ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = levels(apes_mle_beta_binary_plotdf$variables)[1], label = "AIC", angle = 90) +
+      ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = levels(apes_mle_beta_binary_plotdf$variables)[1], label = "BIC", angle = 90) +
       ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
       ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
       ggplot2::scale_fill_manual(
@@ -116,8 +109,8 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
       ggplot2::geom_tile(colour = "gray") +
       ggplot2::scale_x_continuous(breaks = seq(min(apes_mle_beta_binary_plotdf$model_size),
                                                max(apes_mle_beta_binary_plotdf$model_size), by = 1L)) +
-      ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = "intercept", label = "AIC", angle = 90) +
-      ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = "intercept", label = "BIC", angle = 90) +
+      ggplot2::annotate("text", x = aic_opt_median_size + 0.2, y = levels(apes_mle_beta_binary_plotdf$variables)[1], label = "AIC", angle = 90) +
+      ggplot2::annotate("text", x = bic_opt_median_size + 0.2, y = levels(apes_mle_beta_binary_plotdf$variables)[1], label = "BIC", angle = 90) +
       ggplot2::geom_vline(xintercept = aic_opt_median_size, colour = "black") +
       ggplot2::geom_vline(xintercept = bic_opt_median_size, colour = "black") +
       ggplot2::scale_fill_distiller(palette = "Spectral", direction = -1, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = c(0, 1)) +
@@ -125,7 +118,8 @@ plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
         x = "Model size (including intercept)",
         y = "Variables",
         fill = "Selection frequency",
-        title = "Variable inclusion tile plot, continuous colouring") +
+        title = "Variable inclusion tile plot",
+        caption = paste0("Continuous colouring, variables ordered by ", order)) +
       ggplot2::theme_classic(18) +
       ggplot2::theme(legend.text = element_text(angle = 90, vjust = 0.5),
                      legend.position = "bottom")

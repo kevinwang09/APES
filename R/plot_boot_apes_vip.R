@@ -20,7 +20,7 @@
 #' @rdname plot.boot_apes
 #' @export
 plot_boot_apes_vip = function(x, max_vars = NULL){
-  n = nrow(x[[1]]$response_tibble) ## Number of observations
+  n = base::nrow(x[[1]]$response_tibble) ## Number of observations
 
   penalty = seq(0, 2*log(n), by = 0.1)
   list_apes_model_df = purrr::map(x, "apes_model_df")
@@ -29,8 +29,7 @@ plot_boot_apes_vip = function(x, max_vars = NULL){
   boot_opt_vars = purrr::map2_dfr(
     .x = list_apes_model_df,
     .y = list_apes_mle_beta_binary,
-
-    ~ get_opt_vars(
+    .f = ~ get_opt_vars(
       penalty = penalty,
       apes_model_df = .x,
       apes_mle_beta_binary = .y),
@@ -41,7 +40,8 @@ plot_boot_apes_vip = function(x, max_vars = NULL){
     dplyr::group_by(.data$penalty, .data$variables) %>%
     dplyr::summarise(boot_select_prob = mean(.data$fitted_beta), .groups = "drop") %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(variables = as.character(.data$variables))
+    dplyr::mutate(variables = as.character(.data$variables)) %>%
+    dplyr::filter(.data$variables != "intercept")
 
   p = length(unique(boot_vars_plotdf$variables))
   if(is.null(max_vars)){
@@ -49,7 +49,7 @@ plot_boot_apes_vip = function(x, max_vars = NULL){
   }
 
   label_tbl = boot_vars_plotdf %>%
-    dplyr::filter(penalty == max(.data$penalty)) %>%
+    dplyr::filter(.data$penalty == max(.data$penalty)) %>%
     dplyr::mutate(label = .data$variables %>%
                     forcats::fct_reorder(.data$boot_select_prob, .desc = TRUE),
                   label = ifelse(.data$label %in% levels(.data$label)[seq_len(max_vars)], as.character(.data$label), NA))

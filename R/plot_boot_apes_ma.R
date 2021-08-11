@@ -32,7 +32,8 @@ plot_boot_apes_ma = function(x, order = "BIC", max_vars = NULL){
   cummean_model_avg_plotdf = reshape2::melt(
     cummean_model_avg,
     varnames = c("cum_boot_num", "variables"),
-    value.name = "ma_values")
+    value.name = "ma_values") %>%
+    dplyr::filter(.data$variables != "intercept")
 
   p = length(unique(cummean_model_avg_plotdf$variables))
   if(is.null(max_vars)){
@@ -41,9 +42,10 @@ plot_boot_apes_ma = function(x, order = "BIC", max_vars = NULL){
 
   label_tbl = cummean_model_avg_plotdf %>%
     dplyr::filter(.data$cum_boot_num == max(.data$cum_boot_num)) %>%
-    dplyr::mutate(label = .data$variables %>%
-                    forcats::fct_reorder(abs(.data$ma_values), .desc = TRUE),
-                  label = ifelse(.data$label %in% levels(.data$label)[seq_len(max_vars)], as.character(.data$label), NA))
+    dplyr::mutate(
+      label = .data$variables %>%
+        forcats::fct_reorder(abs(.data$ma_values), .desc = TRUE),
+      label = ifelse(.data$label %in% levels(.data$label)[seq_len(max_vars)], as.character(.data$label), NA))
 
   result = cummean_model_avg_plotdf %>%
     ggplot2::ggplot(aes(
