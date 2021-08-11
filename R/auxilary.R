@@ -6,7 +6,7 @@
 #' @param model a fitted 'full' model, the result of a call to glm
 #' @noRd
 #' @references mplot
-mextract = function(model){
+mextract = function(model, fitted_values){
   # what's the name of the dependent variable?
   yname = deparse(stats::formula(model)[[2]])
   # Set up the data frames for use

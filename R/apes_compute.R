@@ -43,7 +43,8 @@ apes_compute = function(x, y, fitted_values, linear_predictors, variable_names, 
   if(estimator == "mio"){
 
     if (!requireNamespace("bestsubset", quietly = TRUE)) {
-      stop("Package \"bestsubset\" needed for this function to work. Please install it.",
+      stop("Package \"bestsubset\" needed for this function to work.
+           See https://kevinwang09.github.io/APES/articles/install_bestsubset.html for instructions.",
            call. = FALSE)
     }
 

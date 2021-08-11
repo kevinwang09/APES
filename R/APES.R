@@ -12,9 +12,12 @@
 #' @param k Model size to explore. Default to NULL, which searches through all variables in the model.
 #' Alternatively, user can input a vector. If estimator is:
 #' \itemize{
-#'  \item "leaps", then models up to size max(k) wil be explored.
+#'  \item "leaps", then models up to size max(k) will be explored.
 #'  \item "mio", then models with specified values will be explored.
 #' }
+#' @param fitted_values Default to NULL, and fitted values are extracted from the fitted model itself.
+#' However, users can specify a vector of fitted values to
+#' improve the performance of APES as per Wang et. al. 2019.
 #' @param really_big If set to FALSE (by default), then it will prevent variable selection greater than 30 variables.
 #' We recommend only setting this argument to TRUE if the number of variables exceed 30 while simultaneous setting the
 #' "estimator" argument to "mio".
@@ -36,7 +39,7 @@
 #' set.seed(10)
 #' n = 100
 #' p = 10
-#' beta = c(1, -1, rep(0, p-2))
+#' beta = c(5, -5, rep(0, p-2))
 #' x = matrix(rnorm(n*p), ncol = p)
 #' colnames(x) = paste0("X", 1:p)
 #'
@@ -67,7 +70,10 @@
 #' data = data.frame(x, time = time, censor = censor)
 #' model = survival::coxph(survival::Surv(time, censor) ~ ., data = data)
 #' apes(model = model)
-apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, really_big = FALSE, verbose = FALSE,
+apes <- function(model, k = NULL, estimator = "leaps",
+                 fitted_values = NULL,
+                 time_limit = 10L, really_big = FALSE,
+                 verbose = FALSE,
                  n_boot = 0, workers = 1L){
 
   extracts = mextract(model = model)
@@ -76,11 +82,16 @@ apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, really_
   n = extracts$n
   p = extracts$p
   model_type = extracts$model_type
-  fitted_values = extracts$fitted_values
   variable_names = extracts$variable_names
   linear_predictors = extracts$linear_predictors
 
+  ## If the user specifies some fitted values, we will use that to compute weights.
+  if(is.null(fitted_values)){
+    fitted_values = extracts$fitted_values
+  }
+
   if(p >= 30 & !really_big){
+    message("p (including factors) is ")
     stop("p is too large! If you want to proceed, you need to set 'reall_big' to TRUE.")
   }
 
@@ -90,7 +101,10 @@ apes <- function(model, k = NULL, estimator = "leaps", time_limit = 10L, really_
     simplify = FALSE)
 
   ## Determine k to search through
-  if(is.null(k)){k = seq_len(p)}
+  if(is.null(k)){
+    message("No variable size specified, searching all sizes from 1 to p... \n")
+    k = seq_len(p)
+  }
 
   if(n_boot == 0){
     result = apes_compute(

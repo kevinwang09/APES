@@ -19,7 +19,7 @@
 #' plotdf is a tibble with all the necessary values to plot a variable inclusion plot
 #' @rdname plot.boot_apes
 #' @export
-plot_vip_boot_apes = function(x, max_vars = NULL){
+plot_boot_apes_vip = function(x, max_vars = NULL){
   n = nrow(x[[1]]$response_tibble) ## Number of observations
 
   penalty = seq(0, 2*log(n), by = 0.1)

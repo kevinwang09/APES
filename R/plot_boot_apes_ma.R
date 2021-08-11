@@ -12,7 +12,7 @@
 #' On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.
 #' @rdname plot.boot_apes
 #' @export
-plot_ma_boot_apes = function(x, order = "BIC", max_vars = NULL){
+plot_boot_apes_ma = function(x, order = "BIC", max_vars = NULL){
   model_avg_beta = purrr::map(x, "model_avg_beta")
 
   stopifnot(order %in% c("AIC", "BIC"))

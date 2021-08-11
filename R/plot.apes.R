@@ -1,6 +1,6 @@
 #' @title Generic plotting function for class \code{apes}
 #' @param x An object of class \code{apes}
-#' @param type Type of plot: (only supporting "ic" at the moment)
+#' @param type Type of plot: (only supporting "path" at the moment)
 #' \itemize{
 #' \item{"path"}: Information criterion vs model size.
 #' Either "AIC" or "BIC" can be shown using the order argument.

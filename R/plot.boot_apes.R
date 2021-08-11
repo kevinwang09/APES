@@ -42,10 +42,9 @@ plot.boot_apes = function(x,
                           max_vars = NULL, ...){
   type = match.arg(type)
 
-
   switch(type,
-         vip_tile = plot_vip_tile_boot_apes(x = x, ...),
-         vip = plot_vip_boot_apes(x = x, ...),
-         path = plot_path_boot_apes(x = x, ...),
-         ma = plot_ma_boot_apes(x = x, ...))
+         vip_tile = plot_boot_apes_vip_tile(x = x, ...),
+         vip = plot_boot_apes_vip(x = x, ...),
+         path = plot_boot_apes_path(x = x, ...),
+         ma = plot_boot_apes_ma(x = x, ...))
 }

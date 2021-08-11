@@ -21,7 +21,7 @@
 #' }
 #' @rdname plot.boot_apes
 #' @export
-plot_vip_tile_boot_apes = function(x, order = "median", categorical = FALSE){
+plot_boot_apes_vip_tile = function(x, order = "median", categorical = FALSE){
   apes_mle_beta_binary_bind = purrr::map_dfr(x, "apes_mle_beta_binary", .id = "boot_num")
   apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num")
 

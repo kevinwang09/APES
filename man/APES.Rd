@@ -8,6 +8,7 @@ apes(
   model,
   k = NULL,
   estimator = "leaps",
+  fitted_values = NULL,
   time_limit = 10L,
   really_big = FALSE,
   verbose = FALSE,
@@ -22,13 +23,17 @@ Accepts either a "glm" class or "coxph" class object.}
 \item{k}{Model size to explore. Default to NULL, which searches through all variables in the model.
 Alternatively, user can input a vector. If estimator is:
 \itemize{
- \item "leaps", then models up to size max(k) wil be explored.
+ \item "leaps", then models up to size max(k) will be explored.
  \item "mio", then models with specified values will be explored.
 }}
 
 \item{estimator}{Either "leaps" (default) or "mio", which correspond to
 optimisation algorithms available in
 the leaps and bestsubset package, respectively.}
+
+\item{fitted_values}{Default to NULL, and fitted values are extracted from the fitted model itself.
+However, users can specify a vector of fitted values to
+improve the performance of APES as per Wang et. al. 2019.}
 
 \item{time_limit}{The time limit for the maximum time allocated to each
 model size model when the "mio" estimator was selected. It will not affect the computational speed if "leaps" is selected as the estimator.}
@@ -60,7 +65,7 @@ then the feature dimension also includes all the levels of factors. See vignette
 set.seed(10)
 n = 100
 p = 10
-beta = c(1, -1, rep(0, p-2))
+beta = c(5, -5, rep(0, p-2))
 x = matrix(rnorm(n*p), ncol = p)
 colnames(x) = paste0("X", 1:p)
 

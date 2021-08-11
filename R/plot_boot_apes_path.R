@@ -9,7 +9,7 @@
 #' @rdname plot.boot_apes
 #' @return A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.
 #' @export
-plot_path_boot_apes = function(x, order = "BIC"){
+plot_boot_apes_path = function(x, order = "BIC"){
   apes_model_df_bind = purrr::map_dfr(x, "apes_model_df", .id = "boot_num") %>%
     group_by(.data$boot_num) %>%
     dplyr::mutate(
