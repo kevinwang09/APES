@@ -44,6 +44,7 @@ jobs:
           remotes::install_dev("pkgdown")
           install.packages("tidyverse")
           install.packages("MASS")
+          install.packages("bestglm")
           install.packages("mplot")
         shell: Rscript {0}
 

@@ -57,14 +57,20 @@ summary(full_model)
 
 ## Variable selection under 50 bootstrap using `APES`
 
-```{r}
+```{r, eval = FALSE}
 apes_result = APES::apes(model = full_model, n_boot = 50)
 apes_result
 ```
 
+```
+apes_result
+Time taken:  0.03365383  minutes 
+Total number of bootstrap APES results:  50
+```
+
 ## Variable selection under 50 bootstrap using `mplot`
 
-```{r}
+```{r, eval = FALSE}
 t1 = Sys.time()
 
 mplot_result = mplot::vis(
@@ -78,7 +84,12 @@ t2 = Sys.time()
 cat("Time taken: ", as.numeric(difftime(t2, t1, units = "mins")), "minutes")
 ```
 
-Looking at the time differences, it is clear that APES is faster. However, it should be noted that APES only computed the best linear model within each model size while `mplot` performed a genuine exhaustive search across all GLM. These results are thus not intuitively comparable. However, the results presented in [Wang et. al](https://doi.org/10.1111/anzs.12276) provide some assurance that the results of APES are good approximations to a genuine exhaustive search. 
+```
+Morgan-Tatar search since family is non-gaussian.
+Time taken:  2.608035 minutes
+```
+
+Looking at the time differences, it is clear that APES is faster. However, it should be noted that APES only computed the best linear model within each model size while `mplot` performed a genuine exhaustive search across all GLMs. These results are thus not intuitively comparable. However, the results presented in [Wang et. al](https://doi.org/10.1111/anzs.12276) provide some assurance that the results of APES are good approximations to a genuine exhaustive search. 
 
 ## Comparing variable importance plots
 
