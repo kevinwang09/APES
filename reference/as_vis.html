@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generic plotting function for class boot_apes — plot.boot_apes • APES</title>
+<title>Converting APES object into mplot-vis object (experimental) — as_vis • APES</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,8 @@
 
 
 
-<meta property="og:title" content="Generic plotting function for class boot_apes — plot.boot_apes" />
-<meta property="og:description" content="This function is suitable for a list of bootstrap APES outputs.
-From each bootstrap run, APES stores log-likelihood for every model it considered.
-In this function, we then consider general information criterion (GIC) of the form
--2*logLike + penalty * modeSize.
-For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
-look at which variables are selected in that model.
-The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.
-This function displays the same information as plot_vi, but in a tile plot format." />
+<meta property="og:title" content="Converting APES object into mplot-vis object (experimental) — as_vis" />
+<meta property="og:description" content="Converting APES object into mplot-vis object (experimental)" />
 
 
 
@@ -141,95 +134,31 @@ This function displays the same information as plot_vi, but in a tile plot forma
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generic plotting function for class <code>boot_apes</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/plot.boot_apes.R'><code>R/plot.boot_apes.R</code></a>, <a href='https://github.com/kevinwang09/APES/blob/master/R/plot_boot_apes_ma.R'><code>R/plot_boot_apes_ma.R</code></a>, <a href='https://github.com/kevinwang09/APES/blob/master/R/plot_boot_apes_path.R'><code>R/plot_boot_apes_path.R</code></a>, and 2 more</small>
-    <div class="hidden name"><code>plot.boot_apes.Rd</code></div>
+    <h1>Converting APES object into mplot-vis object (experimental)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/kevinwang09/APES/blob/master/R/as_vis.R'><code>R/as_vis.R</code></a></small>
+    <div class="hidden name"><code>as_vis.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is suitable for a list of bootstrap APES outputs.
-From each bootstrap run, APES stores log-likelihood for every model it considered.
-In this function, we then consider general information criterion (GIC) of the form
--2*logLike + penalty * modeSize.
-For each penalty and each bootstrap run, we apply this GIC to find a model of the optimal fit, and then
-look at which variables are selected in that model.
-The frequency of a variable selected across different penalties are then avaraged across all bootstrap runs.</p>
-<p>This function displays the same information as plot_vi, but in a tile plot format.</p>
+    <p>Converting APES object into mplot-vis object (experimental)</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='co'># S3 method for boot_apes</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"vip_tile"</span>, <span class='st'>"vip"</span>, <span class='st'>"path"</span>, <span class='st'>"ma"</span><span class='op'>)</span>, max_vars <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>plot_boot_apes_ma</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"BIC"</span>, max_vars <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-
-<span class='fu'>plot_boot_apes_path</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"BIC"</span><span class='op'>)</span>
-
-<span class='fu'>plot_boot_apes_vip</span><span class='op'>(</span><span class='va'>x</span>, max_vars <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-
-<span class='fu'>plot_boot_apes_vip_tile</span><span class='op'>(</span><span class='va'>x</span>, order <span class='op'>=</span> <span class='st'>"median"</span>, categorical <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></code></pre></div>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as_vis</span><span class='op'>(</span><span class='va'>boot_apes</span>, <span class='va'>model</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object of class <code>boot_apes</code></p></td>
+      <th>boot_apes</th>
+      <td><p>Bootstrapped APES result</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>Type of plot:</p><ul>
-<li><p>vip: Variable inclusion plot in Tarr et. al. 2018.
-Shows the probability of variability selection across various penalty terms.
-Either "AIC" or "BIC" can be shown using the order argument.</p></li>
-<li><p>"vi_tile" (default): Similar to "vi", but in a tile format.</p></li>
-<li><p>"path": Information criterion vs model size.
-Either "AIC" or "BIC" can be shown using the order argument.</p></li>
-<li><p>"ma": Model averaged coefficient across bootstrap runs.
-The weighted averages can be calculated from either "AIC" or "BIC" using the order argument.</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>max_vars</th>
-      <td><p>Maximum number of variables to label. Default to NULL which plots all variables.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Additional parameters. Some options are:</p><ul>
-<li><p>"order": Either "AIC", "BIC". If type is selected to be "vi_tile", then also takes the value "median".</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>order</th>
-      <td><p>The ordering of variables. Either "median", "AIC" or "BIC"</p></td>
-    </tr>
-    <tr>
-      <th>categorical</th>
-      <td><p>If categorised colour scheme should be used. Default to FALSE.</p></td>
+      <th>model</th>
+      <td><p>The full model
+If TRUE, then googleVis will be used to make an interactive plot.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A ggplot output corresponding to the select plotting type.</p>
-<p>A ggplot. From each bootstrap run, APES stores coefficient values averaged across all models considered.
-As we have multiple bootstrapped APES output, we can cummulatively average
-these model averaged coefficient values across all bootstrap runs.
-On the final plot, we should be able to see variables of non-zero coefficients show up distinctly away from zero.</p>
-<p>A ggplot of AIC/BIC path plot. Each curve is one bootstrapped APES run.</p>
-<p>a variable inclusion plot in ggplot format. An attribute of the name
-plotdf is a tibble with all the necessary values to plot a variable inclusion plot</p>
-<p>A list.</p><ul>
-<li><p><code>apes_mle_beta_binary_plotdf</code> a tibble with all the necessary values to plot a tile variable inclusion plot</p></li>
-<li><p><code>var_tile_plot</code> a ggplot with continuous colouring</p></li>
-<li><p><code>var_tile_plot_category</code> a ggplot with discrete colouring</p></li>
-</ul>
-
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Kevin Wang</p>
-<p>Kevin Wang</p>
-<p>Kevin Wang</p>
-<p>Kevin Wang</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span></span>
@@ -238,21 +167,17 @@ plotdf is a tibble with all the necessary values to plot a variable inclusion pl
 <span class='r-in'><span class='va'>beta</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>-</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>*</span><span class='va'>p</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='va'>p</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"X"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='va'>p</span><span class='op'>)</span></span>
+<span class='r-in'></span>
 <span class='r-in'><span class='va'>y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='va'>n</span>, size <span class='op'>=</span> <span class='fl'>1</span>, prob <span class='op'>=</span> <span class='fu'><a href='transforms.html'>expit</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='va'>beta</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>x</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"binomial"</span><span class='op'>)</span></span>
-<span class='r-in'></span>
-<span class='r-in'><span class='va'>boot_result</span> <span class='op'>=</span> <span class='fu'><a href='APES.html'>apes</a></span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>boot_apes</span> <span class='op'>=</span> <span class='fu'><a href='APES.html'>apes</a></span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> No variable size specified, searching all sizes from 1 to p... </span>
-<span class='r-in'></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>boot_result</span>, type <span class='op'>=</span> <span class='st'>"vip_tile"</span><span class='op'>)</span></span>
-<span class='r-plt'><img src='plot.boot_apes-1.png' alt='' width='700' height='433' /></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>boot_result</span>, type <span class='op'>=</span> <span class='st'>"vip"</span><span class='op'>)</span></span>
-<span class='r-plt'><img src='plot.boot_apes-2.png' alt='' width='700' height='433' /></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>boot_result</span>, type <span class='op'>=</span> <span class='st'>"path"</span><span class='op'>)</span></span>
-<span class='r-plt'><img src='plot.boot_apes-3.png' alt='' width='700' height='433' /></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>boot_result</span>, type <span class='op'>=</span> <span class='st'>"ma"</span><span class='op'>)</span></span>
-<span class='r-plt'><img src='plot.boot_apes-4.png' alt='' width='700' height='433' /></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://garthtarr.github.io/mplot/'>mplot</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'>as_vis</span><span class='op'>(</span>boot_apes <span class='op'>=</span> <span class='va'>boot_apes</span>, model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>, which <span class='op'>=</span> <span class='st'>"vip"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'>as_vis</span><span class='op'>(</span>boot_apes <span class='op'>=</span> <span class='va'>boot_apes</span>, model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>, which <span class='op'>=</span> <span class='st'>"vip"</span>, interactive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
 </code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

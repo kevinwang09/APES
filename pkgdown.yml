@@ -1,11 +1,11 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1.9000
-pkgdown_sha: e1e46f2e13c7efdb17bc4eae40bc3779c2b0b517
+pkgdown: 1.6.1.9001
+pkgdown_sha: ce9781a15c7ea07df9fb17a11295ba4abec0b54b
 articles:
   APES: APES.html
-  birthweight: birthweight.html
-  diabetes: diabetes.html
-  install_bestsubset: install_bestsubset.html
-  speed: speed.html
-last_built: 2020-10-25T00:01Z
+  birthweight: articles/birthweight.html
+  diabetes: articles/diabetes.html
+  install_bestsubset: articles/install_bestsubset.html
+  speed: articles/speed.html
+last_built: 2021-08-12T01:23Z
 
