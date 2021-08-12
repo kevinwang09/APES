@@ -11,7 +11,7 @@ author:
   affiliation: Department of Mathematics and Statistics, Macquarie University, Australia
 output: 
   rmarkdown::html_vignette:
-    fig_width: 8
+    fig_width: 6
     fig_height: 6
 vignette: |
   %\VignetteIndexEntry{APES: diabetes data example}
@@ -57,15 +57,9 @@ summary(full_model)
 
 ## Variable selection under 50 bootstrap using `APES`
 
-```{r, eval = FALSE}
+```{r}
 apes_result = APES::apes(model = full_model, n_boot = 50)
 apes_result
-```
-
-```
-apes_result
-Time taken:  0.03365383  minutes 
-Total number of bootstrap APES results:  50
 ```
 
 ## Variable selection under 50 bootstrap using `mplot`
@@ -103,9 +97,11 @@ plot(apes_result, type = "vip")
 ```
 
 From mplot:
-```{r}
+```{r, eval = FALSE}
 plot(mplot_result, which = "vip")
 ```
+
+<img src="mplot_vip_diabetes.png" height=350>
 
 Based on the plots above, we see that both methods show similar ordering of the variables as we should expect. As pointed out [by the `mplot` vignette](http://garthtarr.github.io/mplot/articles/diabetes.html), one of the most interesting feature of this data is the cross-over between some selected variables (variables `hdl` and `tc` which cross over after the BIC threshold) which is preserved by the `APES` package. 
 
