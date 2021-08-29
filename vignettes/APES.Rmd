@@ -88,7 +88,7 @@ plot(apes_result)
 
 # More examples
 
-The example above is a simple simulation to illustrate the basic underlying theory of APES and the `apes` object. Please see a [birth weight data example](https://kevinwang09.github.io/APES/articles/birthweight.html) and a [diabetes data example](https://kevinwang09.github.io/APES/articles/diabetes_example.html) where we will demonstrate the performance of `APES` using bootstrap sampling to assess model stability.
+The example above is a simple simulation to illustrate the basic underlying theory of APES and the `apes` object. Please see a [birth weight data example](https://kevinwang09.github.io/APES/articles/articles/birthweight.html) and a [diabetes data example](https://kevinwang09.github.io/APES/articles/articles/diabetes.html) where we will demonstrate the performance of `APES` using bootstrap sampling to assess model stability.
 
 # Session Info
 ```{r}

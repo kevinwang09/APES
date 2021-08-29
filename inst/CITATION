@@ -11,5 +11,5 @@ bibentry(bibtype = "Article",
          journal = "Australian & New Zealand Journal of Statistics",
          volume = "61",
          issue = "4",
-         doi = "https://doi.org/10.1111/anzs.12276",
+         url = "https://onlinelibrary.wiley.com/doi/10.1111/anzs.12276",
          header = "To cite APES in publications please use: Wang, K. Y., Tarr, G., Yang, J. Y., & Mueller, S. (2019). Fast and approximate exhaustive variable selection for generalised linear models with APES. Australian & New Zealand Journal of Statistics, 61(4), 445–465.")

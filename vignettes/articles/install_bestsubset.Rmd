@@ -28,7 +28,9 @@ The APES method relies on a best subset algorithm for linear regression model. I
 
 The `bestsubset` package that `APES` depends on can be installed from GitHub via the `R` command `devtools::install_github("ryantibs/best-subset/bestsubset")`. While this step is relatively straight forward, the real hurdle is the installation of the `gurobi` `R` package which the commercial company Gurobi has copyright over.
 
-To install `gurobi`, follow the steps in [this article](https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html). Specifically, you should:
+To install `gurobi`, follow the steps in [this vignette](https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html). 
+
+In general, you should:
 
 1. Register an account with Gurobi at https://www.gurobi.com/login/.
 
