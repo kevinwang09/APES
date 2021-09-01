@@ -243,7 +243,7 @@ then the feature dimension also includes all the levels of factors. See vignette
 <span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>glm.fit: fitted probabilities numerically 0 or 1 occurred</span>
 <span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>glm.fit: fitted probabilities numerically 0 or 1 occurred</span>
 <span class='r-in'><span class='va'>apes_result</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.0007783175  minutes </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.001669216  minutes </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  APES - AIC selected the following variables </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> intercept        X1        X2        X3        X4        X5        X6        X7 </span>
@@ -269,7 +269,7 @@ then the feature dimension also includes all the levels of factors. See vignette
 <span class='r-in'><span class='va'>model</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span>, family <span class='op'>=</span> <span class='st'>"poisson"</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> No variable size specified, searching all sizes from 1 to p... </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.0001626531  minutes </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  6.818771e-06  minutes </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  APES - AIC selected the following variables </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> intercept        X1        X2        X3        X4        X5        X6        X7 </span>
@@ -286,11 +286,11 @@ then the feature dimension also includes all the levels of factors. See vignette
 <span class='r-in'><span class='co'>## Bootstrap examples</span></span>
 <span class='r-in'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> No variable size specified, searching all sizes from 1 to p... </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.0008506139  minutes </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.0007369359  minutes </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Total number of bootstrap APES results:  2</span>
 <span class='r-in'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span>, n_boot <span class='op'>=</span> <span class='fl'>2</span>, workers <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> No variable size specified, searching all sizes from 1 to p... </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.001089017  minutes </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  0.0008617163  minutes </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Total number of bootstrap APES results:  2</span>
 <span class='r-in'><span class='co'>## apes(model = model, n_boot = 2, workers = 2)</span></span>
 <span class='r-in'></span>
@@ -302,7 +302,7 @@ then the feature dimension also includes all the levels of factors. See vignette
 <span class='r-in'><span class='va'>model</span> <span class='op'>=</span> <span class='fu'>survival</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span><span class='op'>(</span><span class='fu'>survival</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='va'>censor</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>data</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'>apes</span><span class='op'>(</span>model <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> No variable size specified, searching all sizes from 1 to p... </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  7.581711e-06  minutes </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Time taken:  6.934007e-06  minutes </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  APES - AIC selected the following variables </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> intercept        X1        X2        X3        X4        X5        X6        X7 </span>
