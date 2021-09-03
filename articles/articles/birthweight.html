@@ -59,10 +59,10 @@
       <a href="../../articles/articles/diabetes.html">APES: diabetes data example</a>
     </li>
     <li>
-      <a href="../../articles/articles/install_bestsubset.html">Install `bestsubset`</a>
+      <a href="../../articles/articles/speed.html">Speeding up APES</a>
     </li>
     <li>
-      <a href="../../articles/articles/speed.html">Speeding up APES</a>
+      <a href="../../articles/install_bestsubset.html">Install `bestsubset`</a>
     </li>
   </ul>
 </li>
@@ -190,7 +190,7 @@
 <pre><code>## No variable size specified, searching all sizes from 1 to p...</code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">apes_result</span></code></pre></div>
-<pre><code>## Time taken:  9.908279e-05  minutes 
+<pre><code>## Time taken:  0.0001051982  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -229,7 +229,7 @@
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/APES.html">apes</a></span><span class="op">(</span><span class="va">full_model2</span><span class="op">)</span></code></pre></div>
 <pre><code>## No variable size specified, searching all sizes from 1 to p...</code></pre>
-<pre><code>## Time taken:  7.414818e-06  minutes 
+<pre><code>## Time taken:  7.764498e-06  minutes 
 ## 
 ##  APES - AIC selected the following variables 
 ## intercept       age       lwt raceblack raceother smokeTRUE   ptdTRUE    htTRUE 
@@ -338,7 +338,7 @@
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] fs_1.5.0           lubridate_1.7.10   RColorBrewer_1.1-2 httr_1.4.2        
-##  [5] rprojroot_2.0.2    tools_4.1.1        backports_1.2.1    bslib_0.2.5.1     
+##  [5] rprojroot_2.0.2    tools_4.1.1        backports_1.2.1    bslib_0.3.0       
 ##  [9] utf8_1.2.2         R6_2.5.1           DBI_1.1.1          colorspace_2.0-2  
 ## [13] withr_2.4.2        tidyselect_1.1.1   compiler_4.1.1     textshaping_0.3.5 
 ## [17] cli_3.0.1          rvest_1.0.1        xml2_1.3.2         desc_1.3.0        
