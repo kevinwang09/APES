@@ -95,10 +95,4 @@ plot(boot_result, type = "ma")
 }
 \author{
 Kevin Wang
-
-Kevin Wang
-
-Kevin Wang
-
-Kevin Wang
 }
