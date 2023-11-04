@@ -21,11 +21,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::covr
-          needs: coverage
-
       - name: Install additional dependencies
         run: |
           install.packages(c("remotes"))
@@ -33,6 +28,11 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("covr")
         shell: Rscript {0}
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::covr
+          needs: coverage
 
       - name: Test coverage
         run: |
