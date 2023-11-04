@@ -37,6 +37,8 @@ Suggests:
     testthat,
     vdiffr,
     rmarkdown
+Remotes: 
+  kevinwang09/bestsubset
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 URL: https://github.com/kevinwang09/APES

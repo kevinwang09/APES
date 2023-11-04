@@ -30,18 +30,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Install additional dependencies
-        run: |
-          install.packages("remotes")
-          remotes::install_github(repo="ryantibs/best-subset", subdir="bestsubset")
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_dev("pkgdown")
-          install.packages("tidyverse")
-          install.packages("MASS")
-          install.packages("bestglm")
-          install.packages("mplot")
-        shell: Rscript {0}
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.
