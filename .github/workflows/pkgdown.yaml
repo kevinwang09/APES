@@ -34,6 +34,8 @@ jobs:
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
+
+      - name: Install additional dependencies
         run: |
           install.packages("remotes")
           remotes::install_github(repo="ryantibs/best-subset", subdir="bestsubset")

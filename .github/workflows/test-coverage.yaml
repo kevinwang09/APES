@@ -25,6 +25,8 @@ jobs:
         with:
           extra-packages: any::covr
           needs: coverage
+
+      - name: Install additional dependencies
         run: |
           install.packages(c("remotes"))
           remotes::install_github(repo="ryantibs/best-subset", subdir="bestsubset")
