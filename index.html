@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -46,20 +46,20 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/articles/birthweight.html">APES: birth weight data example</a>
+      <a href="articles/birthweight.html">APES: birth weight data example</a>
     </li>
     <li>
-      <a href="articles/articles/diabetes.html">APES: diabetes data example</a>
+      <a href="articles/diabetes.html">APES: diabetes data example</a>
     </li>
     <li>
-      <a href="articles/articles/speed.html">Speeding up APES</a>
+      <a href="articles/speed.html">Speeding up APES</a>
     </li>
     <li>
       <a href="articles/install_bestsubset.html">Install `bestsubset`</a>
@@ -69,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/kevinwang09/APES/">
+  <a href="https://github.com/kevinwang09/APES/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -87,76 +87,76 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="apes-approximated-exhaustive-search-for-glms" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#apes-approximated-exhaustive-search-for-glms" class="anchor" aria-hidden="true"></a>APES: APproximated Exhaustive Search for GLMs</h1></div>
-
+<div class="section level1">
+<div class="page-header"><h1 id="apes-approximated-exhaustive-search-for-glms">APES: APproximated Exhaustive Search for GLMs<a class="anchor" aria-label="anchor" href="#apes-approximated-exhaustive-search-for-glms"></a>
+</h1></div>
+<p><a href="https://github.com/kevinwang09/APES/actions" class="external-link"><img src="https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg" alt="R build status"></a> <a href="https://codecov.io/github/kevinwang09/APES?branch=master" class="external-link"><img src="https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg" alt="Coverage status"></a></p>
 <p><img src="https://github.com/kevinwang09/APES/raw/master/inst/APES_logo.png" align="right" width="300"></p>
 <p>APproximated Exhaustive Search (APES) is a model selection method for Generalised Linear Models. The accompanying paper is <a href="https://doi.org/10.1111/anzs.12276" class="external-link">Wang et. al. (2019)</a>. You can find the vignette <a href="https://kevinwang09.github.io/APES/articles/APES.html" class="external-link">here</a>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor" aria-hidden="true"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kevinwang09/APES"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kevinwang09/APES"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="a-quick-example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#a-quick-example" class="anchor" aria-hidden="true"></a>A quick example</h2>
+<div class="section level2">
+<h2 id="a-quick-example">A quick example<a class="anchor" aria-label="anchor" href="#a-quick-example"></a>
+</h2>
 <p>Suppose we have simulated a data with 500 rows and 20 predictor variables, and we have fitted a logistic regression model against a binary response variable. We may wish to perform an exhaustive variable selection on such a model to determine which variables produce the most parsimonious model. However, performing an exhaustive variable selection means looking through (2^{20} = 1,048,576) models! Exhaustive variable selection is known to be time consuming, and looking at so many models might take a long time.</p>
 <p>APES is a variable selection method that first converts the logistic model into a linear model and then it uses a best-subset algorithm (such as leaps or mixed integer optimisation) to search for the best linear model. The selected linear models are then converted into logistic models. The reason for doing this is that the exhaustive variable selection can be performed much faster in the linear model space.</p>
 <p>The current implementation of APES supports logistic, Poisson and Cox regression models.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES" class="external-link">APES</a></span><span class="op">)</span>
-
-<span class="co">## Simulating data</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">=</span> <span class="fl">500</span>
-<span class="va">p</span> <span class="op">=</span> <span class="fl">20</span>
-<span class="va">k</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">p</span>
-<span class="va">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">p</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fu"><a href="reference/transforms.html">expit</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span><span class="op">)</span><span class="op">)</span>
-<span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">x</span><span class="op">)</span>
-
-<span class="co">## Fitting a full model </span>
-<span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span>
-
-<span class="co">## Running APES selection</span>
-<span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="reference/APES.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
-<span class="va">apes_result</span>
-<span class="co">#&gt; Time taken:  0.0002061009  minutes </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  APES - AIC selected the following variables </span>
-<span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span>
-<span class="co">#&gt;     0.064     1.226    -1.093     0.000     0.000     0.000     0.000     0.000 </span>
-<span class="co">#&gt;        X8        X9       X10       X11       X12       X13       X14       X15 </span>
-<span class="co">#&gt;     0.000     0.000     0.000     0.000     0.000     0.000     0.000     0.000 </span>
-<span class="co">#&gt;       X16       X17       X18       X19       X20 </span>
-<span class="co">#&gt;     0.000     0.000     0.000     0.000     0.000 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  APES - BIC selected the following variables </span>
-<span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span>
-<span class="co">#&gt;     0.082     1.284    -1.137     0.000    -0.161     0.000     0.000     0.000 </span>
-<span class="co">#&gt;        X8        X9       X10       X11       X12       X13       X14       X15 </span>
-<span class="co">#&gt;     0.000     0.000     0.000     0.221     0.000     0.252    -0.162     0.000 </span>
-<span class="co">#&gt;       X16       X17       X18       X19       X20 </span>
-<span class="co">#&gt;     0.208     0.000     0.000     0.000     0.000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kevinwang09/APES" class="external-link">APES</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Simulating data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">=</span> <span class="fl">500</span></span>
+<span><span class="va">p</span> <span class="op">=</span> <span class="fl">20</span></span>
+<span><span class="va">k</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">p</span></span>
+<span><span class="va">beta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">p</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="fu"><a href="reference/transforms.html">expit</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Fitting a full model </span></span>
+<span><span class="va">model</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Running APES selection</span></span>
+<span><span class="va">apes_result</span> <span class="op">=</span> <span class="fu"><a href="reference/APES.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span><span class="op">)</span></span>
+<span><span class="va">apes_result</span></span>
+<span><span class="co">#&gt; Time taken:  0.0002061009  minutes </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  APES - AIC selected the following variables </span></span>
+<span><span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span></span>
+<span><span class="co">#&gt;     0.064     1.226    -1.093     0.000     0.000     0.000     0.000     0.000 </span></span>
+<span><span class="co">#&gt;        X8        X9       X10       X11       X12       X13       X14       X15 </span></span>
+<span><span class="co">#&gt;     0.000     0.000     0.000     0.000     0.000     0.000     0.000     0.000 </span></span>
+<span><span class="co">#&gt;       X16       X17       X18       X19       X20 </span></span>
+<span><span class="co">#&gt;     0.000     0.000     0.000     0.000     0.000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  APES - BIC selected the following variables </span></span>
+<span><span class="co">#&gt; intercept        X1        X2        X3        X4        X5        X6        X7 </span></span>
+<span><span class="co">#&gt;     0.082     1.284    -1.137     0.000    -0.161     0.000     0.000     0.000 </span></span>
+<span><span class="co">#&gt;        X8        X9       X10       X11       X12       X13       X14       X15 </span></span>
+<span><span class="co">#&gt;     0.000     0.000     0.000     0.221     0.000     0.252    -0.162     0.000 </span></span>
+<span><span class="co">#&gt;       X16       X17       X18       X19       X20 </span></span>
+<span><span class="co">#&gt;     0.208     0.000     0.000     0.000     0.000</span></span></code></pre></div>
 <p>The best model of each model size are stored and the “best” model of all can be selected using an information criterion such as the Akaike Information Criterion (AIC) or the Bayesian Information Criterion (BIC). Notice how in the above output of APES, the true model size is identified as 3 and 2 by the AIC and BIC, respectively. The selected model estimates are also shown.</p>
 <p>The bootstrap procedure can be used to understand the variable selection stability. The APES package also comes with some plotting functions that displays the bootstrapped results.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">boot_result</span> <span class="op">=</span> <span class="fu"><a href="reference/APES.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, n_boot <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
-<span class="va">boot_result</span>
-<span class="co">#&gt; Time taken:  0.02650997  minutes </span>
-<span class="co">#&gt; Total number of bootstrap APES results:  20</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">boot_result</span> <span class="op">=</span> <span class="fu"><a href="reference/APES.html">apes</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, n_boot <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="va">boot_result</span></span>
+<span><span class="co">#&gt; Time taken:  0.02650997  minutes </span></span>
+<span><span class="co">#&gt; Total number of bootstrap APES results:  20</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">boot_result</span>, type <span class="op">=</span> <span class="st">"vip"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
 </div>
 </div>
-<div id="references" class="section level1">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor" aria-hidden="true"></a>References</h1>
+<div class="section level1">
+<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h1>
 <ul>
 <li>Wang, K. Y., Tarr, G., Yang, J. Y., &amp; Mueller, S. (2019). Fast and approximate exhaustive variable selection for generalised linear models with APES. Australian &amp; New Zealand Journal of Statistics, 61(4), 445–465. <a href="https://doi.org/10.1111/anzs.12276" class="external-link uri">https://doi.org/10.1111/anzs.12276</a>
 </li>
@@ -169,17 +169,15 @@
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/kevinwang09/APES/">https://​github.com/​kevinwang09/​APES/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/kevinwang09/APES/issues">https://​github.com/​kevinwang09/​APES/​issues</a>
-</li>
+<li><a href="https://github.com/kevinwang09/APES/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/kevinwang09/APES/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
 
@@ -187,7 +185,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing APES</a></li>
+<li><a href="authors.html#citation">Citing APES</a></li>
 </ul>
 </div>
 
@@ -201,13 +199,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/kevinwang09/APES/actions" class="external-link"><img src="https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/github/kevinwang09/APES?branch=master" class="external-link"><img src="https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
-</ul>
-</div>
+
 
   </div>
 </div>
@@ -220,7 +212,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

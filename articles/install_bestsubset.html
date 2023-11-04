@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">APES</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -46,20 +46,20 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/articles/birthweight.html">APES: birth weight data example</a>
+      <a href="../articles/birthweight.html">APES: birth weight data example</a>
     </li>
     <li>
-      <a href="../articles/articles/diabetes.html">APES: diabetes data example</a>
+      <a href="../articles/diabetes.html">APES: diabetes data example</a>
     </li>
     <li>
-      <a href="../articles/articles/speed.html">Speeding up APES</a>
+      <a href="../articles/speed.html">Speeding up APES</a>
     </li>
     <li>
       <a href="../articles/install_bestsubset.html">Install `bestsubset`</a>
@@ -84,20 +84,28 @@
 
       
 
-      </header><script src="install_bestsubset_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Install <code>bestsubset</code>
 </h1>
-                        <h4 data-toc-skip class="author">Kevin Y.X. Wang</h4>
+                        <h4 data-toc-skip class="author">Kevin Y.X.
+Wang</h4>
             <address class="author_afil">
-      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 data-toc-skip class="author">Garth Tarr</h4>
+      School of Mathematics and Statistics, The University of Sydney,
+Australia<br><h4 data-toc-skip class="author">Garth
+Tarr</h4>
             <address class="author_afil">
-      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 data-toc-skip class="author">Jean Y.H. Yang</h4>
+      School of Mathematics and Statistics, The University of Sydney,
+Australia<br><h4 data-toc-skip class="author">Jean
+Y.H. Yang</h4>
             <address class="author_afil">
-      School of Mathematics and Statistics, The University of Sydney, Australia<br><h4 data-toc-skip class="author">Samuel Mueller</h4>
+      School of Mathematics and Statistics, The University of Sydney,
+Australia<br><h4 data-toc-skip class="author">Samuel
+Mueller</h4>
             <address class="author_afil">
-      Department of Mathematics and Statistics, Macquarie University, Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/master/vignettes/install_bestsubset.Rmd" class="external-link"><code>vignettes/install_bestsubset.Rmd</code></a></small>
+      Department of Mathematics and Statistics, Macquarie University,
+Australia<br><small class="dont-index">Source: <a href="https://github.com/kevinwang09/APES/blob/HEAD/vignettes/install_bestsubset.Rmd" class="external-link"><code>vignettes/install_bestsubset.Rmd</code></a></small>
       <div class="hidden name"><code>install_bestsubset.Rmd</code></div>
 
     </address>
@@ -108,26 +116,55 @@
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor" aria-hidden="true"></a>Introduction</h1>
-<p>The APES method relies on a best subset algorithm for linear regression model. In cases where the number of regressors is less than 30, the <a href="https://cran.r-project.org/web/packages/leaps/index.html" class="external-link"><code>leaps</code> package</a> is sufficiently fast to provide a result in a reasonable time. For cases where the number of regressors becomes larger, we recommend using the <a href="https://github.com/ryantibs/best-subset" class="external-link"><code>bestsubset</code> package</a> as the backend. However, the installation of this package is not quite straight forward. The purpose of this vignette is to detail some key steps to install this package.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>The APES method relies on a best subset algorithm for linear
+regression model. In cases where the number of regressors is less than
+30, the <a href="https://cran.r-project.org/web/packages/leaps/index.html" class="external-link"><code>leaps</code>
+package</a> is sufficiently fast to provide a result in a reasonable
+time. For cases where the number of regressors becomes larger, we
+recommend using the <a href="https://github.com/ryantibs/best-subset" class="external-link"><code>bestsubset</code>
+package</a> as the backend. However, the installation of this package is
+not quite straight forward. The purpose of this vignette is to detail
+some key steps to install this package.</p>
 </div>
-<div id="installing-bestsubset" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installing-bestsubset" class="anchor" aria-hidden="true"></a>Installing <code>bestsubset</code>
-</h1>
-<p>The <code>bestsubset</code> package that <code>APES</code> depends on can be installed from GitHub via the <code>R</code> command <code>devtools::install_github("ryantibs/best-subset/bestsubset")</code>. While this step is relatively straight forward, the real hurdle is the installation of the <code>gurobi</code> <code>R</code> package which the commercial company Gurobi has copyright over.</p>
-<p>To install <code>gurobi</code>, follow the steps in <a href="https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation.html" class="external-link">this vignette</a>.</p>
+<div class="section level2">
+<h2 id="installing-bestsubset">Installing <code>bestsubset</code><a class="anchor" aria-label="anchor" href="#installing-bestsubset"></a>
+</h2>
+<p>The <code>bestsubset</code> package that <code>APES</code> depends on
+can be installed from GitHub via the <code>R</code> command
+<code>devtools::install_github("ryantibs/best-subset/bestsubset")</code>.
+While this step is relatively straight forward, the real hurdle is the
+installation of the <code>gurobi</code> <code>R</code> package which the
+commercial company Gurobi has copyright over.</p>
+<p>To install <code>gurobi</code>, follow the steps in <a href="https://cran.r-project.org/web/packages/prioritizr/vignettes/gurobi_installation_guide.html" class="external-link">this
+vignette</a>.</p>
 <p>In general, you should:</p>
 <ol style="list-style-type: decimal">
 <li><p>Register an account with Gurobi at <a href="https://www.gurobi.com/login/" class="external-link uri">https://www.gurobi.com/login/</a>.</p></li>
-<li><p>Review the licensing options at <a href="http://www.gurobi.com/products/licensing-pricing/licensing-overview" class="external-link uri">http://www.gurobi.com/products/licensing-pricing/licensing-overview</a>. Academic affiliates can obtain a free license from <a href="https://www.gurobi.com/downloads/end-user-license-agreement-academic/" class="external-link uri">https://www.gurobi.com/downloads/end-user-license-agreement-academic/</a>.</p></li>
-<li><p>Open up your system terminal and enter <code>grbgetkey &lt;license-id&gt;</code>, where your <code>&lt;license-id&gt;</code> is in the form of <code>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</code> from step 2.</p></li>
-<li><p>Download the Gurobi software from <a href="https://www.gurobi.com/downloads/" class="external-link uri">https://www.gurobi.com/downloads/</a> and select the software version and operating system. Documentations specific to your operating system can be found at <a href="http://www.gurobi.com/documentation/" class="external-link uri">http://www.gurobi.com/documentation/</a>.</p></li>
-<li><p>Once the software is downloaded, install it at your desired path. The <code>R</code> package will be in a subfolder under the installation path. For example, on MacOS, the default installation path for Gurobi 9.0.1 is <code>/Library/gurobi901</code> and the <code>R</code> command for installing <code>gurobi</code> is <code>install.packages('/Library/gurobi901/mac64/R/gurobi_9.0-1_R_3.6.1.tgz', repos=NULL)</code>. You will also need install the <code>slam</code> package via <code>install.packages("slam", repos = "https://cloud.r-project.org")</code>.</p></li>
-<li><p>Test if <code>gurobi</code> is installed by running <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library(gurobi)</a></code> in <code>R</code>.</p></li>
-<li><p>Finally, the <code>bestsubset</code> package can be installed from GitHub via the <code>R</code> command <code>devtools::install_github("ryantibs/best-subset/bestsubset")</code>.</p></li>
+<li><p>Review the licensing options at <a href="http://www.gurobi.com/products/licensing-pricing/licensing-overview" class="external-link uri">http://www.gurobi.com/products/licensing-pricing/licensing-overview</a>.
+Academic affiliates can obtain a free license from <a href="https://www.gurobi.com/downloads/end-user-license-agreement-academic/" class="external-link uri">https://www.gurobi.com/downloads/end-user-license-agreement-academic/</a>.</p></li>
+<li><p>Open up your system terminal and enter
+<code>grbgetkey &lt;license-id&gt;</code>, where your
+<code>&lt;license-id&gt;</code> is in the form of
+<code>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</code> from step 2.</p></li>
+<li><p>Download the Gurobi software from <a href="https://www.gurobi.com/downloads/" class="external-link uri">https://www.gurobi.com/downloads/</a> and select the
+software version and operating system. Documentations specific to your
+operating system can be found at <a href="http://www.gurobi.com/documentation/" class="external-link uri">http://www.gurobi.com/documentation/</a>.</p></li>
+<li><p>Once the software is downloaded, install it at your desired path.
+The <code>R</code> package will be in a subfolder under the installation
+path. For example, on MacOS, the default installation path for Gurobi
+9.0.1 is <code>/Library/gurobi901</code> and the <code>R</code> command
+for installing <code>gurobi</code> is
+<code>install.packages('/Library/gurobi901/mac64/R/gurobi_9.0-1_R_3.6.1.tgz', repos=NULL)</code>.
+You will also need install the <code>slam</code> package via
+<code>install.packages("slam", repos = "https://cloud.r-project.org")</code>.</p></li>
+<li><p>Test if <code>gurobi</code> is installed by running
+<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library(gurobi)</a></code> in <code>R</code>.</p></li>
+<li><p>Finally, the <code>bestsubset</code> package can be installed
+from GitHub via the <code>R</code> command
+<code>devtools::install_github("ryantibs/best-subset/bestsubset")</code>.</p></li>
 </ol>
 </div>
   </div>
@@ -149,7 +186,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
