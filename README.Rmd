@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 
 # APES: APproximated Exhaustive Search for GLMs
 
-[![R build status](https://github.com/kevinwang09/APES/workflows/R-CMD-check/badge.svg)](https://github.com/kevinwang09/APES/actions)
-[![Coverage status](https://codecov.io/gh/kevinwang09/APES/branch/master/graph/badge.svg)](https://codecov.io/github/kevinwang09/APES?branch=master)
+[![R-CMD-check](https://github.com/kevinwang09/APES/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kevinwang09/APES/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/kevinwang09/APES/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/kevinwang09/APES/actions/workflows/test-coverage.yaml)
 
 <img src="https://github.com/kevinwang09/APES/raw/master/inst/APES_logo.png" align="right" width="300" />
 
